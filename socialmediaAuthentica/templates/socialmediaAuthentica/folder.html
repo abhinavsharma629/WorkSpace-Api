@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Folder View Example</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        #myImg {
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        #myImg:hover {
+            opacity: 0.7;
+        }
+        /* The Modal (background) */
+        
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            padding-top: 100px;
+            /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.9);
+            /* Black w/ opacity */
+        }
+        /* Modal Content (image) */
+        
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+        /* Caption of Modal Image */
+        
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+        /* Add Animation */
+        
+        .modal-content,
+        #caption {
+            -webkit-animation-name: zoom;
+            -webkit-animation-duration: 0.6s;
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+        
+        @-webkit-keyframes zoom {
+            from {
+                -webkit-transform: scale(0)
+            }
+            to {
+                -webkit-transform: scale(1)
+            }
+        }
+        
+        @keyframes zoom {
+            from {
+                transform: scale(0)
+            }
+            to {
+                transform: scale(1)
+            }
+        }
+        /* The Close Button */
+        
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* 100% Image Width on Smaller Screens */
+        
+        @media only screen and (max-width: 700px) {
+            .modal-content {
+                width: 100%;
+            }
+        }
+
+        ::selection {
+    background: transparent;
+}
+::-moz-selection {
+    background: transparent;
+}
+
+    </style>
+
+    <!-- <style type="text/css">
+  $spacing: 1rem;
+$primary: #47cedf;
+$secondary: #c298cf;
+$black: #787878;
+$border-radius: 5px;
+
+$bp: 900px;
+
+html {
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+body {
+    background: #efefef;
+    font-size: 100%;
+    line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial,
+        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    color: $black;
+
+    @media (min-width: $bp) {
+        padding: $spacing;
+    }
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+[draggable] {
+  user-select: none;
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.btn {
+    display: inline-block;
+    margin: $spacing 0 0;
+    line-height: 1;
+    font-size: .75rem;
+    font-weight: bold;
+    padding: $spacing *.8 $spacing * 2;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: white;
+    background: $primary;
+    border: none;
+    outline: none;
+
+    &:hover,
+    &:focus{
+        background: darken($primary, 10%);
+        cursor: pointer;
+    }
+
+    &:active {
+        transform:translateY(2px);
+    }
+}
+
+.ui {
+    position: relative;
+    display: flex;
+    margin: 0 auto;
+    max-width: $bp;
+    min-height: 100vh;
+    background: #fff;
+    overflow: hidden;
+
+    @media (min-width: $bp) {
+        margin: 10vh auto 0;
+        min-height: 50vh;
+        box-shadow: 0 0 20px rgba($black, 0.1);
+        border-radius: $border-radius;
+    }
+
+    &.upload-drop--dragover {
+        .ui__sidebar {
+            opacity: .5;
+        }
+
+        .ui__main {
+            transition: border .5s ease;
+            border: 4px dashed $primary;
+
+            > * {
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+.ui__sidebar {
+    display: block;
+    background: #404040;
+    color: #ccc;
+    overflow: hidden;
+    transition: all .5s ease;
+    width: 0;
+    max-width: 300px;
+    max-height: 100%;
+
+    .ui__sidebar--open & {
+        display: block;
+        width: 80%;
+        opacity: 1;
+        padding: $spacing;
+        border-right: 0.5rem solid #efefef;
+    }
+
+    @media (min-width: $bp) {
+        display: block;
+        width: 300px;
+        padding: $spacing;
+        border-right: 0.5rem solid #efefef;
+
+        .ui__sidebar--open & {
+            width: 300px
+        }
+    }
+}
+
+.ui__main {
+    flex: 1 1 auto;
+    display: block;
+    width: calc(100% - 300px);
+}
+
+.ui__overlay {
+
+}
+
+.ui__menu {
+    display: flex;
+}
+
+.ui__btn {
+    flex: 0 0 auto;
+    padding: $spacing/2 $spacing;
+    transition: all .1s linear;
+    user-select: none;
+
+    &::before {
+        font-family: FontAwesome;
+    }
+
+    &:hover {
+        color: darken($black, 40%);
+    }
+
+    &.ui__btn--active,
+    &:active {
+        color: $primary;
+    }
+}
+
+.upload-btn {
+    &::before {
+        content: '\f0ee';
+    }
+}
+
+.help-btn {    
+    &::before {
+        content: '\f128';
+    }
+}
+
+.sidebar-toggle {
+    margin-left: 0;
+
+    &::before {
+        content: '\f152';
+    }
+
+    .ui__sidebar--open & {
+        &::before {
+            content: '\f191';
+        }
+    }
+    @media (min-width: $bp) {
+        display: none;
+    }
+}
+
+.options-toggle {
+    margin-right: 0;
+    text-align: right;
+
+    &::before {
+        content: '\f013';
+    }
+}
+
+.ui__info {
+
+}
+
+.file-path {
+    flex: 1 1 auto;
+    display: inline-block;
+    margin: 0;
+    padding: $spacing / 3 $spacing;
+    font-size: .875rem;
+    list-style: none;
+    background: #f8f8f8;
+    border-radius: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 2;
+    border-radius: 0 0 3px 3px;
+
+    li {
+        display: inline-block;
+
+        &::after {
+            display: inline-block;
+            font-family: FontAwesome;
+            content: '\f105';
+            opacity: .5;
+            margin-left: $spacing / 2;
+            margin-right: $spacing / 4;
+        }
+    }
+
+    a {
+        cursor: pointer;
+
+        &:hover {
+            color: darken($black, 40%);
+        }
+    }
+}
+
+.file-tree {
+    display: block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-height: 100%;
+    overflow-y: scroll;
+    user-select: none;
+}
+
+.file-tree__item {
+    display: block;
+    padding: $spacing / 2 $spacing;
+}
+
+.file-tree__subtree {
+    display: none;
+    margin: $spacing / 2 $spacing 0 $spacing * 1.5;
+    padding: 0;
+    list-style: none;
+
+    .file-tree__item--open & {
+        display: block;
+    }
+
+    > li {
+        padding: $spacing / 3 0;
+        font-size: .875rem;
+
+        .folder::before {
+            color: $secondary;
+        }
+    }
+}
+
+.folder {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &::before {
+        content: "\f07b";
+        font-family: FontAwesome;
+        margin-right: $spacing / 2;
+        color: $primary;
+    }
+
+    &:hover {
+        color: white;
+        cursor: pointer;
+
+        &::before {
+            color: lighten($primary, 5%);
+        }
+    }
+
+    &.folder--open {
+        color: white;
+        &::before {
+            content: "\f07c";
+        }
+    }
+}
+
+.file-list {
+    width: 100%;
+    text-align: left;
+
+    .file-list__file {
+        &:nth-child(odd) {
+            background: #f8f8f8;
+        }
+    }
+
+    th {
+        user-select: none;
+        border-bottom: 1px solid #efefef;
+        padding: $spacing;
+
+        &:hover {
+            cursor: pointer;
+            color: darken($black, 40%);
+        }
+    }
+
+    td {
+        padding: $spacing/3 $spacing;
+
+        &:hover {
+            cursor: pointer;
+            color: darken($black, 40%);
+        }
+    }
+}
+
+.file-list__header {
+    font-size: 0.6875rem;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba($primary, .6);
+    z-index: 1000;
+    box-shadow: 0 0 20px rgba($black, 0.1);
+
+    &.overlay--active {
+        display: block;
+    }
+}
+
+.overlay__inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0 auto;
+    z-index: 1001;
+    border-radius: $border-radius;
+    background: #f8f8f8;
+
+    padding: $spacing * 2;
+    text-align: center;
+
+    @media (min-width: $bp) {
+        top: 50%;
+        transform: translateY(-50%);
+        bottom: auto;
+        max-width: 500px;
+    }
+
+    .upload-drop--dragover & {
+        transition: border .5s ease;
+        border: 4px dashed $primary;
+
+        > * {
+            pointer-events: none;
+        }
+    }
+}
+
+.info-modal {
+    display: block;
+    transform: translateY(-100%);
+    opacity: 0;
+    overflow: hidden;
+    height: 0;
+    font-size: .875rem;
+
+    &.info-modal--active {
+        transform: translateY(0);
+        opacity: 1;
+        height: auto;
+        padding: $spacing;
+        background: linear-gradient(to bottom, white, #efefef);
+        border: 5px solid #fff;
+    }
+}
+</style> -->
+</head>
+
+<body style="cursor:pointer" oncopy="return false" oncut="return false" onpaste="return false">
+  <div class="container" id="sdf"></div>
+    <!-- <div class="ui upload-drop">
+
+    <aside class="ui__sidebar">
+
+        <ul class="file-tree">
+            <li class="file-tree__item">
+                <div class="folder">Project A</div>
+            </li>
+            <li class="file-tree__item file-tree__item--open">
+                <div class="folder folder--open">Project A</div>
+
+                <ul class="file-tree__subtree">
+                    <li class="file-tree__item">
+                        <div class="folder">Planfolder</div>
+                    </li>
+                    <li class="file-tree__item">
+                        <div class="folder folder--open">Holiday</div>
+                    </li>
+                    <li class="file-tree__item">
+                        <div class="folder">Shared</div>
+                    </li>
+                </ul>
+
+            </li>
+            <li class="file-tree__item">
+                <div class="folder">Project A</div>
+                <ul class="file-tree__subtree">
+                    <li class="file-tree__item">
+                        <div class="folder">Planfolder</div>
+                    </li>
+                    <li class="file-tree__item">
+                        <div class="folder folder--open">Holiday</div>
+
+                    </li>
+                    <li class="file-tree__item">
+                        <div class="folder">Shared</div>
+
+                    </li>
+                </ul>
+
+            </li>
+            <li class="file-tree__item">
+                <div class="folder">Project XYS</div>
+            </li>
+            <li class="file-tree__item">
+                <div class="folder">Project A</div>
+            </li>
+            <li class="file-tree__item">
+                <div class="folder">Project F</div>
+                <ul class="file-tree__subtree">
+                    <li class="file-tree__item">
+                        <div class="folder">Planfolder</div>
+                    </li>
+                    <li class="file-tree__item">
+                        <div class="folder folder--open">Holiday</div>
+
+                    </li>
+                    <li class="file-tree__item">
+                        <div class="folder">Shared</div>
+
+                    </li>
+                </ul>
+
+            </li>
+            <li class="file-tree__item">
+                <div class="folder">Project A</div>
+            </li>
+            <li class="file-tree__item">
+                <div class="folder">Project A</div>
+            </li>
+            <li class="file-tree__item">
+                <div class="folder">Project C</div>
+                <ul class="file-tree__subtree">
+                    <li class="file-tree__item">
+                        <div class="folder">Planfolder</div>
+                    </li>
+                    <li class="file-tree__item">
+                        <div class="folder folder--open">Holiday</div>
+                    </li>
+                    <li class="file-tree__item">
+                        <div class="folder">Shared</div>
+                    </li>
+                </ul>
+
+            </li>
+            <li class="file-tree__item">
+                <div class="folder">Project A</div>
+            </li>
+            <li class="file-tree__item">
+                <div class="folder">Project A</div>
+                <ul class="file-tree__subtree">
+                    <li class="file-tree__item">
+                        <div class="folder">Planfolder</div>
+                    </li>
+                    <li class="file-tree__item">
+                        <div class="folder folder--open">Holiday</div>
+
+                    </li>
+                    <li class="file-tree__item">
+                        <div class="folder">Shared</div>
+                    </li>
+                </ul>
+
+            </li>
+            <li class="file-tree__item">
+                <div class="folder">Project X</div>
+            </li>
+            <li class="file-tree__item">
+                <div class="folder">Letztes Projekt Z</div>
+            </li>
+        </ul>
+
+    </aside>
+
+    <main class="ui__main">
+
+        <div class="ui__menu">
+
+            <a href="javascript:void(0);" class="ui__btn sidebar-toggle"></a>
+            <a href="javascript:void(0);" data-modal="upload-modal" class="ui__btn upload-btn"></a>
+
+            <ul class="file-path">
+                <li><a href="#">UI</a></li>
+                <li><a href="#">Project A</a></li>
+            </ul>
+
+            <a href="javascript:void(0);" class="ui__btn options-toggle"></a>
+            <a href="javascript:void(0);" class="ui__btn help-btn" data-overlay="help"></a>
+
+        </div>
+
+        <div class="ui__info info-modal" id="upload-modal">
+            <h2>Upload</h2>
+            <p>Simply drag & drop a file here or select one with the button below.</p>
+            <form action="#" method="POST">
+                <div><input type="file" required></div>
+                <button type="submit" class="btn">Upload</button>
+            </form>
+
+        </div>
+
+        <table class="file-list" id="file-table">
+
+            <tr class="file-list__header">
+                <th onClick="sortTable(0)">Name <i class="fa fa-long-arrow-down"></i></th>
+                <th onClick="sortTable(1)">Typ</th>
+                <th onClick="sortTable(2, '123')">Size</th>
+                <th>Tags</th>
+            </tr>
+
+            <tr class="file-list__file">
+                <td>Holiday Photos</td>
+                <td>zip</td>
+                <td>1.2MB</td>
+                <td>privat</td>
+            </tr>
+            <tr class="file-list__file">
+                <td>Secrets</td>
+                <td>zip</td>
+                <td>1GB</td>
+                <td>privat</td>
+            </tr>
+            <tr class="file-list__file">
+                <td>Something else</td>
+                <td>jpeg</td>
+                <td>5MB</td>
+                <td>privat</td>
+            </tr>
+            <tr class="file-list__file">
+                <td>Short trip</td>
+                <td>txt</td>
+                <td>2kb</td>
+                <td>privat</td>
+            </tr>
+            <tr class="file-list__file">
+                <td>What a file name is that?</td>
+                <td>txt</td>
+                <td>3.1MB</td>
+                <td>privat</td>
+            </tr>
+            <tr class="file-list__file">
+                <td>Holidy Plan</td>
+                <td>txt</td>
+                <td>5MB</td>
+                <td>privat</td>
+            </tr>
+        </table>
+
+    </main>
+
+</div>
+
+<div class="ui__overlay overlay" id="help">
+    <div class="overlay__inner">
+
+        <h2>🎂</h2>
+        <p>The cake is a lie...</p>
+
+        <a href="javascript:void(0)" class="btn overlay__close">Oh no!</a>
+
+    </div>
+
+</div>
+-->
+
+    <!-- {% for i,j in obj.hierarchicalData.items %}
+  {% if id %}
+    {% if i == id %}
+      <ul>
+        {% if j.type == "folder" %}
+          <li onclick="go('{{i}}')">{{j.title}}</li>
+        {% else %}
+          <a href="{{j.embedLink}}"><li>{{j.title}}</li></a>
+        {% endif %}
+
+        <ul>
+          {% for k in j.children %}
+            {% for a,b in obj.hierarchicalData.items %}
+              {% if a == k %}
+                {% if b.type == "folder" %}
+                  <li onclick="go('{{a}}')">{{b.title}}</li>
+                {% else %}
+                  <a href="{{b.embedLink}}"><li>{{b.title}}</li></a>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+
+          {% endfor %}
+        </ul>
+      </ul>
+    {% endif %}
+  {% else %}
+    <ul>
+        {% if j.type == "folder" %}
+          <li onclick="go('{{i}}')">{{j.title}}</li>
+        {% else %}
+          <a href="{{j.embedLink}}"><li>{{j.title}}</li></a>
+        {% endif %}
+
+        <ul>
+          {% for k in j.children %}
+            {% for a,b in obj.hierarchicalData.items %}
+              {% if a == k %}
+                {% if b.type == "folder" %}
+                  <li onclick="go('{{a}}')">{{b.title}}</li>
+                {% else %}
+                  <a href="{{b.embedLink}}"><li>{{b.title}}</li></a>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+
+          {% endfor %}
+        </ul>
+      </ul>
+  {% endif %}
+{% endfor %} -->
+
+    <!-- {% if id %}
+    {% for i,j in obj.hierarchicalData.items %} {% if i == id %} -->
+    <!-- <ul>
+        {% for k in j.children %} {% for a,b in obj.hierarchicalData.items %} {% if a == k %} {% if b.type == "folder" %}
+        <li ondblclick="go('{{a}}')">{{b.title}}</li>
+        {% else %}
+        <li id="{{ forloop.counter }}" ondblclick="showImg('{{b.embedLink}}', '{{b.title}}', '{{b.type}}','{{ forloop.counter }}', '{{b.childId}}')">{{b.title}}</li>
+        {% endif %} {% endif %} {% endfor %} {% endfor %}
+        
+    </ul> -->
+    <!-- {% endif %} {% endfor %} {% else %} {% for i,j in obj.rootPageData.items %} -->
+    <!-- <ul>
+        {% for k in j %} {% if k.type == "folder" %}
+        <li ondblclick="go('{{i}}')">{{k.title}}</li>
+        {% else %}
+        <li id="{{ forloop.counter }}" ondblclick="showImg('{{k.embedLink}}', '{{k.title}}', '{{k.type}}', '{{ forloop.counter }}', '{{k.childId}}')">{{k.title}}</li>
+        {% endif %} {% endfor %}
+    </ul>
+    {% endfor %} {% endif %} -->
+
+    <div id="myModal" class="modal">
+        <span class="close">&times;</span>
+        <!-- <img class="modal-content" id="img01"> -->
+        <iframe class="modal-content" id="img01" width="100%" height="100%"></iframe>
+        <div id="caption"></div>
+    </div>
+    <script type="text/javascript">
+        function showImg(src1, title, type, id, imgId) {
+            // Get the modal
+            
+
+                if (type.split('/')[0] == 'image') {
+                    var modal = document.getElementById("myModal");
+
+                    // Get the image and insert it inside the modal - use its "alt" text as a caption
+                    var img = document.getElementById(id);
+
+                    var modalImg = document.getElementById("img01");
+                    var captionText = document.getElementById("caption");
+                    modal.style.display = "block";
+                    modalImg.src = src1;
+                    // "https://drive.google.com/file/d/" + imgId + "/view?usp=sharing"
+                    captionText.innerHTML = title;
+
+                    // Get the <span> element that closes the modal
+                    var span = document.getElementsByClassName("close")[0];
+
+                    // When the user clicks on <span> (x), close the modal
+                    span.onclick = function() {
+                        modal.style.display = "none";
+                    }
+                }
+
+        }
+    </script>
+</body>
+
+</html>
+<!-- <script type="text/javascript">
+  var ui = $(".ui"),
+    sidebar = $(".ui__sidebar"),
+    main = $(".ui__main"),
+    uploadDrop = $(".upload-drop");
+
+// SIDEBAR TOGGLE
+$(".sidebar-toggle").on("click", function(e) {
+    e.preventDefault();
+    ui.toggleClass("ui__sidebar--open");
+});
+
+// MODAL
+$("[data-modal]").on("click", function(e) {
+    e.preventDefault();
+    var target = $(this).data("modal");
+    openModal(target);
+});
+
+function openModal(id) {
+    $("#" + id).toggleClass("info-modal--active");
+    $('[data-modal="' + id + '"]').toggleClass("ui__btn--active");
+}
+
+// OVERLAY
+$("[data-overlay]").on("click", function(e) {
+    e.preventDefault();
+    var target = $(this).data("overlay");
+    openOverlay(target);
+});
+
+// Close Overlay on Overlay Background Click
+$(".overlay").on("click", function(e) {
+    if (e.target !== e.currentTarget) return;
+    closeOverlay();
+});
+
+$(".overlay__close").on("click", function(e) {
+    closeOverlay();
+});
+
+function openOverlay(id) {
+    $("#" + id + ".overlay").addClass("overlay--active");
+}
+
+function closeOverlay() {
+    $(".overlay--active").removeClass("overlay--active");
+}
+
+// File Tree
+$(".folder").on("click", function(e) {
+    var t = $(this);
+    var tree = t.closest(".file-tree__item");
+
+    if (t.hasClass("folder--open")) {
+        t.removeClass("folder--open");
+        tree.removeClass("file-tree__item--open");
+    } else {
+        t.addClass("folder--open");
+        tree.addClass("file-tree__item--open");
+    }
+
+    // Close all siblings
+    tree
+        .siblings()
+        .removeClass("file-tree__item--open")
+        .find(".folder--open")
+        .removeClass("folder--open");
+});
+
+// DRAG & DROP
+var dc = 0;
+uploadDrop
+    .on("dragover", function(e) {
+    dc = 0;
+    drag($(this), e);
+})
+    .on("dragenter", function(e) {
+    drag($(this), e);
+    dc++;
+})
+    .on("dragleave", function(e) {
+    dragend($(this), e);
+    dc--;
+})
+    .on("drop", function(e) {
+    drop($(this), e);
+});
+
+function drag(that, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    that.addClass("upload-drop--dragover");
+}
+
+function dragend(that, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (dc === 0) {
+        $(".upload-drop--dragover").removeClass("upload-drop--dragover");
+    }
+}
+
+function drop(that, e) {
+    dc = 0;
+    dragend($(this), e);
+    // Handle file
+    alert("It seems you dropped something!");
+}
+
+// SORTING
+function sortTable(n, method) {
+    var table,
+        rows,
+        switching,
+        i,
+        x,
+        y,
+        shouldSwitch,
+        dir,
+        switchcount = 0;
+    table = document.getElementById("file-table");
+    switching = true;
+    dir = "asc";
+
+    while (switching) {
+        switching = false;
+        rows = table.getElementsByTagName("tr");
+
+        for (i = 1; i < rows.length - 1; i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("td")[n];
+            y = rows[i + 1].getElementsByTagName("td")[n];
+
+            if (method == "123") {
+                if (dir == "asc") {
+                    if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            } else {
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount++;
+        } else {
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+
+</script> -->
+<script type="text/javascript">
+  function changeView(id){
+    var count=1;
+    var ar=JSON.parse('{{obj1|escapejs}}')
+    //console.log('{{obj1}}');
+    if(id!="None"){
+      console.log("inside id")
+    var data=ar[id]['children'];
+    //console.log(data);
+    var html="<ul>";
+    for(var i in data){
+      //console.log(data[i]);
+      if(ar[data[i]]['type']=="folder"){
+        html+=`<li ondblclick="go('`+data[i]+`')">`+ar[data[i]]['title']+`</li>`;
+      }
+      else{
+        html+=`<li id="`+count+`" ondblclick="showImg('`+ar[data[i]]['embedLink']+`', '`+ar[data[i]]['title']+`', '`+ar[data[i]]['type']+`','`+count+`', '`+ar[data[i]]['childId']+`')">`+ar[data[i]]['title']+`</li>`;
+        count+=1;
+      }
+    }
+    html+="</ul>";
+    window.location.hash = "?folderId="+id;
+    //console.log(html);
+  }
+  else{
+    var data=JSON.parse('{{obj|escapejs}}');
+    //console.log(data);
+    var html="<ul>";
+    for(var i in data){
+      if(ar[i]['type']=="folder"){
+        html+=`<li ondblclick="go('`+i+`')">`+ar[i]['title']+`</li>`;
+      }
+      else{
+        html+=`<li id="`+count+`" ondblclick="showImg('`+ar[i]['embedLink']+`', '`+ar[i]['title']+`', '`+ar[i]['type']+`','`+count+`', '`+ar[i]['childId']+`')">`+ar[i]['title']+`</li>`;
+        count+=1;
+      }
+    }
+    html+="</ul>";
+  }
+  console.log("Ok Done");
+  //console.log(html);
+    $("#sdf").html(html);
+  }
+</script>
+<script type="text/javascript">
+    function go(id) {
+        // console.log('inside')
+        // console.log(id);
+        // window.location.href = "/hi/folderView?folderId=" + id;
+        changeView(id);
+    }
+</script>
+<script type="text/javascript">
+  $(function(){
+    changeView("None")
+  })
+</script>

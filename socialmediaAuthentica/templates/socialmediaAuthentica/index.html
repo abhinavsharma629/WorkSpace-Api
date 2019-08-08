@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    
+
+ 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<style type="text/css">
+	.modal-body {
+    position:relative; /* This avoids whatever it's absolute inside of it to go off the container */
+    height: 50%; /* let's imagine that your login box height is 250px . This height needs to be added, otherwise .img-responsive will be like "Oh no, I need to be vertically aligned?! but from which value I need to be aligned??" */
+}
+.img-responsive {
+    width:50%; /* This value will depend on what size you want for your loading image, let's say it's 50px */
+    height: 50%;
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin-top:-25px; /* This needs to be half of the height */
+    margin-left:-25px; /* This needs to be half of the width */
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Dynamic Tabs</h2>
+  <table>
+  <thead>
+		    <tr>
+		      <th scope="col">#</th>
+		      <th scope="col">File Name</th>
+		      <th scope="col">Link</th>
+		      <th scope="col">Actions</th>
+		    </tr>
+	  	</thead>
+	  	<tbody>
+	  	{% for i in obj %}
+	  		{% if i.typeOfData == "image/png" %}
+	  			{% for j,k in i.data.items %}
+	  			
+	  				{% for l in k %}
+	  				
+ 					
+		  					<tr id='row-{{i.typeOfData}}-{{forloop.counter}}'>
+						      <td scope="row">{{forloop.counter}}</td>
+						      <td>{{l.title}}</td>
+						      <td>{{l.modifiedDate}}</td>
+						      <td><a href="#" onclick="embed('{{l.embedLink}}')">Open</a></td>
+						      <!-- <td><a href="{{l.selfLink}}">Open In Google Drive</a></td> -->
+						    </tr>
+						
+					{% endfor %}
+				{% endfor %}
+			{% endif %}
+		{% endfor %}
+
+		<div class="modal fade" id="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img id="sr" class="img-responsive">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+	</tbody>
+	</table>
+ <script type="text/javascript">
+ 	function embed(id){
+ 		$('#modal').modal('show');
+ 		$("#sr").attr('src',id);
+ 	}
+ </script>
+</body>
+</html>

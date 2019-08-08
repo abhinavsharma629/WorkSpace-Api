@@ -1,0 +1,113 @@
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <!-- Material Design for Bootstrap fonts and icons -->
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+      <!-- Material Design for Bootstrap CSS -->
+      <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/v4-shims.css">
+      <link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
+      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+      <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <style>
+         .row{
+         margin-left: 1%;
+         }
+      </style>
+   </head>
+   <body>
+      <br>
+      <div class="row">
+         {% for i,j in obj1.items %}
+         <div class="col-lg-5">
+            <div class="card" id="{{j.name}}" onclick="repoDetails('{{j.name}}')">
+               <div class="card-title">
+                  <div class="d-inline-block mb-1">
+                     <br>
+                     <h4>
+                        <a href="#">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{j.name|truncatechars:"17"}}</a>
+                        {% if j.private == True %}<span class="Label Label--outline v-align-middle ml-1 mb-1"><i class="fa" style="font-size:24px">&#xf023;</i></span>{% endif %}
+                     </h4>
+                  </div>
+                  <div class="card-body">
+                     <div>
+                        <p class="col-9 d-inline-block text-gray mb-2 pr-4" itemprop="description">
+                           {{j.description|truncatechars:200}}
+                        </p>
+                     </div>
+                  </div>
+                  <div class="card-footer">
+                     <div class="f6 text-gray mt-2">
+                        {% comment %} <span class="ml-0 mr-3"> {% endcomment %}
+                        {% if j.language == "Python" %}
+                        <i class="devicon-python-plain" style="font-size:32px;"></i>
+                        {% elif j.language == "C"%}
+                        <i class="devicon-c-plain" style="font-size:32px;"></i>
+                        {% elif j.language == "C++"%}
+                        <i class="devicon-cplusplus-plain" style="font-size:32px;"></i>
+                        {% elif j.language == "C#"%}
+                        <i class="devicon-csharp-plain" style="font-size:32px;"></i>
+                        {% elif j.language == "HTML"%}
+                        <i class="devicon-html5-plain" style="font-size:32px;"></i>
+                        {% elif j.language == "Java"%}
+                        <i class="devicon-java-plain" style="font-size:32px;"></i>
+                        {% elif j.language == "JavaScript"%}
+                        <i class="devicon-javascript-plain" style="font-size:32px;"></i>
+                        {% elif j.language == "React"%}
+                        <i class="devicon-react-original colored" style="font-size:32px;"></i>
+                        {% elif j.language == "TypeScript"%}
+                        <i class="devicon-typescript-plain" style="font-size:32px;"></i>
+                        {% elif j.language == "Django"%}
+                        <i class="devicon-django-plain colored" style="font-size:38px;"></i>
+                        {% elif j.language == "CSS"%}
+                        <i class="devicon-css3-plain" style="font-size:32px;"></i>
+                        {% elif j.language == "NodeJs"%}
+                        <i class="devicon-nodejs-plain colored" style="font-size:32px;"></i>
+                        {% elif j.language == "Angular"%}
+                        <i class="devicon-angularjs-plain colored" style="font-size:32px;"></i>
+                        {% else %}
+                        <i class="fa fa-code" style="font-size:32px;"></i>
+                        {% endif %}
+                        &nbsp;&nbsp;
+                        <span><i style="font-size:24px" class="fa">&#xf126;</i>&nbsp;<b>{{j.forks}}</b></span>&nbsp;&nbsp;
+                        <span><i style="font-size:18px" class="fa">&#xf06e;</i>&nbsp;<b>{{j.watchers}}</b></span>&nbsp;&nbsp;
+                        <span><i style="font-size:18px" class="fa fa-star"></i>&nbsp;<b>{{j.stargazers_count}}</b></span>
+                        {% comment %} Created 
+                        <relative-time datetime="2019-07-09T19:15:15Z" title="Jul 10, 2019, 12:45 AM GMT+5:30">5 days ago</relative-time>
+                        {% endcomment %}
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         {% comment %} {% if forloop.counter|divisibleby:2 %}
+         {{forloop.counter}}
+         <br>
+         {% endif %} {% endcomment %}
+         {% endfor %}
+      </div>
+   </body>
+   <script>
+      function repoDetails(id){
+          console.log(id);
+          var settings = {
+            "url": "https://api.github.com/repos/{{username}}/"+id+"/branches",
+            "method": "GET",
+            "headers" : {
+            'Authorization': "Bearer {{access_token}}"
+            }
+            }
+            $.ajax(settings).done(function (response) {
+            var sha=response[0]['commit']['sha'];
+            window.location.href="http://127.0.0.1:8000/hi/friendRepoDetails/{{username}}?sha="+sha+"&repoName="+id;
+            });
+      }
+   </script>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en" >
+   <head>
+      <meta charset="UTF-8">
+      <title>Split 3D Carousel</title>
+      <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Merriweather:300:italic" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      <style>
+         html,
+         body {
+         height: 100%;
+         padding: 0;
+         margin: 0;
+         }
+         body {
+         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+         }
+         .js-transitions-disabled * {
+         transition: none !important;
+         }
+         .carousel {
+         position: relative;
+         height: 100%;
+         overflow: hidden;
+         -webkit-perspective: 50vw;
+         perspective: 50vw;
+         -webkit-perspective-origin: 50% 50%;
+         perspective-origin: 50% 50%;
+         }
+         .carousel__control {
+         position: absolute;
+         height: 160px;
+         width: 40px;
+         background: #fff;
+         right: 0;
+         top: 0;
+         bottom: 0;
+         margin: auto;
+         z-index: 1;
+         }
+         .carousel__control a {
+         position: relative;
+         display: block;
+         width: 100%;
+         padding-top: 75%;
+         box-sizing: border-box;
+         }
+         .carousel__control a:hover:before {
+         background-color: rgba(0,0,0,0.4);
+         }
+         .carousel__control a.active:before,
+         .carousel__control a.active:hover:before {
+         background-color: rgba(0,0,0,0.6);
+         }
+         .carousel__control a:first-child {
+         margin-top: 15px;
+         }
+         .carousel__control a:before {
+         position: absolute;
+         top: 50%;
+         left: 0;
+         right: 0;
+         margin: auto;
+         border-radius: 50%;
+         padding-top: 25%;
+         width: 25%;
+         background: rgba(0,0,0,0.2);
+         content: '';
+         display: block;
+         margin-top: -12.5%;
+         }
+         .carousel__stage {
+         position: absolute;
+         top: 20px;
+         bottom: 20px;
+         left: 20px;
+         right: 20px;
+         margin: auto;
+         -webkit-transform-style: preserve-3d;
+         transform-style: preserve-3d;
+         -webkit-transform: translateZ(calc(-50vh + 20px));
+         transform: translateZ(calc(-50vh + 20px));
+         }
+         .spinner {
+         position: absolute;
+         width: calc(50vw - (20px));
+         height: calc(100vh - 40px);
+         top: 0;
+         left: 0;
+         right: auto;
+         bottom: 0;
+         margin: auto;
+         -webkit-transform-style: preserve-3d;
+         transform-style: preserve-3d;
+         transition: -webkit-transform 1s;
+         transition: transform 1s;
+         transition: transform 1s, -webkit-transform 1s;
+         -webkit-backface-visibility: hidden;
+         backface-visibility: hidden;
+         -webkit-transform-origin: 50% 50%;
+         transform-origin: 50% 50%;
+         -webkit-transform: rotateX(0);
+         transform: rotateX(0);
+         }
+         .js-spin-fwd .spinner {
+         -webkit-transform: rotateX(-90deg);
+         transform: rotateX(-90deg);
+         }
+         .js-spin-bwd .spinner {
+         -webkit-transform: rotateX(90deg);
+         transform: rotateX(90deg);
+         }
+         .js-spin-fwd .spinner--right {
+         -webkit-transform: rotateX(90deg);
+         transform: rotateX(90deg);
+         }
+         .js-spin-bwd .spinner--right {
+         -webkit-transform: rotateX(-90deg);
+         transform: rotateX(-90deg);
+         }
+         .spinner--right {
+         right: 0;
+         left: auto;
+         }
+         .spinner__face {
+         display: none;
+         position: absolute;
+         width: 100%;
+         height: 100%;
+         }
+         .spinner__face.js-next {
+         display: block;
+         -webkit-transform: rotateX(90deg) translateZ(calc(50vh - 20px));
+         transform: rotateX(90deg) translateZ(calc(50vh - 20px));
+         }
+         .spinner--right .spinner__face.js-next {
+         -webkit-transform: rotateX(270deg) translateZ(calc(50vh - 20px));
+         transform: rotateX(270deg) translateZ(calc(50vh - 20px));
+         }
+         .js-spin-bwd .spinner__face.js-next {
+         -webkit-transform: rotateX(-90deg) translateZ(calc(50vh - 20px));
+         transform: rotateX(-90deg) translateZ(calc(50vh - 20px));
+         }
+         .js-spin-bwd .spinner--right .spinner__face.js-next {
+         -webkit-transform: rotateX(-270deg) translateZ(calc(50vh - 20px));
+         transform: rotateX(-270deg) translateZ(calc(50vh - 20px));
+         }
+         .js-active {
+         display: block;
+         -webkit-transform: translateZ(calc(50vh - 20px));
+         transform: translateZ(calc(50vh - 20px));
+         }
+         .content {
+         width: 100%;
+         height: 100%;
+         }
+         .spinner--right .content {
+         left: -100%;
+         }
+         .content__right {
+         position: absolute;
+         margin-left: 100%;
+         top: 0;
+         width: 100%;
+         height: 100%;
+         }
+         .content__left{
+         position: absolute;
+         left: 0;
+         top: 0;
+         width: 100%;
+         height: 100%;
+         }
+         @import url("https://fonts.googleapis.com/css?family=Raleway:400,400i,700");
+         h1 {
+         text-transform: uppercase;
+         position: absolute;
+         left: 50%;
+         top: 20%;
+         transform: translate(-50%, -50%);
+         color: #e91e63;
+         }
+         .spinner1 span {
+         position: absolute;
+         left: 50%;
+         top: 50%;
+         border-radius: 50%;
+         transform: translate(-50%, -50%);
+         width: 4rem;
+         height: 4rem;
+         border: 0.1em solid #9c27b0;
+         animation: 3s infinite spin ease;
+         }
+         .spinner1 span:nth-child(1) {
+         animation-delay: 0s;
+         }
+         .spinner1 span:nth-child(2) {
+         animation-delay: 0.1s;
+         }
+         .spinner1 span:nth-child(3) {
+         animation-delay: 0.2s;
+         }
+         .spinner1 span:nth-child(4) {
+         animation-delay: 0.3s;
+         }
+         .spinner1 span:nth-child(5) {
+         animation-delay: 0.4s;
+         }
+         @keyframes spin {
+         0% {
+         transform: translate(-50%, -50%) rotate(0) scale(0);
+         border-radius: 0%;
+         border-color: #9c27b0;
+         }
+         50% {
+         transform: translate(-50%, -50%) rotate(180deg) scale(2.5);
+         border-radius: 50%;
+         border-color: #e91e63;
+         }
+         70% {
+         transform: translate(-50%, -50%) rotate(180deg) scale(2.5);
+         border-radius: 50%;
+         border-color: #9c27b0;
+         }
+         100% {
+         transform: translate(-50%, -50%) rotate(360deg) scale(0);
+         border-radius: 0%;
+         border-color: #9c27b0;
+         }
+         }
+      </style>
+   </head>
+   <body>
+      <div class="spinner1" id="spi">
+         <span></span>
+         <span></span>
+         <span></span>
+         <span></span>
+         <span></span>
+      </div>
+      <div class="carousel">
+         <div class="carousel__control">
+         </div>
+         <div class="carousel__stage">
+            <div class="spinner spinner--left">
+               <div class="spinner__face js-active">
+                  <div class="content" data-type="iceland" data-bg="#27323c">
+                     <div class="content__left" id="g11">
+                     </div>
+                     <div class="content__right" id="f11">
+                     </div>
+                  </div>
+               </div>
+               <div class="spinner__face">
+                  <div class="content" data-type="china">
+                     <div class="content__left" id="g21">
+                     </div>
+                     <div class="content__right"  id="f21">
+                     </div>
+                  </div>
+               </div>
+               <div class="spinner__face">
+                  <div class="content" data-type="peru">
+                     <div class="content__left" style="background: url('{{yourImg}}') no-repeat fixed left; height:100%; width:50%;">
+                     </div>
+                     <div class="content__right" style="background: url('{{friendImg}}') no-repeat fixed right; height:100%; width:50%; margin-left:50%;">
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!--  Poor man's preloader -->
+      <div style="height: 0; width: 0; overflow: hidden">
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+      <script>
+         let activeIndex = 0;
+         let limit = 0;
+         let disabled = false;
+         let $stage;
+         let $controls;
+         let canvas = false;
+         
+         const SPIN_FORWARD_CLASS = 'js-spin-fwd';
+         const SPIN_BACKWARD_CLASS = 'js-spin-bwd';
+         const DISABLE_TRANSITIONS_CLASS = 'js-transitions-disabled';
+         const SPIN_DUR = 1000;
+         
+         const appendControls = () => {
+         for (let i = 0; i < limit; i++) {
+         $('.carousel__control').append(`<a href="#" data-index="${i}"></a>`);
+         }
+         let height = $('.carousel__control').children().last().outerHeight();
+         
+         $('.carousel__control').css('height', 30 + limit * height);
+         $controls = $('.carousel__control').children();
+         $controls.eq(activeIndex).addClass('active');
+         };
+         
+         const setIndexes = () => {
+         $('.spinner').children().each((i, el) => {
+         $(el).attr('data-index', i);
+         limit++;
+         });
+         };
+         
+         const duplicateSpinner = () => {
+         const $el = $('.spinner').parent();
+         const html = $('.spinner').parent().html();
+         $el.append(html);
+         $('.spinner').last().addClass('spinner--right');
+         $('.spinner--right').removeClass('spinner--left');
+         };
+         
+         const paintFaces = () => {
+         $('.spinner__face').each((i, el) => {
+         const $el = $(el);
+         let color = $(el).attr('data-bg');
+         //$el.children().css('backgroundImage', `url(${getBase64PixelByColor(color)})`);
+         });
+         };
+         
+         const getBase64PixelByColor = hex => {
+         if (!canvas) {
+         canvas = document.createElement('canvas');
+         canvas.height = 1;
+         canvas.width = 1;
+         }
+         if (canvas.getContext) {
+         const ctx = canvas.getContext('2d');
+         ctx.fillStyle = hex;
+         ctx.fillRect(0, 0, 1, 1);
+         return canvas.toDataURL();
+         }
+         return false;
+         };
+         
+         const prepareDom = () => {
+         setIndexes();
+         paintFaces();
+         duplicateSpinner();
+         appendControls();
+         };
+         
+         const spin = (inc = 1) => {
+         $("#spi").show();
+         if (disabled) return;
+         if (!inc) return;
+         activeIndex += inc;
+         disabled = true;
+         
+         if (activeIndex >= limit) {
+         activeIndex = 0;
+         }
+         
+         if (activeIndex < 0) {
+         activeIndex = limit - 1;
+         }
+         
+         const $activeEls = $('.spinner__face.js-active');
+         const $nextEls = $(`.spinner__face[data-index=${activeIndex}]`);
+         $nextEls.addClass('js-next');
+         
+         if (inc > 0) {
+         $stage.addClass(SPIN_FORWARD_CLASS);
+         } else {
+         $stage.addClass(SPIN_BACKWARD_CLASS);
+         }
+         
+         $controls.removeClass('active');
+         $controls.eq(activeIndex).addClass('active');
+         
+         setTimeout(() => {
+         spinCallback(inc);
+         }, SPIN_DUR, inc);
+         };
+         
+         const spinCallback = inc => {
+         
+         drawStuff();
+         
+         $('.js-active').removeClass('js-active');
+         $('.js-next').removeClass('js-next').addClass('js-active');
+         $stage.
+         addClass(DISABLE_TRANSITIONS_CLASS).
+         removeClass(SPIN_FORWARD_CLASS).
+         removeClass(SPIN_BACKWARD_CLASS);
+         
+         $('.js-active').each((i, el) => {
+         const $el = $(el);
+         $el.prependTo($el.parent());
+         });
+         setTimeout(() => {
+         $stage.removeClass(DISABLE_TRANSITIONS_CLASS);
+         disabled = false;
+         }, 100);
+         
+         };
+         
+         const attachListeners = () => {
+         
+         document.onkeyup = e => {
+         switch (e.keyCode) {
+           case 38:
+             spin(-1);
+             break;
+           case 40:
+             spin(1);
+             break;}
+         
+         };
+         
+         $controls.on('click', e => {
+         e.preventDefault();
+         if (disabled) return;
+         const $el = $(e.target);
+         const toIndex = parseInt($el.attr('data-index'), 10);
+         spin(toIndex - activeIndex);
+         
+         });
+         };
+         
+         const assignEls = () => {
+         $stage = $('.carousel__stage');
+         };
+         
+         const init = () => {
+         assignEls();
+         prepareDom();
+         attachListeners();
+         };
+         
+         
+         $(() => {
+         init();
+         });
+      </script>
+      <script>
+         google.charts.load('current', {'packages':['bar']});
+             google.charts.setOnLoadCallback(drawStuff);
+         
+             function drawStuff() {
+               var result=compareAnalysis();
+               console.log(result);
+               var data = new google.visualization.arrayToDataTable([['Languages', 'Percentage'],...result[0]]);
+               var data1 = new google.visualization.arrayToDataTable([['Languages', 'Percentage'],...result[1]]);
+               var data2 = new google.visualization.arrayToDataTable([['Languages', 'Count'],...result[2]]);
+               var data3 = new google.visualization.arrayToDataTable([['Languages', 'Count'],...result[3]]);
+         
+               var options = {
+                   title:'Language Use Comparison',
+                   width:'100%',
+                   height:'50%',
+                 bars: 'horizontal', // Required for Material Bar Charts.
+                 axes: {
+                   x: {
+                     0: { side: 'top', label: 'Percentage'} // Top x-axis.
+                   }
+                 },
+                 bar: { groupWidth: "50%" }
+               };
+
+               var options1 = {
+                   title:'Language Use Count',
+                   width:'100%',
+                   height:'50%',
+                 bars: 'horizontal', // Required for Material Bar Charts.
+                 axes: {
+                   x: {
+                     0: { side: 'top', label: 'Percentage'} // Top x-axis.
+                   }
+                 },
+                 bar: { groupWidth: "50%" },
+                colors: ['#b0120a']
+               };
+
+               var chart = new google.charts.Bar(document.getElementById('g11'));
+               var chart1 = new google.charts.Bar(document.getElementById('f11'));
+               var chart2 = new google.charts.Bar(document.getElementById('g21'));
+               var chart3 = new google.charts.Bar(document.getElementById('f21'));
+               chart.draw(data, options);
+               chart1.draw(data1, options);
+               chart2.draw(data2, options1);
+               chart3.draw(data3, options1);
+               $("#spi").hide();
+             };
+      </script>
+      <script>
+         function compareAnalysis(){
+         console.log(JSON.parse('{{analysisDict|escapejs}}'));
+         console.log(JSON.parse('{{ownerAnalysis|escapejs}}'));
+         var ownerAnalysis=JSON.parse('{{ownerAnalysis|escapejs}}')
+         var competitorAnalysis=JSON.parse('{{analysisDict|escapejs}}')
+         
+         var competitorArray=[];
+         var ownerArray=[];
+         var ownerCount=[];
+         var competitorCount=[];
+         if(ownerAnalysis>=competitorAnalysis){
+           var maxDict=ownerAnalysis;
+           var minDict=competitorAnalysis;
+           for(var i in maxDict){
+             ownerArray.push([i,maxDict[i]['total']/maxDict[i]['count']]);
+             ownerCount.push([i, maxDict[i]['count']]);
+             if(i in competitorAnalysis){
+               competitorArray.push([i,minDict[i]['total']/minDict[i]['count']]);
+               competitorCount.push([i, minDict[i]['count']]);
+               delete minDict[i];
+             }
+             else{
+               competitorArray.push([i,0]);
+               competitorCount.push([i,0]);
+             }
+           }
+           for(var i in minDict){
+             competitorArray.push([i,minDict[i]['total']/minDict[i]['count']]);
+             competitorCount.push([i,minDict[i]['count']]);
+             ownerArray.push([i,0]);
+             ownerCount.push([i,0])
+           }
+         }
+         else{
+           var maxDict=competitorAnalysis;
+           var minDict=ownerAnalysis;
+           for(var i in maxDict){
+             competitorArray.push([i,maxDict[i]['total']/maxDict[i]['count']]);
+             competitorCount.push([i,maxDict[i]['count']]);
+             if(i in ownerAnalysis){
+               ownerArray.push([i,minDict[i]['total']/minDict[i]['count']]);
+               ownerCount.push([i,minDict[i]['count']]);
+               delete minDict[i];
+             }
+             else{
+               ownerArray.push([i,0]);
+               ownerCount.push([i,0])
+             }
+           }
+           for(var i in minDict){
+             ownerArray.push([i,minDict[i]['total']/minDict[i]['count']]);
+             ownerCount.push([i,minDict[i]['count']])
+             competitorArray.push([i,0]);
+             competitorCount.push([i,0]);
+           }
+         }
+         console.log(ownerArray);
+         console.log(competitorArray);
+         
+         return [ownerArray, competitorArray, ownerCount, competitorCount];
+         }
+      </script>
+   </body>
+</html>

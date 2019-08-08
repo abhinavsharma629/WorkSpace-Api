@@ -1,0 +1,191 @@
+<html>
+<head>
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+   
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<style>
+* {
+  font-family: sans-serif;
+  padding: 0px;
+  margin: 0px;
+}
+
+body {
+  background-color: #212121;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
+  margin: 20px;
+}
+
+
+.container {
+  background-color: #ECEFF1;
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  justify-self: center;
+  position: relative;
+  transition: 100ms;
+}
+
+.follow:hover, .icon:hover, .profile-img:hover {
+  cursor: pointer;
+}
+
+.profile-img {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  z-index: 3;
+  margin: 10px;
+  box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.3);
+}
+
+.background-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.name1 {
+  font-size: 22px;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+}
+
+.bio {
+  margin: 15px;
+  margin-top: 0px;
+}
+
+.icon1 {
+  width: 19px;
+  position: absolute;
+  margin-left: -28px;
+  margin-top: 3px;
+}
+
+.follow {
+  font-size: 14px;
+  width: 50px;
+  color: #ECEFF1;
+  z-index: 3;
+  position: absolute;
+  right: 0;
+  margin: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.follow1 {
+  font-size: 14px;
+  width: 70px;
+  color: #ECEFF1;
+  z-index: 3;
+  position: absolute;
+  right: 20%;
+  margin: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: rgba(0,0,0,0.7);
+  cursor: pointer;
+}
+
+
+@media only screen and (max-width: 2000px) {
+  .main {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+@media only screen and (max-width: 1500px) {
+  .main {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media only screen and (max-width: 1100px) {
+  .main {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<br>
+<div class="row" style="margin-left:40%;">
+<button class="btn btn-primary" onclick="display('followers')"><i class="fa">&#xf0c0;</i>&nbsp;Followers</button>&times;&times;
+<button class="btn btn-primary" onclick="display('following')"><i class="fa">&#xf007;</i>&nbsp;Following</button>
+</div>
+<br>
+
+<div class="main" id="followers">
+  {% for i in followers %}
+    <div class="container">
+    <p class="follow1" align="center" onclick="compare('{{i.login}}')">Compare</p>
+    <p class="follow" align="center" onclick="redirect('{{i.login}}')">View</p>
+    <img class="profile-img" src="{{i.avatar_url}}">
+    <img class="background-img" src="https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_960_720.jpg">
+    
+    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{i.login}}">
+    <p class="name1"><img class="icon1" src="https://cdn1.iconfinder.com/data/icons/micon-social-pack/512/twitch-512.png">{{i.login|truncatechars:"10"}}</p>
+    </span>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="main" style="display: none;" id="following">
+  {% for i in following %}
+    <div class="container">
+    <p class="follow1" align="center" onclick="compare('{{i.login}}')">Compare</p>
+    <p class="follow" align="center" onclick="redirect('{{i.login}}')">View</p>
+    <img class="profile-img" src="{{i.avatar_url}}">
+    <img class="background-img" src="https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_960_720.jpg">
+    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{i.login}}">
+    <p class="name1"><img class="icon1" src="https://cdn1.iconfinder.com/data/icons/micon-social-pack/512/twitch-512.png">{{i.login|truncatechars:"10"}}</p>
+    </span>
+</div>
+  {% endfor %}
+</div>
+</body>
+<script>
+function display(type){
+if(type=="followers"){
+    $("#following").removeAttr("style");
+    $("#followers").attr("style", "display: none;");
+}
+else{
+    $("#followers").removeAttr("style");
+    $("#following").attr("style", "display: none;");
+}
+}
+function redirect(username){
+    window.location.href="http://127.0.0.1:8000/hi/friendRepos/"+username;
+}
+function compare(username){
+    window.location.href="http://127.0.0.1:8000/hi/compareProfiles?username="+username;
+}
+</script>
+</html>

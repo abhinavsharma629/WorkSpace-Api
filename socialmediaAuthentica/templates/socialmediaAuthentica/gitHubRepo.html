@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <!-- Material Design for Bootstrap fonts and icons -->
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+      <!-- Material Design for Bootstrap CSS -->
+      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+      <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <style>
+         .row{
+         margin-left: 1%;
+         }
+         #myImg {
+         border-radius: 5px;
+         cursor: pointer;
+         transition: 0.3s;
+         }
+         #myImg:hover {
+         opacity: 0.7;
+         }
+         /* The Modal (background) */
+         .modal {
+         display: none;
+         /* Hidden by default */
+         position: fixed;
+         /* Stay in place */
+         z-index: 1;
+         /* Sit on top */
+         padding-top: 100px;
+         /* Location of the box */
+         left: 0;
+         top: 0;
+         width: 100%;
+         /* Full width */
+         height: 100%;
+         /* Full height */
+         overflow: auto;
+         /* Enable scroll if needed */
+         background-color: rgb(0, 0, 0);
+         /* Fallback color */
+         background-color: rgba(0, 0, 0, 0.9);
+         /* Black w/ opacity */
+         }
+         /* Modal Content (image) */
+         .modal-content {
+         margin: auto;
+         position:relative;
+         display: block;
+         width: 80%;
+         }
+         /* Caption of Modal Image */
+         #caption {
+         margin: auto;
+         display: block;
+         width: 80%;
+         text-align: center;
+         color: #ccc;
+         padding: 10px 0;
+         height: 150px;
+         }
+         /* Add Animation */
+         .modal-content,
+         #caption {
+         -webkit-animation-name: zoom;
+         -webkit-animation-duration: 0.6s;
+         animation-name: zoom;
+         animation-duration: 0.6s;
+         background: white;
+         width:80%;
+         }
+         @-webkit-keyframes zoom {
+         from {
+         -webkit-transform: scale(0)
+         }
+         to {
+         -webkit-transform: scale(1)
+         }
+         }
+         @keyframes zoom {
+         from {
+         transform: scale(0)
+         }
+         to {
+         transform: scale(1)
+         }
+         }
+         /* The Close Button */
+         .close {
+         position: absolute;
+         top: 15px;
+         right: 35px;
+         color: #f1f1f1;
+         font-size: 40px;
+         font-weight: bold;
+         transition: 0.3s;
+         }
+         .close:hover,
+         .close:focus {
+         color: #bbb;
+         text-decoration: none;
+         cursor: pointer;
+         }
+         /* 100% Image Width on Smaller Screens */
+         @media only screen and (max-width: 700px) {
+         .modal-content {
+         width: 100%;
+         }
+         }
+         ::selection {
+         background: transparent;
+         }
+         ::-moz-selection {
+         background: transparent;
+         }
+         html {
+         box-sizing: border-box;
+         }
+         *,
+         *::before,
+         *::after {
+         box-sizing: inherit;
+         }
+         body {
+         background: #efefef;
+         font-size: 100%;
+         /*line-height: 1.5;*/
+         max-height: 100%;
+         max-width: 100%;
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+         color: #787878;
+         }
+         @media (min-width: 900px) {
+         body {
+         padding: 1rem;
+         }
+         }
+         a {
+         text-decoration: none;
+         color: inherit;
+         }
+         [draggable] {
+         -webkit-user-select: none;
+         -moz-user-select: none;
+         -ms-user-select: none;
+         user-select: none;
+         -khtml-user-drag: element;
+         -webkit-user-drag: element;
+         }
+         h1, h2, h3, h4, h5, h6 {
+         margin: 0;
+         font-size: 1rem;
+         font-weight: bold;
+         }
+         .btn {
+         display: inline-block;
+         margin: 1rem 0 0;
+         line-height: 1;
+         font-size: .75rem;
+         font-weight: bold;
+         padding: 0.8rem 2rem;
+         letter-spacing: 1px;
+         text-transform: uppercase;
+         color: white;
+         background: #47cedf;
+         border: none;
+         outline: none;
+         }
+         .btn:hover, .btn:focus {
+         background: #24bccf;
+         cursor: pointer;
+         }
+         .btn:active {
+         -webkit-transform: translateY(2px);
+         transform: translateY(2px);
+         }
+      </style>
+   </head>
+   <body>
+      <br>
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb" id="ol" style="cursor:pointer;">
+            <li class="breadcrumb-item active" aria-current="page">{{repoName}}</li>
+         </ol>
+      </nav>
+      <div class="card">
+         {% comment %} 
+         <div class="card-title">
+            <h4>{{repoName}}</h4>
+         </div>
+         {% endcomment %}
+         <div class="card-body">
+            <table class="table table-hover">
+               <tbody id="tbdy" style="cursor:pointer;">
+               </tbody>
+            </table>
+         </div>
+      </div>
+      <div id="myModal" class="modal" style="width: 100%; height: 100%;">
+         <span class="close">&times;</span>
+         <!-- <img class="modal-content" id="img01"> -->
+         <iframe class="modal-content" id="img01" style="border:2px #ffffff solid;" name="myiFrame" frameborder="1" marginheight="0px" marginwidth="0px" height="100%" width="100%" allowfullscreen></iframe>
+      </div>
+      <script>
+         var a=JSON.parse('{{obj|escapejs}}');
+         console.log(a);
+         var myMap = new Map();
+         var rootMap = new Map();
+         for(var i in a['tree']){
+             var ancestor=a['tree'][i]['path'].split('/');
+             if(ancestor.length===1){
+                 if(rootMap.has('/')){
+                     var curr=rootMap.get('/');
+                     rootMap.set('/', [...curr, a['tree'][i]])
+                 }
+                 else{
+                     var arr=[];
+                     arr=[...arr, a['tree'][i]];
+                     rootMap.set('/', arr);
+                 }
+                 if(a['tree'][i]['type']==="blob"){
+                     var html=`<tr id="`+a['tree'][i]['sha']+`" ondblclick="showBlob('`+a['tree'][i]['sha']+`', '`+a['tree'][i]['path'].replace("'","~|")+`')">`;
+                 }
+                 else{
+                     var html=`<tr id="`+a['tree'][i]['sha']+`" onclick="showTree('`+ancestor[0].replace("'","~|")+`')">`;
+                 }
+                 html+=` <th colspan="2">`+ancestor[0]+`</th>
+                         <td scope="row">`+a['tree'][i]['type']+`</td></tr>`
+                 $("#tbdy").append(html);
+           
+           
+                 if(myMap.has('/')){
+                     var array=myMap.get('/');
+                     myMap.set('/', [...array, a['tree'][i]])
+                 }
+                 else{
+                     var arr=[a['tree'][i]];
+                     myMap.set('/', arr);
+                 }
+             }
+             else{
+                 var anc="";
+                 for(var j=0;j<ancestor.length-1;j++){
+                     anc+="/"+ancestor[j];
+                 }
+                 anc=anc.substr(1,anc.length).replace("'","~|");
+                 //console.log("Ans path is:- "+" "+anc)
+                 if(myMap.has(anc)){
+                     var array1=myMap.get(anc);
+                     myMap.set(anc, [...array1, a['tree'][i]])
+                 }
+                 else{
+                     var arr1=[a['tree'][i]];
+                     myMap.set(anc, arr1);
+                 }
+             }
+         }
+         console.log(myMap)
+         console.log(rootMap) 
+      </script>
+      <script>
+
+      var audioArray=['mp3','ogg'];
+      var videoArray=['mp4'];
+      var imageArray=['jpg', 'jpeg', 'gif'];
+         //ESCAPE SEQUENCE FOR DIR/FILES WITH ' in their names is :- ~|
+         
+         //Showing Only Files Data
+               
+               function showBlob(id, path){
+                   path=path.replace("~|", "'")
+                   //console.log(id);
+                   var settings = {
+                     "url": "https://api.github.com/repos/{{username}}/{{repoName}}/contents/"+path,
+                     "method": "GET",
+                     "headers": {
+                         "Authorization": "Bearer {{access_token}}"
+                     }
+                 }
+                     $.ajax(settings).done(function (response) {
+               
+                     var modal = document.getElementById("myModal");
+                     var modalImg = document.getElementById("img01");
+                     modal.style.display = "block";
+                     var ext=path.split('/')
+                     ext=ext[ext.length-1].split('.');
+                     ext=ext[ext.length-1];
+                     //console.log(ext);
+                     if((audioArray.indexOf(ext))!==-1){
+                        modalImg.src = "data:audio/mp3;base64,"+response['content'];
+                     }
+                     else if((imageArray.indexOf(ext))!==-1){
+                     modalImg.src = "data:image/jpeg;base64,"+response['content'];
+                     }
+                     else if(videoArray.indexOf(ext)!==-1){
+                       modalImg.src = "data:video/mp4;base64,"+response['content'];
+                     }
+                     else if(ext==="docx"){
+                         modalImg.src = "data:application/pdf;base64,"+response['content'];
+                     }
+                     else if(ext==="pdf"){
+                         modalImg.src = "data:application/pdf;base64,"+response['content'];
+                     }
+                     else if(ext==="pptx"){
+                         modalImg.src = "data:application/vnd.openxmlformats-officedocument.presentationml.presentation;base64,"+response['content'];
+                     }
+                     
+                     else{
+                         modalImg.src = "data:text/plain;base64,"+response['content'];
+                     }
+                        var span = document.getElementsByClassName("close")[0];
+               
+                        // When the user clicks on <span> (x), close the modal
+                        span.onclick = function() {
+                            modal.style.display = "none";
+                            var modalImg = document.getElementById("img01");
+                             modalImg.src = "";
+                        }
+                     });    
+               }
+      </script>
+      <script>
+         function showTree(path){
+                console.log(path);
+                $("#tbdy").html("");
+                var curr=myMap.get(path);
+                //console.log("Current is:- "+" "+curr);
+                var path=curr[0]['path'];
+                if(path){
+                    //console.log(path);
+                    $("#ol").html("");
+                    
+                  path=path.split('/');
+                  var s="";
+                  if(path.length===1){
+                      var html=`<li class="breadcrumb-item"><a onclick="showTree('/')">{{repoName}}</a></li>`;
+                      $("#ol").html(html);
+                  }
+                  else{
+                      var html=`<li class="breadcrumb-item"><a onclick="showTree('/')" href="#">{{repoName}}</a></li>`;
+            
+                  for(var i=0;i<path.length-2;i++){
+                      
+                      s+="/"+path[i];
+                      //console.log("Current Path is:- "+" "+s);
+                      html+=`<li class="breadcrumb-item"><a onclick="showTree('`+s.substr(1,s.length).replace("'","")+`')" href="#">`+path[i]+`</a></li>`
+                  }
+                      html+=`<li class="breadcrumb-item active" aria-current="page">`+path[path.length-2]+`</li>`;
+                      $("#ol").html(html);
+                }
+                }
+                  for(var j in curr){
+                    var ancestor=curr[j]['path'].split('/');
+                    //console.log(curr)
+                    ancestor=ancestor[ancestor.length-1]
+                    //console.log("Tree ans:- "+" "+ancestor)
+                    if(curr[j]['type']==="blob"){
+                          var html1=`<tr id="`+curr[j]['sha']+`" ondblclick="showBlob('`+curr[j]['sha']+`', '`+curr[j]['path'].replace("'","~|")+`')">`;
+                      }
+                      else{
+                          var html1=`<tr id="`+curr[j]['sha']+`" onclick="showTree('`+curr[j]['path'].replace("'","~|")+`')">`;
+                      }
+                      html1+=`<th colspan="2">`+ancestor+`</th><td scope="row">`+curr[j]['type']+`</td></tr>`;
+                      $("#tbdy").append(html1);
+                }
+            }
+      </script>
+   </body>
+</html>

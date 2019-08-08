@@ -1,0 +1,54 @@
+[
+    noteId: {
+        noteData: ,
+        sharedAt: ,
+        noteId: ,
+        note_created_date: ,
+        note_last_updated: ,
+        shared_to: ,
+        admin: ,
+        admin_profile_picture: ,
+        occupation: ,
+        likesCount: ,
+        likesUser = [
+            username
+        ]
+        comments = [
+            commentId: {
+                username: date: ,
+                data:
+            },
+            commentId: {
+                username: date: ,
+                data:
+            }
+        ],
+    },
+
+    noteId: {
+        noteData: ,
+        sharedAt: ,
+        noteId: ,
+        note_created_date: ,
+        note_last_updated: ,
+        shared_to: ,
+        admin: ,
+        admin_profile_picture: ,
+        occupation: ,
+        likesCount: ,
+        likesUser = [
+            username
+        ]
+        comments = [
+            commentId: {
+                username: date: ,
+                data:
+            },
+            commentId: {
+                username: date: ,
+                data:
+            }
+        ],
+    },
+
+]
