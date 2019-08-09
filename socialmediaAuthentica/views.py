@@ -34,7 +34,7 @@ from .dropBoxTree import dropBoxTree
 from django.core import serializers
 from django.db.models import Q
 from .userRepo import userRepo, userFollowers, userFollowing
-from .models import Trial
+from .models import Trial, CloudOauth2Details
 from django.views.decorators.cache import cache_page
 from django_user_agents.utils import get_user_agent
 from Notifications.models import Notifications
