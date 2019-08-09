@@ -66,11 +66,14 @@ class saveDeleteNote(APIView):
         print(user_agent)
         details=getDeviceDetails(user_agent, request)
 
-        for users in NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=noteId)).sharedTo.all():
-            print(users)
-            obj,notif=Notifications.objects.get_or_create(fromUser=UserDetails.objects.get(userId=request.user), toUser=UserDetails.objects.get(userId__username=users.sharedTo.userId.username), notification=str(request.user.username+" deleted note with title:- "+savedNoteData.objects.get(noteId=noteId).title+" that was shared With You from "+details))
-            if(notif):
-                obj.save()
+        try:
+            for users in NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=noteId)).sharedTo.all():
+                print(users)
+                obj,notif=Notifications.objects.get_or_create(fromUser=UserDetails.objects.get(userId=request.user), toUser=UserDetails.objects.get(userId__username=users.sharedTo.userId.username), notification=str(request.user.username+" deleted note with title:- "+savedNoteData.objects.get(noteId=noteId).title+" that was shared With You from "+details))
+                if(notif):
+                    obj.save()
+        except Exception as e:
+            print("No Shared Users")
         try:
             savedNoteData.objects.get(noteId=noteId).delete()
             return JsonResponse({"message": "Ok Deleted", "status":"200"})

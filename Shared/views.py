@@ -308,15 +308,18 @@ def specificNoteDetailForGit(request):
     sharedNotesForCurrentUser=NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId')))
     serializers=NotesDetailsSerializer(sharedNotesForCurrentUser)
 
-    obj=CloudOauth2Details.objects.get(userId=request.user)
 
-    return JsonResponse({"message": "Ok", "noteDetails": json.dumps(serializers.data),"gitHubData":json.dumps(sharedNotesForCurrentUser.noteId.gitHubData),"auth_login_name":obj.auth_login_name, "status": "200"})
+    return JsonResponse({"message": "Ok", "noteDetails": json.dumps(serializers.data),"gitHubData":json.dumps(sharedNotesForCurrentUser.noteId.gitHubData), "status": "200"})
     
 @api_view(['GET'])
 def allUserFriends(request):
-    friends=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all()
-    print(friends)
-    serializer=FriendsFormedDetailsSerializer(friends, many=True)
-    print(serializer.data)
+    try:
+        friends=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all()
 
-    return JsonResponse({"list": json.dumps(serializer.data), "status":"200"})
+        print(friends)
+        serializer=FriendsFormedDetailsSerializer(friends, many=True)
+        print(serializer.data)
+        return JsonResponse({"list": json.dumps(serializer.data), "status":"200"})
+    
+    except Exception as e:
+        return JsonResponse({"message": "No Friends", "status":"404"})
