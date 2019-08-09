@@ -182,7 +182,7 @@ def createUser(request, format=None):
             obj1.profilePhoto=params['file']
             #obj1.coverPhoto=params['file1']
             obj1.save()
-            res=requests.post('http://127.0.0.1:8000/user/api/token/', data={'username': params['username'], 'password': params['pass']}).json()
+            res=requests.post('https://shielded-dusk-55059.herokuapp.com/user/api/token/', data={'username': params['username'], 'password': params['pass']}).json()
             print(res)
             return JsonResponse({"message":"Success", "status":"201", 'token_data': res})
         else:
@@ -201,7 +201,7 @@ def validateUser(request, format=None):
     user=authenticate(username=params['username'], password=params['pass'])
     print(user)
     if(user is not None):
-        res=requests.post('http://127.0.0.1:8000/user/api/token/', data={'username': params['username'], 'password': params['pass']}).json()
+        res=requests.post('https://shielded-dusk-55059.herokuapp.com/user/api/token/', data={'username': params['username'], 'password': params['pass']}).json()
         return JsonResponse({"message": "Success", "status":"200", 'token_data': res})
     else:
         return JsonResponse({"message": "Success", "status":"404"})
