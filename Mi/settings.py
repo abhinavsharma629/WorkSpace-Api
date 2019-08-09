@@ -181,7 +181,8 @@ EMAIL_PORT = 587
 
 
 CORS_ORIGIN_WHITELIST = [
-    "http://127.0.0.1:8001"
+    "http://127.0.0.1:8001",
+    "https://obscure-bayou-10492.herokuapp.com"
 ]
 
 
