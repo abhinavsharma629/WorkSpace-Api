@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'Mi.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=dj_database_url.config('DATABASE_URL')
+        default=dj_database_url.config('postgres://xkwomrmbgqvczp:f9ae8151eb283ea46beff8d917a09870fb25214dd8dd120c7dda8607a9a310af@ec2-54-221-238-248.compute-1.amazonaws.com:5432/dch3oggdm23n00')
     )
 }
 
