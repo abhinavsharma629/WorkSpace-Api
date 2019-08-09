@@ -180,7 +180,7 @@ def submitGitHubNote(request):
         import requests
         print(request.META.get('HTTP_AUTHORIZATION'))
         
-        url="http://127.0.0.1:8000/shared/shareNote/"
+        url="https://shielded-dusk-55059.herokuapp.com/shared/shareNote/"
         res=requests.post(url, data={
             "list[]":request.data['list[]'],
             "noteId":obj.noteId
