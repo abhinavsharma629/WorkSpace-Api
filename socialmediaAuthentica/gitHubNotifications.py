@@ -1,7 +1,9 @@
 import json
 import requests
 from django.contrib.auth.models import User
+from .models import AllAuths, DataAnalysis
 
+provider=AllAuths.objects.get(authName='GITHUB')
 
 def getGitHubNotifications(username, access_token):
     obj=User.objects.get(username=username)

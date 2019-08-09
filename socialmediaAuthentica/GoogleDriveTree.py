@@ -1,7 +1,10 @@
 import json
 import requests
 from django.contrib.auth.models import User
-provider="sdf"
+from .models import AllAuths1, DataAnalysis
+
+
+provider=AllAuths1.objects.get(authName='GOOGLE DRIVE')
 
 def googleTree(access_token, username):
 	obj=User.objects.get(username=username)
