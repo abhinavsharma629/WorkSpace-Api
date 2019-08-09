@@ -1,10 +1,10 @@
 import json
 import requests
 from django.contrib.auth.models import User
-from .models import AllAuths1, DataAnalysis
+from .models import AllAuths, DataAnalysis
 
 
-provider=AllAuths1.objects.get(authName='DROPBOX')
+provider=AllAuths.objects.get(authName='DROPBOX')
 
 def dropBoxTree(accessToken, username):
 	obj=User.objects.get(username=username)

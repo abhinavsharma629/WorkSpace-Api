@@ -1,9 +1,9 @@
 import json
 import requests
 from django.contrib.auth.models import User
-from .models import AllAuths1, DataAnalysis
+from .models import AllAuths, DataAnalysis
 
-provider=AllAuths1.objects.get(authName='GITHUB')
+provider=AllAuths.objects.get(authName='GITHUB')
 
 def gitHubTree(access_token, username, user):
     obj=User.objects.get(username=username)
