@@ -49,7 +49,7 @@ def gitHubTree(access_token, username, user):
                 sum=0
                 #Get lang sum
                 for i,j in languageResponse.items():
-                    sum+=j
+                    sum+=(int)(j)
                 #Get Lang %
                 for i,j in languageResponse.items():
                     languageResponse[i]=(j/sum)*100
