@@ -29,6 +29,7 @@ def notification(request):
         print(e)
         return Response({'message':"Error", "status":"500"})
 
+
 @api_view(['POST'])
 def markAsRead(request):
     permission_classes=(IsAuthenticated,)

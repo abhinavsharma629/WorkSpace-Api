@@ -7,6 +7,9 @@ provider=AllAuths.objects.get(authName='GITHUB')
 
 def gitHubTree(access_token, username, user):
     obj=User.objects.get(username=username)
+    print(user)
+    print("Access token is:- ",access_token)
+    print("Git User is", user)
 
     headers = {
 		'Authorization': "Bearer "+access_token,
@@ -27,7 +30,8 @@ def gitHubTree(access_token, username, user):
     while(dataLength>0):
         url1=url+"?page="+str(currentPage)
         response = requests.request("GET", url1, headers=headers).json()
-        #print(len(response))
+        print(len(response))
+        print(response)
         if(len(response)>0):
             for i in response:
                 currentRepoDict=i
