@@ -50,34 +50,37 @@ def gitHubTree(access_token, username, user):
                 print("\n-----------------------\n")
                 #print(languageResponse)
                 sum=0
-                #Get lang sum
-                for i,j in languageResponse.items():
-                    try:
-                        sum+=(int)(j)
-                    except Exception as e:
-                        print(e)
-                #Get Lang %
-                for i,j in languageResponse.items():
-                    languageResponse[i]=(j/sum)*100
-                    
-                    #Get per lang Total
-                    if(i in analysisDict):
-                        analysisDict[i]['count']+=1
-                        analysisDict[i]['total']+=(j/sum)*100
-                    else:
-                        analysisDict[i]={
-                            'total':(j/sum)*100,
-                            'count': 1
-                        }
-                
-                    if(i in totalOfLanguages and currentRepoDict['fork']=="false"):
-                        totalOfLanguages[i]['value']+=(j/sum)*100
+                try:
+                    #Get lang sum
+                    for i,j in languageResponse.items():
+                        try:
+                            sum+=(int)(j)
+                        except Exception as e:
+                            print(e)
+                    #Get Lang %
+                    for i,j in languageResponse.items():
+                        languageResponse[i]=(j/sum)*100
                         
-                    elif((not i in totalOfLanguages) and currentRepoDict['fork']=="false"):
-                        totalOfLanguages[i]={
-                            'value':(j/sum)*100,
-                            'count': 1
-                        }
+                        #Get per lang Total
+                        if(i in analysisDict):
+                            analysisDict[i]['count']+=1
+                            analysisDict[i]['total']+=(j/sum)*100
+                        else:
+                            analysisDict[i]={
+                                'total':(j/sum)*100,
+                                'count': 1
+                            }
+                    
+                        if(i in totalOfLanguages and currentRepoDict['fork']=="false"):
+                            totalOfLanguages[i]['value']+=(j/sum)*100
+                            
+                        elif((not i in totalOfLanguages) and currentRepoDict['fork']=="false"):
+                            totalOfLanguages[i]={
+                                'value':(j/sum)*100,
+                                'count': 1
+                            }
+                except Exception as e:
+                    print(e)
                         
 
                 
