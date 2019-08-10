@@ -26,7 +26,7 @@ class UserDetails(models.Model):
     coverPhoto=models.FileField(upload_to='cover_pictures', null=True, blank=True)
     dateOfBirth=models.DateField()
     gender=models.CharField(max_length=100)
-    photos=models.ManyToManyField(Photos)
+    photos=models.ManyToManyField(Photos, blank=True)
     current_lat=models.FloatField(null=True, blank=True)
     current_long=models.FloatField(null=True, blank=True)
     lat_long=models.PointField(srid=4326, null=True,blank=True, spatial_index=True, geography=True)
