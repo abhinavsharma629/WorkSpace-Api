@@ -310,9 +310,9 @@ def storeCloud(request):
     print(request.POST.get('cred'))
     print(type(request.POST.get('cred')))
     print(request.data)
-    cred=json.loads(request.POST.get('cred'))
+    cred=json.loads(request.data.get('cred'))
 
-    dump=json.loads(request.POST.get('dump'))
+    dump=json.loads(request.data.get('dump'))
 
     userObj=User.objects.get(username=request.user)
     if(CloudOauth2Details.objects.filter(userId=userObj, authName=AllAuths.objects.get(authName=request.POST.get('authName'))).count()==1):
