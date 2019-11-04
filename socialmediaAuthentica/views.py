@@ -315,17 +315,17 @@ def storeCloud(request):
     dump=json.loads(request.data.get('dump'))
 
     userObj=User.objects.get(username=request.user)
-    if(CloudOauth2Details.objects.filter(userId=userObj, authName=AllAuths.objects.get(authName=request.POST.get('authName'))).count()==1):
+    if(CloudOauth2Details.objects.filter(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName'))).count()==1):
         return JsonResponse({"message": "Already Exists", "status": "203"})
     else:
-        if(request.POST.get('authName')=="GOOGLE DRIVE"):
-            cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.POST.get('authName')), auth_login_name=request.POST.get('email'), revokeTokenUri= cred['revoke_uri'], accessToken= cred['access_token'], refreshToken=cred['refresh_token'] , tokenExpiry= cred['token_expiry'], idTokenJwt=cred['id_token_jwt'], tokenId=cred['id_token'], tokenInfoUri=cred['token_info_uri'], accessData=dump)
+        if(request.data.get('authName')=="GOOGLE DRIVE"):
+            cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')), auth_login_name=request.data.get('email'), revokeTokenUri= cred['revoke_uri'], accessToken= cred['access_token'], refreshToken=cred['refresh_token'] , tokenExpiry= cred['token_expiry'], idTokenJwt=cred['id_token_jwt'], tokenId=cred['id_token'], tokenInfoUri=cred['token_info_uri'], accessData=dump)
 
-        elif(request.POST.get('authName')=="DROPBOX"):
-            cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.POST.get('authName')), auth_login_name=request.POST.get('email'), accessToken= cred['access_token'] , tokenId=cred['uid'], accessData=dump)
+        elif(request.data.get('authName')=="DROPBOX"):
+            cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')), auth_login_name=request.data.get('email'), accessToken= cred['access_token'] , tokenId=cred['uid'], accessData=dump)
 
-        elif(request.POST.get('authName')=="GITHUB"):
-            cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.POST.get('authName')),auth_login_name=request.POST.get('auth_login_name'), accessToken= request.POST.get('access_token') , accessData=dump)
+        elif(request.data.get('authName')=="GITHUB"):
+            cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')),auth_login_name=request.data.get('auth_login_name'), accessToken= request.data.get('access_token') , accessData=dump)
 
         if(notif):
             cloudObj.save()
