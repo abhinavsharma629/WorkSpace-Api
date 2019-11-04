@@ -107,7 +107,7 @@ def friendList(request):
     print(followers)
     following=userFollowing(username)
     return render(request, 'socialmediaAuthentication/gitHubFriendList.html', {'access_token':'ce688de4b322051ca95aabbad71ceab62867631a', 'followers':followers['followers'], 'following':following['followingUsers']})
-    
+
 
 
 
@@ -133,7 +133,7 @@ def compareProfiles(request):
             friend_img_url=requests.request("GET", url1).json()['avatar_url']
             obj1=Trial(username=request.GET.get('username'), userRepos=userRepos, url=friend_img_url, analysisDict=analysisDict)
             obj1.save()
-    
+
     url="https://api.github.com/users/abhinavsharma629"
     obj=DataAnalysis.objects.get(user=User.objects.get(username="abhinavsharma629@gmail.com"), classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName='GITHUB'))
     obj2=DataAnalysis.objects.get(user=User.objects.get(username="abhinavsharma629@gmail.com"), classificationOfDataStorageType="ANALYSIS DATA", provider=AllAuths.objects.get(authName='GITHUB'))
@@ -214,7 +214,7 @@ flow = OAuth2WebServerFlow(client_id='484263106620-gqflub2lb8d0bvbof404133q236ut
                             'https://www.googleapis.com/auth/drive.file',
                             'https://www.googleapis.com/auth/drive.appdata'
                             ],
-                            
+
                             redirect_uri='http://127.0.0.1:8000/hi/complete/google-oauth2/')
 
 def login(request):
@@ -224,20 +224,20 @@ def login(request):
 
 
 def complete(request):
-    
+
     code=request.GET.get('code')
     credentials = flow.step2_exchange(code)
     cred=vars(credentials)
     mainDict={}
     mainDict['id_token']=cred['id_token']
     mainDict['token_response']=cred['token_response']
-    
+
     outfile=open('createAGoogleDrive.json', 'w')
-   
+
     dump=json.dumps(vars(credentials), cls=PythonObjectEncoder)
     outfile.write(dump)
     outfile.close()
-    
+
     headers={}
     headers['Authorization']= 'Bearer '+cred['access_token']
     userDetailsFromToken=requests.get('https://oauth2.googleapis.com/tokeninfo?id_token='+cred['id_token_jwt'], headers=headers)
@@ -260,7 +260,7 @@ def complete(request):
     #         print("Exception" ,e)
     # except Exception as e:
     #     obj,notif=User.objects.get_or_create(username=userData['email'], email=userData['email'])
-        
+
     #     if(notif):
     #         obj.save()
     #         obj=User.objects.get(username=userData['email'])
@@ -273,7 +273,7 @@ def complete(request):
 
     # googleTree((vars(credentials)['access_token']), request.user.username)
     googleTree((vars(credentials)['access_token']), userEmail)
-    
+
     #Api
     obj1=DataAnalysis.objects.get(user=User.objects.get(username=userEmail), classificationOfDataStorageType="HIERARCHICAL DATA", provider=AllAuths.objects.get(authName='GOOGLE DRIVE'))
     obj=DataAnalysis.objects.get(user=User.objects.get(username=userEmail), classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName='GOOGLE DRIVE'))
@@ -281,10 +281,10 @@ def complete(request):
     if(notif):
         cloudObj.save()
     #return JsonResponse({'obj':json.dumps(obj.rootPageData), 'obj1':json.dumps(obj1.hierarchicalData), 'gd_access_token':cloudObj.accessToken , 'gd_refresh_token': cloudObj.refreshToken})
-    
+
     return HttpResponseRedirect('/hi/folderView')
-    
-    '''Post request to:- 
+
+    '''Post request to:-
     Refresh token url:- https://www.googleapis.com/oauth2/v4/token
     Content type:-  application/x-www-form-urlencoded
     #Body :- client_secret
@@ -307,7 +307,8 @@ def complete(request):
 @permission_classes((IsAuthenticated, ))
 def storeCloud(request):
     print("Logged in user is:- ",request.user)
-
+    print(request.POST.get('cred'))
+    print(type(request.POST.get('cred')))
     cred=json.loads(request.POST.get('cred'))
 
     dump=json.loads(request.POST.get('dump'))
@@ -318,13 +319,13 @@ def storeCloud(request):
     else:
         if(request.POST.get('authName')=="GOOGLE DRIVE"):
             cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.POST.get('authName')), auth_login_name=request.POST.get('email'), revokeTokenUri= cred['revoke_uri'], accessToken= cred['access_token'], refreshToken=cred['refresh_token'] , tokenExpiry= cred['token_expiry'], idTokenJwt=cred['id_token_jwt'], tokenId=cred['id_token'], tokenInfoUri=cred['token_info_uri'], accessData=dump)
-        
+
         elif(request.POST.get('authName')=="DROPBOX"):
             cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.POST.get('authName')), auth_login_name=request.POST.get('email'), accessToken= cred['access_token'] , tokenId=cred['uid'], accessData=dump)
-        
+
         elif(request.POST.get('authName')=="GITHUB"):
             cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.POST.get('authName')),auth_login_name=request.POST.get('auth_login_name'), accessToken= request.POST.get('access_token') , accessData=dump)
-        
+
         if(notif):
             cloudObj.save()
         return JsonResponse({"message": "Created", "status": "201"})
@@ -338,11 +339,11 @@ def buildDrive(request):
     if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()==0):
         if(request.GET.get('authName')=="GOOGLE DRIVE"):
             googleTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="GOOGLE DRIVE")).accessToken, request.user)
-        
+
         elif(request.GET.get('authName')=="DROPBOX"):
             dropBoxTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="DROPBOX")).accessToken, request.user)
-    
-        
+
+
         elif(request.GET.get('authName')=="GITHUB"):
             obj=CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="GITHUB"))
             gitHubTree(obj.accessToken, request.user, obj.auth_login_name)
@@ -374,7 +375,7 @@ def buildDrive(request):
             return JsonResponse({'RootFolder':json.dumps(obj.rootPageData), 'AnalysisData':json.dumps(obj1.analysisData), 'access_token':cloudObj.accessToken , 'refresh_token': cloudObj.refreshToken})
 
 
-    
+
 @api_view(['DELETE'])
 @permission_classes((IsAuthenticated, ))
 def socialLogout(request):
@@ -435,9 +436,9 @@ def gitHubComplete(request):
     json.dump(concatinatingTheTwoJsonObjects, gitHubCred, indent=4)
     gitHubCred.close()
 
-    
+
     gitHubTree(userDetailsToJson['email']['email'],userDetailsToJson['login'], accessTokenDataToJson['access_token'])
-    
+
     return HttpResponseRedirect('/hi/gitHubfolderView')
 
 def getGitHubNotifications(request):
@@ -455,7 +456,7 @@ class PythonObjectEncoder(JSONEncoder):
             if isinstance(obj, set):
                 return list(obj)
             elif isinstance(obj, (datetime.date, datetime.datetime)):
-                return DjangoJSONEncoder.default(self, obj) 
+                return DjangoJSONEncoder.default(self, obj)
 
 
 
@@ -495,7 +496,7 @@ def redditComplete(request):
     tokenDataToJson=json.loads(tokenData.text)
     print("Json Data:- ",tokenDataToJson)
 
-   
+
 
     redditToken=open('redditCred.json', 'w')
     # header = {
@@ -522,15 +523,15 @@ def redditComplete(request):
     json.dump(redditUserCreds, redditToken)
     redditToken.close()
     return HttpResponse("<code>"+str(redditUserCreds)+"</code>")
-    
+
     # except Exception as e:
     #     return HttpResponse("<pre>Some Error Occured With the OAuth</pre><br><pre>In particular with "+str(e)+"</pre>")
-    
+
 
 
     ''' The refresh token here is permanent
-    To Refresh The Token In reddit:- 
-    
+    To Refresh The Token In reddit:-
+
     url = "https://www.reddit.com/api/v1/access_token"
 
     payload = "grant_type=refresh_token&refresh_token=refreshToken"
@@ -539,7 +540,7 @@ def redditComplete(request):
         'Authorization': "Basic R19xOFBqUnRGcHVhMHc6VjNzUkVyWHpjRm92VUIxaUV3VzMwb2FvUjl3",
         'Cache-Control': "no-cache",
         }
-    
+
     response = requests.request("POST", url, data=payload, headers=headers)
     '''
 
@@ -577,7 +578,7 @@ def twitterLogin(request):
     authToken=(requestAuthToken[0])[12:]
     print(authToken)
     print(requestAuthToken[1][19:])
-    
+
     resourceOwnerAuthTokenDetails.append(authToken)
     resourceOwnerAuthTokenDetails.append(requestAuthToken[1][19:])
     return HttpResponseRedirect('https://api.twitter.com/oauth/authorize?oauth_token='+authToken)
@@ -655,7 +656,7 @@ def twitterComplete(request):
 
 
 #FACEBOOK
-def fbLogin(request):    
+def fbLogin(request):
     return HttpResponseRedirect('/hi/complete/facebook-oauth2')
 
 def fbComplete(request):
@@ -670,7 +671,7 @@ def fbComplete(request):
 def dropboxLogin(request):
     clientId="0g2qw3uaxpgwbsf"
     #url="https://www.dropbox.com/oauth2/authorize?client_id="+clientId+"&response_type=code&redirect_uri=http:127.0.0.1:8000/hi/complete/dropbox-oauth2"
-    
+
     url="https://www.dropbox.com/oauth2/authorize?client_id="+clientId+"&response_type=code&redirect_uri=http://127.0.0.1:8000/hi/complete/dropbox-oauth2"
     # response=requests.get(url)
     # print(response)
@@ -729,7 +730,7 @@ def dropboxComplete(request):
     dropBoxFile=open('dropBoxUserDetails.json', 'w')
     json.dump(dropBoxDetails, dropBoxFile)
     dropBoxFile.close()
-        
+
     email=response1.json()['email']
     dropBoxTree(accessToken, email)
     return HttpResponse("Ok Done")
@@ -782,9 +783,9 @@ def oneDriveComplete(request):
     oneDrive=open('oneDriveUserDetails.json', 'w')
     userCred={}
     userCred['token_details']=response.json()
-    
+
     print(json.dumps(response.json(), indent=2))
-    
+
     userDataUrl="https://graph.microsoft.com/v1.0/me"
     headers = {
     'Content-Type': "application/json",
@@ -799,7 +800,7 @@ def oneDriveComplete(request):
 
     response1 = requests.request("GET", userDataUrl, headers=headers)
     userCred['user_details']=response1.json()
-    
+
     json.dump(userCred, oneDrive)
     oneDrive.close()
     return HttpResponse("OneDrive Done")
