@@ -309,6 +309,7 @@ def storeCloud(request):
     print("Logged in user is:- ",request.user)
     print(request.POST.get('cred'))
     print(type(request.POST.get('cred')))
+    print(request.data)
     cred=json.loads(request.POST.get('cred'))
 
     dump=json.loads(request.POST.get('dump'))
