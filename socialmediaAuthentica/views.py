@@ -843,6 +843,6 @@ def oneDriveComplete(request):
 def validateUserCloud(request):
     print(request.GET.get('authName'))
     if(CloudOauth2Details.objects.filter(userId=request.user, authName=AllAuths.objects.get(authName=request.GET.get('authName'))).count()>0):
-        return JsonResponse({"message": "Success", "status":"200", "authName":request.GET.get('authName'), "access_token":CloudOauth2Details.objects.get(userId=request.user).accessToken, "auth_login_name":CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName=request.GET.get('authName'))).auth_login_name})
+        return JsonResponse({"message": "Success", "status":"200", "authName":request.GET.get('authName'), "access_token":CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName=request.GET.get('authName')).accessToken, "auth_login_name":CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName=request.GET.get('authName'))).auth_login_name})
     else:
         return JsonResponse({"message": "Error", "status":"404"})
