@@ -146,6 +146,7 @@ def compareProfiles(request):
 @permission_classes((IsAuthenticated, ))
 def compareUserProfiles(request):
     params=request.GET
+    print(params)
     url="https://api.github.com/users/"+params['owner_name']
     url1="https://api.github.com/users/"+params['comparing_user']
     userRepos=userRepo(params['owner_name'])
