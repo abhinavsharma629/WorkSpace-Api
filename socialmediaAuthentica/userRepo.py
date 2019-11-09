@@ -1,7 +1,8 @@
 import json
 import requests
 
-def userRepo(username):
+def userRepo(username, access_token):
+    print(username)
     url = "https://api.github.com/users/"+username+"/repos"
     currentPage=1
     dataLength=1
@@ -16,7 +17,7 @@ def userRepo(username):
     while(dataLength>0):
         url1=url+"?page="+str(currentPage)
         headers = {
-		'Authorization': "Bearer e232f00eb7027b8cfa4e0907270fd4613b3401c5",
+		'Authorization': "Bearer "+access_token,
 		'cache-control': "no-cache"
 		}
         response = requests.request("GET", url1, headers=headers).json()
@@ -27,11 +28,11 @@ def userRepo(username):
                 #print(currentRepoDict)
                 languageDetailsUrl = "https://api.github.com/repos/"+username+"/"+currentRepoDict['name']+"/languages"
                 headers = {
-                'Authorization': "Bearer e232f00eb7027b8cfa4e0907270fd4613b3401c5",
+                'Authorization': "Bearer "+access_token,
                 'cache-control': "no-cache"
                 }
                 languageResponse = requests.request("GET", languageDetailsUrl, headers=headers).json()
-                
+
                 sum=0
                 #Get lang sum
                 for i,j in languageResponse.items():
@@ -39,7 +40,7 @@ def userRepo(username):
                 #Get Lang %
                 for i,j in languageResponse.items():
                     languageResponse[i]=(j/sum)*100
-                    
+
                     #Get per lang Total
                     if(i in analysisDict):
                         analysisDict[i]['count']+=1
@@ -49,16 +50,16 @@ def userRepo(username):
                             'total':(j/sum)*100,
                             'count': 1
                         }
-                
+
                     if(i in totalOfLanguages and currentRepoDict['fork']=="false"):
                         totalOfLanguages[i]['value']+=(j/sum)*100
-                        
+
                     elif((not i in totalOfLanguages) and currentRepoDict['fork']=="false"):
                         totalOfLanguages[i]={
                             'value':(j/sum)*100,
                             'count': 1
                         }
-                        
+
                 #All Repo Dict
                 gitHubRepoDict[currentRepoDict['id']]=currentRepoDict
 
@@ -69,7 +70,7 @@ def userRepo(username):
                     'id':id
                 }
                 gitHubRepoDict[currentRepoDict['id']]['language1']=languageResponse
-                
+
                 #Only Forked Repo Dict
                 if(currentRepoDict['fork']=="true"):
                     forkedDict[currentRepoDict['id']]=currentRepoDict
@@ -79,7 +80,7 @@ def userRepo(username):
                         'id':id
                     }
                     forkedDict[currentRepoDict['id']]['language1']=languageResponse
-                
+
                 #Only Private Repo Dict
                 elif(currentRepoDict['private']=="true"):
                     userPrivateDict[currentRepoDict['id']]=currentRepoDict
@@ -89,7 +90,7 @@ def userRepo(username):
                         'id':id
                     }
                     userPrivateDict[currentRepoDict['id']]['language1']=languageResponse
-                    
+
                 #Only Public Repo Dict
                 else:
                     userPublicDict[currentRepoDict['id']]=currentRepoDict
@@ -99,7 +100,7 @@ def userRepo(username):
                         'id':id
                     }
                     userPublicDict[currentRepoDict['id']]['language1']=languageResponse
-                
+
                 #print(json.dumps(gitHubRepoDict, indent=4),'\n\n-----------\n\n')
                 if(gitHubRepoDict[currentRepoDict['id']]['language'] in languageSegregationDict):
                     languageSegregationDict[gitHubRepoDict[currentRepoDict['id']]['language']]['repos'].append(gitHubRepoDict[currentRepoDict['id']])
@@ -112,7 +113,7 @@ def userRepo(username):
             dataLength=0
             break
         currentPage+=1
-    
+
     return [gitHubRepoDict,analysisDict]
 
 def userFollowing(username):
