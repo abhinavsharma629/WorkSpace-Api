@@ -142,6 +142,34 @@ def compareProfiles(request):
     return render(request, 'socialmediaAuthentication/gitHubComparison.html', {'analysisDict': json.dumps(analysisDict),'access_token':'ce688de4b322051ca95aabbad71ceab62867631a','username':request.GET.get('username'), 'obj1':json.dumps(userRepos), 'obj': json.dumps(obj.rootPageData),'ownerAnalysis': json.dumps(obj2.analysisData), 'yourImg':your_img_url, 'friendImg':friend_img_url})
 
 
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def compareUserProfiles(request):
+    params=request.GET
+    url="https://api.github.com/users/"+params['owner_name']
+    url1="https://api.github.com/users/"+params['comparing_user']
+    userRepos=userRepo(params['owner_name'])
+    analysisDict=userRepos[1]
+    userRepos=userRepos[0]
+
+    userRepos1=userRepo(params['comparing_user'])
+    analysisDict1=userRepos1[1]
+    userRepos1=userRepos1[0]
+
+    img_url=requests.request("GET", url).json()['avatar_url']
+    img_url1=requests.request("GET", url1).json()['avatar_url']
+
+
+    return JsonResponse({
+        'img_url':img_url,
+        'comparing_img_url':img_url1,
+        'analysisDict':json.dumps(analysisDict),
+        'analysisDict1':json.dumps(analysisDict1),
+        'userRepos':json.dumps(userRepos),
+        'userRepos1':json.dumps(userRepos1)
+    })
+
+
 
 def friendRepoDetails(request, username):
     sha=request.GET.get('sha')

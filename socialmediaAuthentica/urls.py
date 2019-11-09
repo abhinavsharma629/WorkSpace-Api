@@ -11,7 +11,7 @@ urlpatterns = [
     #Google Auth -D
     path('complete/google-oauth2/', views.complete, name="complete"),
     path('login', views.login, name="login"),
-    
+
     #GitHub Auth -D
     path('complete/gitHub-oauth2', views.gitHubComplete, name="gitHubComplete"),
     path('gitHubLogin', views.gitHubLogin, name="gitHubLogin"),
@@ -45,6 +45,8 @@ urlpatterns = [
     path('index', views.index, name="index"),
     path('folderView', views.folderView, name="folderView"),
 
+    path('compareUserProfiles', views.compareUserProfiles, name="compareUserProfiles"),
+
     path('index1', views.index1, name="index1"),
     path('folderView1', views.folderView1, name="folderView1"),
 
@@ -59,7 +61,7 @@ urlpatterns = [
     path('buildDrive', views.buildDrive, name="buildDrive"),
     path('storeCloud', views.storeCloud, name="storeCloud"),
     path('socialLogout', views.socialLogout, name="socialLogout"),
-    
+
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
