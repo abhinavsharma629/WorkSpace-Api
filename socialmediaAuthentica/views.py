@@ -149,11 +149,11 @@ def compareUserProfiles(request):
     print(params['owner_name'])
     url="https://api.github.com/users/"+params['owner_name']
     url1="https://api.github.com/users/"+params['comparing_user']
-    userRepos=userRepo(params['owner_name'], access_token)
+    userRepos=userRepo(params['owner_name'], params['access_token'])
     analysisDict=userRepos[1]
     userRepos=userRepos[0]
 
-    userRepos1=userRepo(params['comparing_user'], access_token)
+    userRepos1=userRepo(params['comparing_user'], params['access_token'])
     analysisDict1=userRepos1[1]
     userRepos1=userRepos1[0]
 
