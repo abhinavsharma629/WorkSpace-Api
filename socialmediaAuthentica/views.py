@@ -167,7 +167,8 @@ def compareUserProfiles(request):
         'analysisDict':json.dumps(analysisDict),
         'analysisDict1':json.dumps(analysisDict1),
         'userRepos':json.dumps(userRepos),
-        'userRepos1':json.dumps(userRepos1)
+        'userRepos1':json.dumps(userRepos1),
+        'status':"200"
     })
 
 

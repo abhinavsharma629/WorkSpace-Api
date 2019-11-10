@@ -36,21 +36,21 @@ from Notifications.models import Notifications
 from Notifications.UserAgent import getDeviceDetails
 
 class friendRecommendation(APIView):
-    
+
     permission_classes= ((IsAuthenticated, ))
     def get(self,request):
-		
+
         #Using Postgres earthdistance to find points lying within a given radius
-        start=time.time() 
+        start=time.time()
         pointsLyingInRange=UserDetails.objects.all()
-            
+
         if(len(pointsLyingInRange)!=0):
                 #Converting to POINT object
                 #latitude=float(request.GET.get('lat'))
                 #longitude=float(request.GET.get('long'))
                 #radius=(int)(request.GET.get('radius'))
                 obj=UserDetails.objects.get(userId=request.user)
-                
+
                 friendRequestSent=FriendsFormedDetails.objects.filter(user=UserDetails.objects.get(userId=request.user), friend_or_Request=False)
                 friendRequestReceived=FriendsFormedDetails.objects.filter(friend_name=UserDetails.objects.get(userId=request.user), friend_or_Request=False)
                 friendsFormed=FriendsFormedDetails.objects.filter((Q(friend_name=UserDetails.objects.get(userId=request.user)) | Q(user=UserDetails.objects.get(userId=request.user))), friend_or_Request=True)
@@ -64,18 +64,18 @@ class friendRecommendation(APIView):
                     radius=(int)(request.GET.get('distance'))
                     point='POINT('+str(latitude)+' '+str(longitude)+')'
                     pnt = GEOSGeometry(point, srid=4326)
-                    
+
                     pointsLyingInRange = UserDetails.objects.filter(lat_long__distance_lte=(pnt, D(km=int(radius)))).exclude(userId=request.user)
                     #print(pointsLyingInRange)
                     #print(User.logged_in_user_set.filter(user__in=pointsLyingInRange))
                     #print(User.objects.filter(logged_in_user__in=pointsLyingInRange))
                     serializer= UserDetailsSerializer(pointsLyingInRange, many=True)
                     return JsonResponse({"ext_user":json.dumps(serializer.data), "sent":json.dumps(serializer2.data) , "received":json.dumps(serializer3.data), "friend":json.dumps(serializer4.data), "status": "200"})
-                    
+
                 else:
-                    serializer= UserDetailsSerializer(UserDetails.objects.all().exclude(userId=request.user)[:10], many=True)  
+                    serializer= UserDetailsSerializer(UserDetails.objects.all().exclude(userId=request.user)[:10], many=True)
                     return JsonResponse({"ext_user":json.dumps(serializer.data), "sent":json.dumps(serializer2.data) , "received":json.dumps(serializer3.data),"friend":json.dumps(serializer4.data), "status": "200"})
-                    
+
         else:
                 return Response({'Error Message':'Insufficient Data in Database'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
@@ -92,7 +92,7 @@ def createFriend(request):
     #Get User Agent Details
     params=request.data
     print(params)
-    
+
     user_agent = get_user_agent(request)
     print(user_agent)
     details=getDeviceDetails(user_agent, request)
@@ -101,12 +101,14 @@ def createFriend(request):
     if(notif1):
         obj1.save()
 
-    
+
     if(FriendsFormedDetails.objects.filter(user=UserDetails.objects.get(userId=request.user), friend_name=UserDetails.objects.get(userId__username=params['username'])).count()==0):
         obj, notif=FriendsFormedDetails.objects.get_or_create(user=UserDetails.objects.get(userId=request.user), friend_name=UserDetails.objects.get(userId__username=params['username']), access=params['access'])
         if(notif):
             obj.save()
-            return JsonResponse({"message":"Ok Saved", "status": "200"})
+            serializer=FriendsFormedDetailsSerializer(obj)
+            print(json.dumps(serializer.data))
+            return JsonResponse({"message":"Ok Saved", "status": "200", "friend_fromed":json.dumps(serializer.data)})
         else:
             return JsonResponse({"message":"Error", "status": "500"})
     else:
@@ -120,7 +122,7 @@ def cancelRequest(request):
     user_agent = get_user_agent(request)
     print(user_agent)
     details=getDeviceDetails(user_agent, request)
-    
+
     obj,notif=Notifications.objects.get_or_create(fromUser=UserDetails.objects.get(userId=request.user), toUser=UserDetails.objects.get(userId__username=params['username']), notification=str(request.user.username+" canceled the Friend Request from "+details))
     if(notif):
         obj.save()
@@ -153,11 +155,11 @@ def removeFriend(request):
     try:
         if(FriendsFormedDetails.objects.filter(user=UserDetails.objects.get(userId=request.user), friend_name=UserDetails.objects.get(userId__username=params['username'])).count()==1):
             FriendsFormedDetails.objects.get(user=UserDetails.objects.get(userId=request.user), friend_name=UserDetails.objects.get(userId__username=params['username'])).delete()
-        
+
         if(FriendsFormedDetails.objects.filter(user=UserDetails.objects.get(userId__username=params['username']), friend_name=UserDetails.objects.get(userId=request.user)).count()==1):
             FriendsFormedDetails.objects.get(user=UserDetails.objects.get(userId__username=params['username']), friend_name=UserDetails.objects.get(userId=request.user)).delete()
-        
-        
+
+
         #Deleting Shared To From Notes Details For Current Both User and his friend
         sharedNoteData.objects.filter(sharedTo=UserDetails.objects.get(userId=request.user), noteId__userId=UserDetails.objects.get(userId__username=params['username'])).delete()
         sharedNoteData.objects.filter(sharedTo=UserDetails.objects.get(userId__username=params['username']), noteId__userId=UserDetails.objects.get(userId=request.user)).delete()
@@ -165,11 +167,11 @@ def removeFriend(request):
         #Deleting Comments From Notes Details For Current Both User and his friend
         [CommentsOnNotes.objects.get(noteId=likes['noteId']).delete() for likes in NotesDetails.objects.filter(admin=UserDetails.objects.get(userId=request.user), sharedTo__in=sharedNoteData.objects.filter(sharedTo__userId__username=params['username'])).values('noteId', 'comments')]
         [CommentsOnNotes.objects.get(noteId=likes['noteId']).delete() for likes in NotesDetails.objects.filter(admin=UserDetails.objects.get(userId__username=params['username']), sharedTo__in=sharedNoteData.objects.filter(sharedTo__userId=request.user)).values('noteId', 'comments')]
-        
+
         #Deleting Likes From Notes Details For Current Both User and his friend
         [NotesDetails.objects.get(noteId=likes['noteId']).likes.remove(likes['likes']) for likes in NotesDetails.objects.filter(admin=UserDetails.objects.get(userId=request.user), sharedTo__in=sharedNoteData.objects.filter(sharedTo__userId__username=params['username'])).values('noteId', 'likes')]
         [NotesDetails.objects.get(noteId=likes['noteId']).likes.remove(likes['likes']) for likes in NotesDetails.objects.filter(admin=UserDetails.objects.get(userId__username=params['username']), sharedTo__in=sharedNoteData.objects.filter(sharedTo__userId=request.user)).values('noteId', 'likes')]
-        
+
         return JsonResponse({"message":"Deleted", "status": "200"})
     except Exception as e:
         print(e)
@@ -211,7 +213,11 @@ def acceptFriend(request):
                         obj11.friends.add(friend)
                         obj11.save()
                         print("saved2")
-                        return JsonResponse({"message":"Ok Saved", "status": "201"})
+                        serializer=FriendsFormedDetailsSerializer(friend)
+                        print(json.dumps(serializer.data))
+                        return JsonResponse({"message":"Ok Saved", "status": "201", "friend_fromed":json.dumps(serializer.data)})
+                        #return JsonResponse({"message":"Ok Saved", "status": "201"})
+
                     else:
                         return JsonResponse({"message":"Error", "status": "500"})
                 else:
@@ -226,13 +232,20 @@ def acceptFriend(request):
                     getUser1.save()
                     getUser1.friends.add(friend)
                     getUser1.save()
-                    return JsonResponse({"message":"Ok Saved", "status": "201"})
+                    serializer=FriendsFormedDetailsSerializer(friend)
+                    print(json.dumps(serializer.data))
+                    return JsonResponse({"message":"Ok Saved", "status": "201", "friend_fromed":json.dumps(serializer.data)})
+                    #return JsonResponse({"message":"Ok Saved", "status": "201"})
                 else:
                     return JsonResponse({"message":"Error", "status": "500"})
             else:
                 getUser1=UserFriends.objects.get(userId=UserDetails.objects.get(userId__username=params['username']))
                 getUser1.friends.add(friend)
                 getUser1.save()
-                return JsonResponse({"message":"Ok Saved", "status": "201"})
+                serializer=FriendsFormedDetailsSerializer(friend)
+                print(json.dumps(serializer.data))
+                return JsonResponse({"message":"Ok Saved", "status": "201", "friend_fromed":json.dumps(serializer.data)})
+                #return JsonResponse({"message":"Ok Saved", "status": "201"})
+
     else:
         return JsonResponse({"message":"Not Found", "status": "404"})
