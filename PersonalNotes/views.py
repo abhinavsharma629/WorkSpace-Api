@@ -175,6 +175,21 @@ def getAllNotesWithLessData(request):
         return Response({'message':"Error", "status":"500"})
 
 
+#Get all Notes For A User
+@api_view(['GET'])
+def getNoteImage(request):
+    permission_classes=(IsAuthenticated,)
+    try:
+        if(savedNoteData.objects.filter(userId=UserDetails.objects.get(userId=request.user), noteId=request.GET['noteId']).count()>0):
+            data=savedNoteData.objects.get(userId=UserDetails.objects.get(userId=request.user), noteId=request.GET['noteId']).showUpImg
+            return Response({'message':"Ok Done", "showUpImg": data, "status":"200"})
+        else:
+            return Response({'message':"Error", "status":"404"})
+    except Exception as e:
+        print(e)
+        return Response({'message':"Error", "status":"500"})
+
+
 
 @api_view(['POST'])
 def submitGitHubNote(request):

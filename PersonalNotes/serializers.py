@@ -12,4 +12,4 @@ class savedNoteDataSerializer1(serializers.ModelSerializer):
 
 	class Meta:
 		model=savedNoteData  # what module you are going to serialize
-		fields= ('noteId', 'userId', 'typeOfData', 'title', 'caption', 'createdFrom', 'createdAt', 'showUpImg', 'lastUpdated')
+		fields= ('noteId', 'userId', 'typeOfData', 'title', 'caption', 'createdFrom', 'createdAt', 'lastUpdated')

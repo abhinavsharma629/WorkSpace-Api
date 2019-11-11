@@ -12,6 +12,7 @@ urlpatterns = [
     path('getAllNotes', views.getAllNotes, name="getAllNotes"),
     path('getAllNotesWithLessData', views.getAllNotesWithLessData, name="getAllNotesWithLessData"),
     path('editNote', views.editNote, name="editNote"),
+    path('getNoteImage', views.getNoteImage, name="getNoteImage"),
     path('submitGitHubNote', views.submitGitHubNote, name="submitGitHubNote"),
 
    ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
