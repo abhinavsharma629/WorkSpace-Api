@@ -42,10 +42,14 @@ class saveDeleteNote(APIView):
     def post(self, request, format=None):
         params=request.data
 
+        print(params)
+
+        print(params['content'])
+
         user_agent = get_user_agent(request)
         print(user_agent)
         details=getDeviceDetails(user_agent, request)
-        
+
         if('caption' in params):
             obj,notif=savedNoteData.objects.get_or_create(userId=UserDetails.objects.get(userId=request.user), noteData=params['content'], title=params['title'], caption=params['caption'], createdFrom=details, showUpImg=params['imgData'], lastUpdated=timezone.now())
         else:
@@ -81,7 +85,7 @@ class saveDeleteNote(APIView):
             print(e)
             stat=status.HTTP_404_NOT_FOUND
             return Response({"message": "Not Found", "status":"404"})
-    
+
     permission_classes=(IsAuthenticated,)
     #PUT
     def put(self, request, format=None):
@@ -102,7 +106,7 @@ class saveDeleteNote(APIView):
                     obj.save()
         except Exception as e:
             print(e)
-        
+
         try:
             savedNoteData1=savedNoteData.objects.get(noteId=noteId)
             savedNoteData1.noteData=params['content']
@@ -119,7 +123,7 @@ class saveDeleteNote(APIView):
 def editNote(request):
     permission_classes=(IsAuthenticated,)
     parser_classes = (MultiPartParser,)
-    
+
     params=request.data
     #user=params['user']
     noteId=params['noteId']
@@ -137,10 +141,10 @@ def editNote(request):
         print(e)
         stat=status.HTTP_404_NOT_FOUND
         return Response({'message':"Error"}, status=stat)
-    
+
     #To serialize all data of the particular user at once
     # serializer = serializers.serialize('json', savedNoteData.objects.all(), fields=('noteId', 'username','noteData', 'createdAt', 'lastUpdated'))
-        
+
     # print(serializer)
     # return Response(serializer, status=stat)
 
@@ -162,9 +166,9 @@ def submitGitHubNote(request):
     permission_classes=(IsAuthenticated,)
     parser_classes = [JSONParser]
 
-    
+
     params=request.data
-    
+
     user_agent = get_user_agent(request)
     print(user_agent)
     details=getDeviceDetails(user_agent, request)
@@ -182,7 +186,7 @@ def submitGitHubNote(request):
         obj.save()
         import requests
         print(request.META.get('HTTP_AUTHORIZATION'))
-        
+
         url="https://shielded-dusk-55059.herokuapp.com/shared/shareNote/"
         res=requests.post(url, data={
             "list[]":request.data['list[]'],
@@ -190,7 +194,7 @@ def submitGitHubNote(request):
         }, headers={
             "Authorization": request.META.get('HTTP_AUTHORIZATION')
         }).json()
-        
+
         if(res['status']=="201"):
             return JsonResponse({'message':"Ok Created", "status":"201", "id": obj.noteId, "date": obj.createdAt})
         else:
