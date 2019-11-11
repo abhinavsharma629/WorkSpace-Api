@@ -33,8 +33,8 @@ def shareNote(request):
     print(request.POST)
     print("\n\n")
     print(request.data)
-    friends=request.data.get('list[]')
-    print(request.data.get('list[]'), request.data.get('noteId'))
+    friends=request.data.get('list')
+    print(request.data.get('list'), request.data.get('noteId'))
 
     user_agent = get_user_agent(request)
     print(user_agent)
@@ -78,8 +78,8 @@ def shareNote(request):
 def deleteSharedNote(request):
     permission_classes=(IsAuthenticated,)
 
-    friends=request.data.get('list[]')
-    print(request.data.get('list[]'), request.data.get('noteId'))
+    friends=request.data.get('list')
+    print(request.data.get('list'), request.data.get('noteId'))
 
     user_agent = get_user_agent(request)
     print(user_agent)
