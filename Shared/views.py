@@ -130,10 +130,11 @@ def getFriends(request):
 
     if(UserFriends.objects.filter(userId=UserDetails.objects.get(userId=request.user)).count()>0):
 
+        #Gives error as not unique friendsFormed model entry attached to every user friend formation. Therefore though the below query is correct but fails for cases in which current logged in user is as the friend_name entry for current friendsFormed entry
         print(sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo'))
         print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all().values('user__id'))
         print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)))
-        sharedUsers=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.exclude(user__id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo'))
+        sharedUsers=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.exclude(Q(user__id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo')), Q(friend_name__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo')))
 
         print(sharedUsers)
         serializers=FriendsFormedDetailsSerializer(sharedUsers, many=True)
