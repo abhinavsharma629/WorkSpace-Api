@@ -130,8 +130,8 @@ def getFriends(request):
 
     if(UserFriends.objects.filter(userId=UserDetails.objects.get(userId=request.user)).count()>0):
 
-        print(sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo__id'))
-        print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all().values('friend_name'))
+        print(sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo'))
+        print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all().values('friend_name__id'))
         print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)))
         sharedUsers=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.exclude(friend_name_id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo'))
 
