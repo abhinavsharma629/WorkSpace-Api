@@ -119,6 +119,9 @@ def noteSharedTo(request):
 def getFriends(request):
     permission_classes=(IsAuthenticated,)
 
+    print(request.GET)
+    print("\n\n")
+    print(request.data)
     shared=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId')))
     print(shared)
 
