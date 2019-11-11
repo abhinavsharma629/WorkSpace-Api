@@ -155,11 +155,26 @@ def getAllNotes(request):
     permission_classes=(IsAuthenticated,)
     try:
         data=savedNoteData.objects.filter(userId=UserDetails.objects.get(userId=request.user), typeOfData="note").order_by('-createdAt')
+        serializedData=savedNoteDataSerializer(data, many=True)
+        return Response({'message':"Ok Done", "data": json.dumps(serializedData.data), "status":"200"})
+    except Exception as e:
+        print(e)
+        return Response({'message':"Error", "status":"500"})
+
+
+#Get all Notes For A User
+@api_view(['GET'])
+def getAllNotesWithLessData(request):
+    permission_classes=(IsAuthenticated,)
+    try:
+        data=savedNoteData.objects.filter(userId=UserDetails.objects.get(userId=request.user), typeOfData="note").order_by('-createdAt')
         serializedData=savedNoteDataSerializer1(data, many=True)
         return Response({'message':"Ok Done", "data": json.dumps(serializedData.data), "status":"200"})
     except Exception as e:
         print(e)
         return Response({'message':"Error", "status":"500"})
+
+
 
 @api_view(['POST'])
 def submitGitHubNote(request):

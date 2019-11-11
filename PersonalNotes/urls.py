@@ -6,10 +6,11 @@ from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
-    
+
 	# Compiler
     path('saveDeleteNote', views.saveDeleteNote.as_view()),
     path('getAllNotes', views.getAllNotes, name="getAllNotes"),
+    path('getAllNotesWithLessData', views.getAllNotesWithLessData, name="getAllNotesWithLessData"),
     path('editNote', views.editNote, name="editNote"),
     path('submitGitHubNote', views.submitGitHubNote, name="submitGitHubNote"),
 
