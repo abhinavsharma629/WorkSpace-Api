@@ -33,8 +33,8 @@ def shareNote(request):
     print(request.POST)
     print("\n\n")
     print(request.data)
-    friends=request.POST.getlist('list[]')
-    print(request.POST.getlist('list[]'), request.POST.get('noteId'))
+    friends=request.data.getlist('list[]')
+    print(request.data.getlist('list[]'), request.data.get('noteId'))
 
     user_agent = get_user_agent(request)
     print(user_agent)
@@ -51,11 +51,11 @@ def shareNote(request):
             if(notif):
                 obj.save()
 
-            obj,notif=sharedNoteData.objects.get_or_create(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId')), sharedTo=UserDetails.objects.get(userId__username=currName), sharedFrom=details)
+            obj,notif=sharedNoteData.objects.get_or_create(noteId=savedNoteData.objects.get(noteId=request.data.get('noteId')), sharedTo=UserDetails.objects.get(userId__username=currName), sharedFrom=details)
             if(notif):
                 obj.save()
-                if(NotesDetails.objects.filter(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId'))).count()==0):
-                    obj1, notif1=NotesDetails.objects.get_or_create(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId')), admin=UserDetails.objects.get(userId=request.user))
+                if(NotesDetails.objects.filter(noteId=savedNoteData.objects.get(noteId=request.data.get('noteId'))).count()==0):
+                    obj1, notif1=NotesDetails.objects.get_or_create(noteId=savedNoteData.objects.get(noteId=request.data.get('noteId')), admin=UserDetails.objects.get(userId=request.user))
                     if(notif1):
                         obj1.save()
                         obj1.sharedTo.add(obj)
@@ -64,7 +64,7 @@ def shareNote(request):
                     else:
                         return JsonResponse({"message":"Error", "status":"500"})
                 else:
-                    getNote=NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId')))
+                    getNote=NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.data.get('noteId')))
                     getNote.sharedTo.add(obj)
                     getNote.save()
                     return JsonResponse({"message":"Ok Shared", "status":"201"})
@@ -78,8 +78,8 @@ def shareNote(request):
 def deleteSharedNote(request):
     permission_classes=(IsAuthenticated,)
 
-    friends=request.POST.getlist('list[]')
-    print(request.POST.getlist('list[]'), request.POST.get('noteId'))
+    friends=request.data.getlist('list[]')
+    print(request.data.getlist('list[]'), request.data.get('noteId'))
 
     user_agent = get_user_agent(request)
     print(user_agent)
@@ -90,9 +90,9 @@ def deleteSharedNote(request):
             obj,notif=Notifications.objects.get_or_create(fromUser=UserDetails.objects.get(userId=request.user), toUser=UserDetails.objects.get(userId__username=currName), notification=str(request.user.username+" deleted a shared note from"+details))
             if(notif):
                 obj.save()
-            sharedNoteData.objects.get(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId')), sharedTo=UserDetails.objects.get(userId__username=currName)).delete()
-            NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId'))).comments.filter(userId=UserDetails.objects.get(userId__username=currName)).delete()
-            [NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId'))).likes.remove(user) for user in NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId'))).likes.filter(userId=User.objects.get(username=currName))]
+            sharedNoteData.objects.get(noteId=savedNoteData.objects.get(noteId=request.data.get('noteId')), sharedTo=UserDetails.objects.get(userId__username=currName)).delete()
+            NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.data.get('noteId'))).comments.filter(userId=UserDetails.objects.get(userId__username=currName)).delete()
+            [NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.data.get('noteId'))).likes.remove(user) for user in NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.data.get('noteId'))).likes.filter(userId=User.objects.get(username=currName))]
 
         return JsonResponse({"message":"Ok Shared", "status":"200"})
     except Exception as e:
