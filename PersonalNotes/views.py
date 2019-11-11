@@ -38,13 +38,12 @@ class saveDeleteNote(APIView):
             return Response({"message": "No Such Note Present"}, status=status.HTTP_404_NOT_FOUND)
 
     permission_classes=(IsAuthenticated,)
+    parser_classes = (MultiPartParser,)
     #POST SAVE
-    def post(self, request, format=None):
-        params=request.POST
+    def post(self, request):
+        params=request.data
 
-        print(request.POST)
-
-        print(params['content'])
+        print(request.user)
 
         user_agent = get_user_agent(request)
         print(user_agent)
@@ -61,6 +60,7 @@ class saveDeleteNote(APIView):
             return JsonResponse({'message':"Error", "status":"500"})
 
     permission_classes=(IsAuthenticated,)
+
     #DELETE
     def delete(self, request, format=None):
         params=request.data
