@@ -134,7 +134,7 @@ def getFriends(request):
         print(sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo'))
         print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all().values('user__id'))
         print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)))
-        sharedUsers=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.exclude(Q(user__id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo')), Q(friend_name_id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo')))
+        sharedUsers=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.exclude(Q(user__id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo')) | Q(friend_name_id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo')))
 
         print(sharedUsers)
         serializers=FriendsFormedDetailsSerializer(sharedUsers, many=True)
