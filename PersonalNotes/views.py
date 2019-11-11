@@ -43,6 +43,8 @@ class saveDeleteNote(APIView):
         parser_classes = (MultiPartParser,)
         params=request.data
 
+        print(params)
+
         user_agent = get_user_agent(request)
         print(user_agent)
         details=getDeviceDetails(user_agent, request)
