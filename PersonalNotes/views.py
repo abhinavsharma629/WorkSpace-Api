@@ -50,9 +50,9 @@ class saveDeleteNote(APIView):
         details=getDeviceDetails(user_agent, request)
 
         if('caption' in params):
-            obj,notif=savedNoteData.objects.get_or_create(userId=UserDetails.objects.get(userId=request.user), noteData=params['content'], title=params['title'], caption=params['caption'], createdFrom=details, showUpImg=params['imgData'], lastUpdated=timezone.now())
+            obj,notif=savedNoteData.objects.get_or_create(userId=UserDetails.objects.get(userId=request.user), noteData=params['content'],typeOfData="note", title=params['title'], caption=params['caption'], createdFrom=details, showUpImg=params['imgData'], lastUpdated=timezone.now())
         else:
-            obj,notif=savedNoteData.objects.get_or_create(userId=UserDetails.objects.get(userId=request.user), noteData=params['content'], title=params['title'], createdFrom=details, showUpImg=params['imgData'],  lastUpdated=timezone.now())
+            obj,notif=savedNoteData.objects.get_or_create(userId=UserDetails.objects.get(userId=request.user), noteData=params['content'], typeOfData="note", title=params['title'], createdFrom=details, showUpImg=params['imgData'],  lastUpdated=timezone.now())
         if notif is True:
             obj.save()
             return JsonResponse({'message':"Ok Created", "status":"201", "id": obj.noteId, "date": obj.createdAt})
@@ -154,7 +154,7 @@ def editNote(request):
 def getAllNotes(request):
     permission_classes=(IsAuthenticated,)
     try:
-        data=savedNoteData.objects.filter(userId=UserDetails.objects.get(userId=request.user), typeOfData="").order_by('-createdAt')
+        data=savedNoteData.objects.filter(userId=UserDetails.objects.get(userId=request.user), typeOfData="note").order_by('-createdAt')
         serializedData=savedNoteDataSerializer(data, many=True)
         return Response({'message':"Ok Done", "data": json.dumps(serializedData.data), "status":"200"})
     except Exception as e:
