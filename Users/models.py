@@ -32,4 +32,4 @@ class UserDetails(models.Model):
     lat_long=models.PointField(srid=4326, null=True,blank=True, spatial_index=True, geography=True)
 
     def __str__(self):
-        return self.userId  
+        return self.id  
