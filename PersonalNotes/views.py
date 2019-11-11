@@ -40,6 +40,7 @@ class saveDeleteNote(APIView):
     permission_classes=(IsAuthenticated,)
     #POST SAVE
     def post(self, request, format=None):
+        parser_classes = (MultiPartParser,)
         params=request.data
 
         user_agent = get_user_agent(request)
