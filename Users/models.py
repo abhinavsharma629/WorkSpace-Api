@@ -30,3 +30,6 @@ class UserDetails(models.Model):
     current_lat=models.FloatField(null=True, blank=True)
     current_long=models.FloatField(null=True, blank=True)
     lat_long=models.PointField(srid=4326, null=True,blank=True, spatial_index=True, geography=True)
+
+    def __str__(self):
+        return self.userId+" "+self.id        
