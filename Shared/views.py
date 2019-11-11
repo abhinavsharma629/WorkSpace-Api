@@ -131,9 +131,9 @@ def getFriends(request):
     if(UserFriends.objects.filter(userId=UserDetails.objects.get(userId=request.user)).count()>0):
 
         #Gives error as not unique friendsFormed model entry attached to every user friend formation. Therefore though the below query is correct but fails for cases in which current logged in user is as the friend_name entry for current friendsFormed entry
-        print(sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo'))
-        print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all().values('user__id'))
-        print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)))
+        # print(sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo'))
+        # print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all().values('user__id'))
+        # print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)))
         sharedUsers=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.exclude(Q(user__id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo')) | Q(friend_name_id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo')))
 
         print(sharedUsers)
@@ -150,6 +150,46 @@ def getFriends(request):
     #     return JsonResponse({"list":json.dumps(serializer.data), "status": "200"})
     # else:
     #     return JsonResponse({"message":"No Friends", "status": "404"})
+
+
+
+@api_view(['GET'])
+def getUnshareFriends(request):
+    permission_classes=(IsAuthenticated,)
+
+    print(request.GET)
+    print("\n\n")
+    print(request.data)
+    shared=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId')))
+    print(shared)
+
+    serializers1=sharedNoteDataSerializer(shared, many=True)
+    print(json.dumps(serializers1.data, indent=4))
+
+    if(UserFriends.objects.filter(userId=UserDetails.objects.get(userId=request.user)).count()>0):
+
+        #Gives error as not unique friendsFormed model entry attached to every user friend formation. Therefore though the below query is correct but fails for cases in which current logged in user is as the friend_name entry for current friendsFormed entry
+        # print(sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo'))
+        # print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all().values('user__id'))
+        # print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)))
+        sharedUsers=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.exclude(~Q(user__id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo')) & ~Q(friend_name_id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo')))
+
+        print(sharedUsers)
+        serializers=FriendsFormedDetailsSerializer(sharedUsers, many=True)
+        print(json.dumps(serializers.data, indent=4))
+        return JsonResponse({"list":json.dumps(serializers.data) ,"status": "200"})
+    else:
+        return JsonResponse({"message":"No Friends Present" , "status": "404"})
+    # if(UserFriends.objects.filter(userId=request.user).count()>0):
+    #     obj=UserFriends.objects.get(userId=request.user)
+    #     print(obj)
+    #     friendsList=obj.friends.all()
+    #     serializer=FriendsFormedDetailsSerializer(friendsList, many=True)
+    #     return JsonResponse({"list":json.dumps(serializer.data), "status": "200"})
+    # else:
+    #     return JsonResponse({"message":"No Friends", "status": "404"})
+
+
 
 @api_view(['GET'])
 def sharedNotes(request):
