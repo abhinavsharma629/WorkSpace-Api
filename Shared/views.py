@@ -30,20 +30,23 @@ from socialmediaAuthentica.models import CloudOauth2Details
 def shareNote(request):
     permission_classes=(IsAuthenticated,)
 
+    print(request.POST)
+    print("\n\n")
+    print(request.data)
     friends=request.POST.getlist('list[]')
     print(request.POST.getlist('list[]'), request.POST.get('noteId'))
-    
+
     user_agent = get_user_agent(request)
     print(user_agent)
     details=getDeviceDetails(user_agent, request)
-    
+
     '''May Fail in cases like if a user changes his/her username
     sharedNoteData.objects.bulk_create(
         [sharedNoteData(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId')), admin=User.objects.get(username=request.user.username), sharedTo=User.objects.get(username=currName)) for currName in friends]
      ) '''
     try:
         for currName in friends:
-                
+
             obj,notif=Notifications.objects.get_or_create(fromUser=UserDetails.objects.get(userId=request.user), toUser=UserDetails.objects.get(userId__username=currName), notification=str(request.user.username+" shared a note With You from"+details))
             if(notif):
                 obj.save()
@@ -61,7 +64,7 @@ def shareNote(request):
                     else:
                         return JsonResponse({"message":"Error", "status":"500"})
                 else:
-                    getNote=NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId')))         
+                    getNote=NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId')))
                     getNote.sharedTo.add(obj)
                     getNote.save()
                     return JsonResponse({"message":"Ok Shared", "status":"201"})
@@ -77,7 +80,7 @@ def deleteSharedNote(request):
 
     friends=request.POST.getlist('list[]')
     print(request.POST.getlist('list[]'), request.POST.get('noteId'))
-    
+
     user_agent = get_user_agent(request)
     print(user_agent)
     details=getDeviceDetails(user_agent, request)
@@ -90,7 +93,7 @@ def deleteSharedNote(request):
             sharedNoteData.objects.get(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId')), sharedTo=UserDetails.objects.get(userId__username=currName)).delete()
             NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId'))).comments.filter(userId=UserDetails.objects.get(userId__username=currName)).delete()
             [NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId'))).likes.remove(user) for user in NotesDetails.objects.get(noteId=savedNoteData.objects.get(noteId=request.POST.get('noteId'))).likes.filter(userId=User.objects.get(username=currName))]
-            
+
         return JsonResponse({"message":"Ok Shared", "status":"200"})
     except Exception as e:
         print(e)
@@ -104,9 +107,9 @@ def noteSharedTo(request):
     try:
         sharedUsers=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId')))
         serializers=sharedNoteDataSerializer(sharedUsers, many=True)
-        
+
         return JsonResponse({"sharedTo":json.dumps(serializers.data), "status":"200"})
-    
+
     except Exception as e:
         print(e)
         return JsonResponse({"message":"Error", "status":"500"})
@@ -121,10 +124,10 @@ def getFriends(request):
 
     serializers1=sharedNoteDataSerializer(shared, many=True)
     print(json.dumps(serializers1.data, indent=4))
-    
+
     if(UserFriends.objects.filter(userId=UserDetails.objects.get(userId=request.user)).count()>0):
         sharedUsers=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.exclude(friend_name_id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo'))
-    
+
         print(sharedUsers)
         serializers=FriendsFormedDetailsSerializer(sharedUsers, many=True)
         print(json.dumps(serializers.data, indent=4))
@@ -153,16 +156,16 @@ def sharedNotes(request):
 class likeOnNote(APIView):
     permission_classes=(IsAuthenticated,)
     def post(self, request):
-        
+
         user_agent = get_user_agent(request)
         print(user_agent)
         details=getDeviceDetails(user_agent, request)
-        
-        
+
+
 
         print(NotesDetails.objects.get(noteId=request.data['noteId']).likes.all())
         if(not UserDetails.objects.get(userId=request.user) in NotesDetails.objects.get(noteId=request.data['noteId']).likes.all()):
-            
+
             #Like Notif to Admin
             if(request.user.username!=NotesDetails.objects.get(noteId=request.data['noteId']).admin.userId.username):
                 obj,notif=Notifications.objects.get_or_create(fromUser=UserDetails.objects.get(userId=request.user), toUser=NotesDetails.objects.get(noteId=request.data['noteId']).admin, notification=str(request.user.username+" liked note with title:- "+NotesDetails.objects.get(noteId=request.data['noteId']).noteId.title+" that was shared by "+NotesDetails.objects.get(noteId=request.data['noteId']).admin.userId.username+" from "+details))
@@ -182,7 +185,7 @@ class likeOnNote(APIView):
             obj1.likesCount+=1
             obj1.save()
             return JsonResponse({"message":"Created" ,"status": "201"})
-    
+
     permission_classes=(IsAuthenticated,)
     def delete(self, request):
         print("inside")
@@ -191,7 +194,7 @@ class likeOnNote(APIView):
         user_agent = get_user_agent(request)
         print(user_agent)
         details=getDeviceDetails(user_agent, request)
-        
+
         if(request.user.username!=NotesDetails.objects.get(noteId=request.data['noteId']).admin.userId.username):
             #Disike Comment to Note Admin
             obj,notif=Notifications.objects.get_or_create(fromUser=UserDetails.objects.get(userId=request.user), toUser=NotesDetails.objects.get(noteId=request.data['noteId']).admin, notification=str(request.user.username+" disliked the note with title:- "+NotesDetails.objects.get(noteId=request.data['noteId']).noteId.title+" that was shared by "+NotesDetails.objects.get(noteId=request.data['noteId']).admin.userId.username+" from "+details))
@@ -211,7 +214,7 @@ class likeOnNote(APIView):
         like.likes.remove(UserDetails.objects.get(userId=request.user))
         like.save()
         return JsonResponse({"message":"Removed" ,"status": "200"})
-        
+
 
 class commentOnNote(APIView):
     permission_classes=(IsAuthenticated,)
@@ -221,7 +224,7 @@ class commentOnNote(APIView):
         user_agent = get_user_agent(request)
         print(user_agent)
         details=getDeviceDetails(user_agent, request)
-        
+
         #Comment Notif To Note Admin
         if(request.user.username!=NotesDetails.objects.get(noteId=request.data['noteId']).admin.userId.username):
             obj,notif=Notifications.objects.get_or_create(fromUser=UserDetails.objects.get(userId=request.user), toUser=NotesDetails.objects.get(noteId=request.data['noteId']).admin, notification=str(request.user.username+" commented '"+request.data['comment'][0:10]+"...' on the note with title:- "+NotesDetails.objects.get(noteId=request.data['noteId']).noteId.title+" that was shared by "+NotesDetails.objects.get(noteId=request.data['noteId']).admin.userId.username+" from "+details))
@@ -246,23 +249,23 @@ class commentOnNote(APIView):
             return JsonResponse({"message":"Created" ,"status": "201", "generatedId":comment.commentId})
         else:
             return JsonResponse({"message":"Error" ,"status": "500"})
-    
+
     permission_classes=(IsAuthenticated,)
     def delete(self, request):
         CommentsOnNotes.objects.get(commentId=request.data['commentId']).delete()
         return JsonResponse({"message":"Removed" ,"status": "200"})
-        
+
 
 @api_view(['GET'])
 def noteDetails(request):
     permission_classes=(IsAuthenticated,)
-    
+
     sharedNotesForCurrentUser=NotesDetails.objects.filter(sharedTo__sharedTo__userId__exact=UserDetails.objects.get(userId=request.user).userId)
     serializers=NotesDetailsSerializer(sharedNotesForCurrentUser, many=True)
 
     likesNotesForCurrentUser=NotesDetails.objects.filter(likes__userId=request.user)
     likes_serializer=NotesDetailsSerializer(likesNotesForCurrentUser, many=True)
-    
+
     sharedDetails=sharedNoteData.objects.filter(sharedTo=UserDetails.objects.get(userId=request.user))
     print(sharedDetails)
     serializers1=sharedNotesWithoutDetailsSerializer(sharedDetails, many=True)
@@ -273,7 +276,7 @@ def noteDetails(request):
 @api_view(['GET'])
 def selfSharedNoteDetails(request):
     permission_classes=(IsAuthenticated,)
-    
+
     sharedNotesForCurrentUser=NotesDetails.objects.filter(admin=UserDetails.objects.get(userId=request.user))
     serializers=NotesDetailsSerializer(sharedNotesForCurrentUser, many=True)
     print(serializers.data)
@@ -295,9 +298,9 @@ def specificNoteDetail(request):
     print(request.GET.get('noteId'))
     sharedNotesForCurrentUser=NotesDetails.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId')))
     serializers=NotesDetailsSerializer(sharedNotesForCurrentUser, many=True)
-    
+
     return JsonResponse({"message": "Ok", "noteDetails": json.dumps(serializers.data), "status": "200"})
-    
+
 
 @api_view(['GET'])
 def specificNoteDetailForGit(request):
@@ -310,7 +313,7 @@ def specificNoteDetailForGit(request):
 
 
     return JsonResponse({"message": "Ok", "noteDetails": json.dumps(serializers.data),"gitHubData":json.dumps(sharedNotesForCurrentUser.noteId.gitHubData), "status": "200"})
-    
+
 @api_view(['GET'])
 def allUserFriends(request):
     try:
@@ -320,6 +323,6 @@ def allUserFriends(request):
         serializer=FriendsFormedDetailsSerializer(friends, many=True)
         print(serializer.data)
         return JsonResponse({"list": json.dumps(serializer.data), "status":"200"})
-    
+
     except Exception as e:
         return JsonResponse({"message": "No Friends", "status":"404"})
