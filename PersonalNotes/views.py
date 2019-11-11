@@ -40,9 +40,9 @@ class saveDeleteNote(APIView):
     permission_classes=(IsAuthenticated,)
     #POST SAVE
     def post(self, request, format=None):
-        params=request.data
+        params=request.POST
 
-        print(params)
+        print(request.POST)
 
         print(params['content'])
 
