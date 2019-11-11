@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import savedNoteData
-from .serializers import savedNoteDataSerializer
+from .serializers import savedNoteDataSerializer, savedNoteDataSerializer1
 from django.db.models import Q
 from django.http import JsonResponse
 from rest_framework.parsers import MultiPartParser
@@ -155,7 +155,7 @@ def getAllNotes(request):
     permission_classes=(IsAuthenticated,)
     try:
         data=savedNoteData.objects.filter(userId=UserDetails.objects.get(userId=request.user), typeOfData="note").order_by('-createdAt')
-        serializedData=savedNoteDataSerializer(data, many=True)
+        serializedData=savedNoteDataSerializer1(data, many=True)
         return Response({'message':"Ok Done", "data": json.dumps(serializedData.data), "status":"200"})
     except Exception as e:
         print(e)
