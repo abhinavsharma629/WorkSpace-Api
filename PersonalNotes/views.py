@@ -154,7 +154,7 @@ def editNote(request):
 def getAllNotes(request):
     permission_classes=(IsAuthenticated,)
     try:
-        data=savedNoteData.objects.filter(userId=UserDetails.objects.get(userId=request.user)).order_by('-createdAt')
+        data=savedNoteData.objects.filter(userId=UserDetails.objects.get(userId=request.user), typeOfData="").order_by('-createdAt')
         serializedData=savedNoteDataSerializer(data, many=True)
         return Response({'message':"Ok Done", "data": json.dumps(serializedData.data), "status":"200"})
     except Exception as e:
