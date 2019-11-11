@@ -38,9 +38,10 @@ class saveDeleteNote(APIView):
             return Response({"message": "No Such Note Present"}, status=status.HTTP_404_NOT_FOUND)
 
     permission_classes=(IsAuthenticated,)
-    parser_classes = (MultiPartParser,)
     #POST SAVE
     def post(self, request):
+
+        parser_classes = (MultiPartParser,)
         params=request.data
 
         print(request.user)
