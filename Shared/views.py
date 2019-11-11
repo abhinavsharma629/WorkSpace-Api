@@ -133,8 +133,6 @@ def getFriends(request):
         print(sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo'))
         print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all())
         print(UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)))
-        for(i in UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all()):
-            print(i)
         sharedUsers=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all().exclude(friend_name_id__in=sharedNoteData.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId'))).values('sharedTo'))
 
         print(sharedUsers)
