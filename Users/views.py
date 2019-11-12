@@ -58,7 +58,7 @@ def getUserDetails(request, format=None):
 def userValidity(request):
     if(User.objects.filter(username=request.GET.get('username')).count()==1):
         isFriends=False
-        if(FriendsFormedDetails.objects.filter(Q(userId=UserDetails.objects.get(userId__username=request.GET.get('username')), friend_name=UserDetails.objects.get(userId=request.user)) | Q(userId=UserDetails.objects.get(userId=request.user), friend_name=UserDetails.objects.get(userId__username=request.GET.get('username')))).count()>0):
+        if(FriendsFormedDetails.objects.filter(Q(user=UserDetails.objects.get(userId__username=request.GET.get('username')), friend_name=UserDetails.objects.get(userId=request.user)) | Q(user=UserDetails.objects.get(userId=request.user), friend_name=UserDetails.objects.get(userId__username=request.GET.get('username')))).count()>0):
             isFriends=True
         return JsonResponse({'message':"User Found", 'isFriends':isFriends, "status":"200"})
 
