@@ -20,6 +20,8 @@ import requests
 from django_user_agents.utils import get_user_agent
 from Notifications.models import Notifications
 from Notifications.UserAgent import getDeviceDetails
+from Friends.models import FriendsFormedDetails
+
 # import logging
 
 # logger=logging.getLogger(__name__)
@@ -32,7 +34,7 @@ def getUserDetails(request, format=None):
     # except Exception as e:
     #     logger.error(str(e))
     #print(1/0)
-    
+
     print(request.user.username)
     try:
         extendedData=UserDetails.objects.get(userId=request.user)
@@ -44,12 +46,24 @@ def getUserDetails(request, format=None):
         print(e)
         return Response({"message":"Not Found"}, status=status.HTTP_404_NOT_FOUND)
 
-    
+
     # extendedData=UserDetails.objects.get(userId=request.user)
     # data=User.objects.filter(username=request.user.username)
     # serializedData=UserDetailsSerializer(extendedData)
     # data=serializers.serialize('json', data)
     # return Response({"message":"Ok Done", 'data':data, 'extendedData':serializedData.data}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, )) #For @api_view
+def userValidity(request):
+    if(User.objects.filter(username=request.GET.get('username')).count()==1):
+        isFriends=False
+        if(FriendsFormedDetails.objects.filter(Q(userId=UserDetails.objects.get(userId__username=request.GET.get('username')), friend_name=UserDetails.objects.get(userId=request.user)) | Q(userId=UserDetails.objects.get(userId=request.user), friend_name=UserDetails.objects.get(userId__username=request.GET.get('username')))).count()>0):
+            isFriends=True
+        return JsonResponse({'message':"User Found", 'isFriends':isFriends, "status":"200"})
+
+    else:
+        return JsonResponse({'message':"Error", 'status':'404'})
 
 
 @api_view(['POST'])
@@ -73,68 +87,68 @@ def editUserDetails(request, format=None):
                 obj1.email=params['first_name']
             except:
                 return Response({"message": "Error in First Address"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if('last_name' in params):
             try:
                 obj1.email=params['last_name']
             except:
                 return Response({"message": "Error in Last Address"}, status=status.HTTP_404_NOT_FOUND)
 
-        
+
         if('address' in params):
             try:
                 obj.address=params['address']
             except:
                 return Response({"message": "Error in Address"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if('address1' in params):
             try:
                 obj.address1=params['address1']
             except:
                 return Response({"message": "Error in Address 1"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if('phoneNumber' in params):
             try:
                 obj.phoneNumber=params['phoneNumber']
             except:
                 return Response({"message": "Error in Phone Number"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if('alternatePhoneNumber' in params):
             try:
                 obj.alternatePhoneNumber=params['alternatePhoneNumber']
             except:
                 return Response({"message": "Error in Alternate Phone Number"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if('profilePic' in params):
             try:
                 obj.profilePhoto=params['profilePic']
             except:
                 return Response({"message": "Error in Profile Pic"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if('coverPic' in params):
             try:
                 obj.alternatePhoneNumber=params['coverPic']
             except:
                 return Response({"message": "Error in Cover Pic"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if('date' in params):
             try:
                 obj.dateOfBirth=params['date']
             except:
                 return Response({"message": "Error in Date"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if('gender' in params):
             try:
                 obj.gender=params['gender']
             except:
                 return Response({"message": "Error in Gender"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         if('email1' in params):
             try:
                 obj.alternateEmailAddress=params['email']
             except:
                 return Response({"message": "Error in Alternate Email Address"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         obj.save()
         obj1.save()
         serializedData=UserDetailsSerializer(obj)
@@ -160,7 +174,7 @@ def createUser(request, format=None):
     parser=(MultiPartParser,)
     params=request.data
     print(params)
-    
+
     try:
         obj,notif=User.objects.get_or_create(username=params['username'], email=params['email'])
         obj.set_password(params['pass'])
@@ -172,9 +186,9 @@ def createUser(request, format=None):
         obj.firstname=params['fname']
         obj.lastname=params['lname']
         obj.save()
-        
+
         date = parse_date(params['dob'])
-        
+
         obj1,notif1=UserDetails.objects.get_or_create(userId=User.objects.get(username=params['username']), address=params['address'], address1=params['address1'], phoneNumber=params['phone'], occupation=params['occupation'], state=params['state'], city=params['city'], country=params['country'], alternatePhoneNumber=params['phone1'], dateOfBirth=date, gender=params['gender'],current_lat=(float)(params['lat']), current_long=(float)(params['long']))
         if(notif1):
             obj1.save()
@@ -187,8 +201,8 @@ def createUser(request, format=None):
             return JsonResponse({"message":"Success", "status":"201", 'token_data': res})
         else:
             return JsonResponse({"message":"Error", "status":"203"})
-       
-        
+
+
     else:
         return JsonResponse({"message":"Error", "status":"203"})
 

@@ -25,8 +25,9 @@ from rest_framework_simplejwt import views as jwt_views
 urlpatterns = [
 
     #IP:- 127.0.0.1:8000/user
-    
+
     path('getUserDetails/', views.getUserDetails, name="getUserDetails"),
+    path('userValidity', views.userValidity, name="userValidity"),
     path('editUserDetails/', views.editUserDetails, name="editUserDetails"),
     path('deleteUserDetails/', views.deleteUserDetails, name="deleteUserDetails"),
     path('createUser/', views.createUser, name="createUser"),
