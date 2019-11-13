@@ -285,7 +285,8 @@ def validateUser(request, format=None):
     user=authenticate(username=params['username'], password=params['pass'])
     print(user)
     if(user is not None):
+        img_url=UserDetails.objects.get_or_create(userId=User.objects.get(username=params['username'])).profilePhoto.url
         res=requests.post('https://shielded-dusk-55059.herokuapp.com/user/api/token/', data={'username': params['username'], 'password': params['pass']}).json()
-        return JsonResponse({"message": "Success", "status":"200", 'token_data': res})
+        return JsonResponse({"message": "Success", "status":"200", "img_url":img_url, 'token_data': res})
     else:
         return JsonResponse({"message": "Success", "status":"404"})
