@@ -209,6 +209,70 @@ def createUser(request, format=None):
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
+def saveImage(request, format=None):
+    parser=(MultiPartParser,)
+    params=request.data
+
+    obj,notif=User.objects.get_or_create(username="ashdkahsdhasdha", email="abhinavsharma622@gmail.com")
+    obj.set_password("abhi629@@")
+    if(notif):
+        obj.save()
+        obj1,notif1=UserDetails.objects.get_or_create(userId=User.objects.get(username="ashdkahsdhasdha"), address="sddsfsfsdfs", address1="asdadsadsad", phoneNumber="7909948987", occupation="sdffffffff", state="ads", city="ads", country="asd", alternatePhoneNumber="9557806467", dateOfBirth=date, gender="M")
+        if(notif1):
+            obj1.save()
+            obj1.lat_long='POINT('+str("23.56")+' '+str("34.67")+')'
+            obj1.profilePhoto=params['file']
+            obj1.save()
+            return JsonResponse({"img":obj1.profilePhoto, "status":"201"})
+        else:
+            return JsonResponse({"status":"500"})
+    else:
+        return JsonResponse({"status":"500"})
+
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def createFullUser(request, format=None):
+    parser=(MultiPartParser,)
+    params=request.data
+    print(params)
+
+    try:
+        obj,notif=User.objects.get_or_create(username=params['username'], email=params['email'])
+        obj.set_password(params['pass'])
+    except Exception as e:
+        print(e)
+        return JsonResponse({"message":"Error", "status":"304"})
+    if(notif):
+        obj.save()
+        obj.firstname=params['fname']
+        obj.lastname=params['lname']
+        obj.save()
+
+        date = parse_date(params['dob'])
+
+        obj1,notif1=UserDetails.objects.get_or_create(userId=User.objects.get(username=params['username']), address=params['address'], address1=params['address1'], phoneNumber=params['phone'], occupation=params['occupation'], state=params['state'], city=params['city'], country=params['country'], alternatePhoneNumber=params['phone1'], dateOfBirth=date, gender=params['gender'],current_lat=(float)(params['lat']), current_long=(float)(params['long']))
+        if(notif1):
+            obj1.save()
+            obj1.lat_long='POINT('+str(params['lat'])+' '+str(params['long'])+')'
+            obj1.profilePhoto=params['file']
+            #obj1.coverPhoto=params['file1']
+            obj1.save()
+            res=requests.post('https://shielded-dusk-55059.herokuapp.com/user/api/token/', data={'username': params['username'], 'password': params['pass']}).json()
+            print(res)
+            return JsonResponse({"message":"Success", "status":"201", 'token_data': res})
+        else:
+            return JsonResponse({"message":"Error", "status":"203"})
+
+
+    else:
+        return JsonResponse({"message":"Error", "status":"203"})
+
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
 def validateUser(request, format=None):
     params=request.data
     print(params)

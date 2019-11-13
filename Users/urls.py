@@ -31,6 +31,8 @@ urlpatterns = [
     path('editUserDetails/', views.editUserDetails, name="editUserDetails"),
     path('deleteUserDetails/', views.deleteUserDetails, name="deleteUserDetails"),
     path('createUser/', views.createUser, name="createUser"),
+    path('saveImage/', views.saveImage, name="saveImage"),
+    path('createFullUser/', views.createFullUser, name="createFullUser"),
     path('validateUser/', views.validateUser, name="validateUser"),
 
     # Your URLs...
