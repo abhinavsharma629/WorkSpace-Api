@@ -225,9 +225,9 @@ def saveImage(request, format=None):
         if(notif1):
             obj1.save()
             obj1.lat_long='POINT('+str("23.56")+' '+str("34.67")+')'
-            obj1.profilePhoto=params['_parts'][0][1]['uri']
+            obj1.profilePhoto=params['_parts'][0][1]
             obj1.save()
-            return JsonResponse({"img":obj1.profilePhoto, "status":"201"})
+            return JsonResponse({"img":obj1.profilePhoto.url, "status":"201"})
         else:
             return JsonResponse({"status":"500"})
     else:
