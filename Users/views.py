@@ -216,12 +216,12 @@ def saveImage(request, format=None):
     print(params)
     print(params['_parts'][0][1]['uri'])
 
-    obj,notif=User.objects.get_or_create(username="aaaashdkahsdhasdha", email="abhinavsharma622@gmail.com")
+    obj,notif=User.objects.get_or_create(username="aaaaaashdkahsdhasdha", email="abhinavsharma622@gmail.com")
     obj.set_password("abhi629@@")
     if(notif):
         obj.save()
         date = parse_date("2019-08-09")
-        obj1,notif1=UserDetails.objects.get_or_create(userId=User.objects.get(username="aaaashdkahsdhasdha"), address="sddsfsfsdfs", address1="asdadsadsad", phoneNumber="7909948987", occupation="sdffffffff", state="ads", city="ads", country="asd", alternatePhoneNumber="9557806467", dateOfBirth=date, gender="M")
+        obj1,notif1=UserDetails.objects.get_or_create(userId=User.objects.get(username="aaaaaashdkahsdhasdha"), address="sddsfsfsdfs", address1="asdadsadsad", phoneNumber="7909948987", occupation="sdffffffff", state="ads", city="ads", country="asd", alternatePhoneNumber="9557806467", dateOfBirth=date, gender="M")
         if(notif1):
             obj1.save()
             obj1.lat_long='POINT('+str("23.56")+' '+str("34.67")+')'
@@ -231,7 +231,7 @@ def saveImage(request, format=None):
         else:
             return JsonResponse({"status":"500"})
     else:
-        return JsonResponse({"status":"500"})
+        return JsonResponse({"status":"404"})
 
 
 
