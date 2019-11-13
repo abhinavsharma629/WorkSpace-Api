@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class FriendsFormedDetailsSerializer(serializers.ModelSerializer):
 	username=serializers.CharField(source='user.userId.username')
 	friends_name=serializers.CharField(source='friend_name.userId.username')
-	profile_pic=serializers.CharField(source='user.profilePhoto.url')
+	profile_pic=serializers.FileField(max_length=None, allow_empty_file=False, source='user.profilePhoto')
 	#username = serializers.RelatedField(source='logged_in_user.username', read_only=True)
 	#friends_name = serializers.RelatedField(source='current_user_friends.username', read_only=True)
 
