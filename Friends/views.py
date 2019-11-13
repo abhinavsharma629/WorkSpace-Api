@@ -73,7 +73,7 @@ class friendRecommendation(APIView):
                     return JsonResponse({"ext_user":json.dumps(serializer.data), "sent":json.dumps(serializer2.data) , "received":json.dumps(serializer3.data), "friend":json.dumps(serializer4.data), "status": "200"})
 
                 else:
-                    serializer= UserDetailsSerializer(UserDetails.objects.all().exclude(userId=request.user)[:10], many=True)
+                    serializer= UserDetailsSerializer(UserDetails.objects.all().exclude(userId=request.user), many=True)
                     return JsonResponse({"ext_user":json.dumps(serializer.data), "sent":json.dumps(serializer2.data) , "received":json.dumps(serializer3.data),"friend":json.dumps(serializer4.data), "status": "200"})
 
         else:
