@@ -206,7 +206,7 @@ def createUser(request, format=None):
     else:
         return JsonResponse({"message":"Error", "status":"203"})
 
-
+#TEST TO SAVE IMAGE FROM REACT NATIVE
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 def saveImage(request, format=None):
@@ -241,6 +241,7 @@ def saveImage(request, format=None):
 def createFullUser(request, format=None):
     parser=(MultiPartParser,)
     params=request.data
+    pic=request.FILES['photo']
     print(params)
 
     try:
@@ -248,7 +249,7 @@ def createFullUser(request, format=None):
         obj.set_password(params['pass'])
     except Exception as e:
         print(e)
-        return JsonResponse({"message":"Error", "status":"304"})
+        return JsonResponse({"message":"Error", "status":"200"})
     if(notif):
         obj.save()
         obj.firstname=params['fname']
@@ -257,16 +258,16 @@ def createFullUser(request, format=None):
 
         date = parse_date(params['dob'])
 
-        obj1,notif1=UserDetails.objects.get_or_create(userId=User.objects.get(username=params['username']), address=params['address'], address1=params['address1'], phoneNumber=params['phone'], occupation=params['occupation'], state=params['state'], city=params['city'], country=params['country'], alternatePhoneNumber=params['phone1'], dateOfBirth=date, gender=params['gender'],current_lat=(float)(params['lat']), current_long=(float)(params['long']))
+        obj1,notif1=UserDetails.objects.get_or_create(userId=User.objects.get(username=params['username']), address=params['address'], phoneNumber=params['phone'], occupation=params['occupation'], state=params['state'], city=params['city'], country=params['country'], alternatePhoneNumber=params['phone1'], dateOfBirth=date, gender=params['gender'],current_lat=(float)(params['lat']), current_long=(float)(params['long']))
         if(notif1):
             obj1.save()
             obj1.lat_long='POINT('+str(params['lat'])+' '+str(params['long'])+')'
-            obj1.profilePhoto=params['file']
+            obj1.profilePhoto=pic
             #obj1.coverPhoto=params['file1']
             obj1.save()
             res=requests.post('https://shielded-dusk-55059.herokuapp.com/user/api/token/', data={'username': params['username'], 'password': params['pass']}).json()
             print(res)
-            return JsonResponse({"message":"Success", "status":"201", 'token_data': res})
+            return JsonResponse({"message":"Success", "status":"201", 'img_url':obj1.profilePhoto.url, 'token_data': res})
         else:
             return JsonResponse({"message":"Error", "status":"203"})
 
