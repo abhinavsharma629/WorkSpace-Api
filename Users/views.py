@@ -213,16 +213,17 @@ def saveImage(request, format=None):
     parser=(MultiPartParser,)
     params=request.data
     print(params)
+    print(params['_parts'][0][1]['uri'])
 
-    obj,notif=User.objects.get_or_create(username="ashdkahsdhasdha", email="abhinavsharma622@gmail.com")
+    obj,notif=User.objects.get_or_create(username="aashdkahsdhasdha", email="abhinavsharma622@gmail.com")
     obj.set_password("abhi629@@")
     if(notif):
         obj.save()
-        obj1,notif1=UserDetails.objects.get_or_create(userId=User.objects.get(username="ashdkahsdhasdha"), address="sddsfsfsdfs", address1="asdadsadsad", phoneNumber="7909948987", occupation="sdffffffff", state="ads", city="ads", country="asd", alternatePhoneNumber="9557806467", dateOfBirth=date, gender="M")
+        obj1,notif1=UserDetails.objects.get_or_create(userId=User.objects.get(username="aashdkahsdhasdha"), address="sddsfsfsdfs", address1="asdadsadsad", phoneNumber="7909948987", occupation="sdffffffff", state="ads", city="ads", country="asd", alternatePhoneNumber="9557806467", dateOfBirth=date, gender="M")
         if(notif1):
             obj1.save()
             obj1.lat_long='POINT('+str("23.56")+' '+str("34.67")+')'
-            obj1.profilePhoto=params['file']
+            obj1.profilePhoto=params['_parts'][0][1]['uri']
             obj1.save()
             return JsonResponse({"img":obj1.profilePhoto, "status":"201"})
         else:
