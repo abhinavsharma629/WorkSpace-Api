@@ -212,6 +212,7 @@ def createUser(request, format=None):
 def saveImage(request, format=None):
     parser=(MultiPartParser,)
     params=request.data
+    print(params)
 
     obj,notif=User.objects.get_or_create(username="ashdkahsdhasdha", email="abhinavsharma622@gmail.com")
     obj.set_password("abhi629@@")
