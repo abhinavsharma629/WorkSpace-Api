@@ -58,7 +58,7 @@ class friendRecommendation(APIView):
                 serializer3= FriendsFormedDetailsSerializer(friendRequestReceived, many=True)
                 serializer4=FriendsFormedDetailsSerializer(friendsFormed, many=True)
 
-                print(json.dumps(serializer3.data, indent=4))
+                print(json.dumps(serializer4.data, indent=4))
                 if(obj.current_lat and obj.current_long):
                     latitude=float(obj.current_lat)
                     longitude=float(obj.current_long)
