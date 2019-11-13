@@ -215,11 +215,12 @@ def saveImage(request, format=None):
     print(params)
     print(params['_parts'][0][1]['uri'])
 
-    obj,notif=User.objects.get_or_create(username="aashdkahsdhasdha", email="abhinavsharma622@gmail.com")
+    obj,notif=User.objects.get_or_create(username="aaashdkahsdhasdha", email="abhinavsharma622@gmail.com")
     obj.set_password("abhi629@@")
     if(notif):
         obj.save()
-        obj1,notif1=UserDetails.objects.get_or_create(userId=User.objects.get(username="aashdkahsdhasdha"), address="sddsfsfsdfs", address1="asdadsadsad", phoneNumber="7909948987", occupation="sdffffffff", state="ads", city="ads", country="asd", alternatePhoneNumber="9557806467", dateOfBirth=date, gender="M")
+        date = parse_date("2019-08-09")
+        obj1,notif1=UserDetails.objects.get_or_create(userId=User.objects.get(username="aaashdkahsdhasdha"), address="sddsfsfsdfs", address1="asdadsadsad", phoneNumber="7909948987", occupation="sdffffffff", state="ads", city="ads", country="asd", alternatePhoneNumber="9557806467", dateOfBirth=date, gender="M")
         if(notif1):
             obj1.save()
             obj1.lat_long='POINT('+str("23.56")+' '+str("34.67")+')'
