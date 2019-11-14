@@ -313,22 +313,21 @@ def gd_oauth2_for_native(request):
     url="https://shielded-dusk-55059.herokuapp.com/hi/storeCloud"
 
     print(cred)
-    # response=requests.post(url, data={
-    #     'access_token':(vars(credentials)['access_token']),
-    #     'email':userEmail,
-    #     'cred':json.dumps(vars(credentials), cls=PythonObjectEncoder),
-    #     'dump':dump,
-    #     'authName': "GOOGLE DRIVE"
-    # }, headers=headers1).json()
-    #
-    # print(response)
-    #
-    # if(response['status']=='201'):
-    #     result="A Duplicate User With the Email Of Registered Drive Already Exists in our Database!! Please try again with that account (if its yours) or report an issue if you notice something unusual!!"
-    # else:
-    #     result="Your Drive Data Will Soon Be Loaded!! We are analysing it!! Be Patient!!"
-    # return JsonResponse({"message":result, "status":response['status']})
-    return JsonResponse({"message":"hello", "status":"201"})
+    response=requests.post(url, data={
+        'access_token':(vars(credentials)['access_token']),
+        'email':userEmail,
+        'cred':json.dumps(vars(credentials), cls=PythonObjectEncoder),
+        'dump':dump,
+        'authName': "GOOGLE DRIVE"
+    }, headers=headers1).json()
+
+    print(response)
+
+    if(response['status']=='201'):
+        result="A Duplicate User With the Email Of Registered Drive Already Exists in our Database!! Please try again with that account (if its yours) or report an issue if you notice something unusual!!"
+    else:
+        result="Your Drive Data Will Soon Be Loaded!! We are analysing it!! Be Patient!!"
+    return JsonResponse({"message":result, "status":"201"})
 
 
 
