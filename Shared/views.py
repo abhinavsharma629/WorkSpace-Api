@@ -83,7 +83,13 @@ def shareNote(request):
 def deleteSharedNote(request):
     permission_classes=(IsAuthenticated,)
 
-    friends=request.data.get('list')
+    # friends=request.data.get('list')
+    friends=[]
+    if(request.data.get('list')==None):
+        friends=request.data.getlist('list[]')
+        print(friends)
+    else:
+        friends=request.data.get('list')
     print(request.data.get('list'), request.data.get('noteId'))
 
     user_agent = get_user_agent(request)
