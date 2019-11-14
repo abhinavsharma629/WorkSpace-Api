@@ -248,15 +248,32 @@ flow = OAuth2WebServerFlow(client_id='484263106620-gqflub2lb8d0bvbof404133q236ut
                             redirect_uri='http://127.0.0.1:8000/hi/complete/google-oauth2/')
 
 def login(request):
-
     auth_uri = flow.step1_get_authorize_url()
     return HttpResponseRedirect(auth_uri)
+
+
+
+flow1 = OAuth2WebServerFlow(client_id='484263106620-gqflub2lb8d0bvbof404133q236utfkn.apps.googleusercontent.com',
+                            client_secret='7dRw6vDma4uEraS7X7xWT_7z',
+                            scope=['https://www.googleapis.com/auth/plus.login', 'openid',
+                            'https://www.googleapis.com/auth/userinfo.email',
+                            'https://www.googleapis.com/auth/drive.readonly',
+                            'https://www.googleapis.com/auth/drive.metadata',
+                            'https://www.googleapis.com/auth/drive.readonly',
+                            'https://www.googleapis.com/auth/drive.scripts',
+                            'https://www.googleapis.com/auth/drive.photos.readonly',
+                            'https://www.googleapis.com/auth/drive.file',
+                            'https://www.googleapis.com/auth/drive.appdata'
+                            ],
+
+                            redirect_uri='https://obscure-bayou-10492.herokuapp.com/test/complete/google-oauth2/')
+
 
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def gd_login_auth_uri(request):
-    auth_uri = flow.step1_get_authorize_url()
+    auth_uri = flow1.step1_get_authorize_url()
     return JsonResponse({"auth_uri":auth_uri, "status":"200"})
 
 
