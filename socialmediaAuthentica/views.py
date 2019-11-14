@@ -327,7 +327,7 @@ def gd_oauth2_for_native(request):
         result="A Duplicate User With the Email Of Registered Drive Already Exists in our Database!! Please try again with that account (if its yours) or report an issue if you notice something unusual!!"
     else:
         result="Your Drive Data Will Soon Be Loaded!! We are analysing it!! Be Patient!!"
-    return JsonResponse({"message":result, "status":"200"})
+    return JsonResponse({"message":result, "status":"201"})
 
 
 
