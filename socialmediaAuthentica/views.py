@@ -270,11 +270,66 @@ flow1 = OAuth2WebServerFlow(client_id='484263106620-gqflub2lb8d0bvbof404133q236u
 
 
 
+
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def gd_login_auth_uri(request):
     auth_uri = flow1.step1_get_authorize_url()
     return JsonResponse({"auth_uri":auth_uri, "status":"200"})
+
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
+def gd_oauth2_for_native(request):
+    print(request.data)
+    code=request.data.get('code')
+    print(code)
+    credentials = flow1.step2_exchange(code)
+    cred=vars(credentials)
+    #print(cred)
+    mainDict={}
+    mainDict['id_token']=cred['id_token']
+    mainDict['token_response']=cred['token_response']
+
+    outfile=open('createAGoogleDrive.json', 'w')
+
+    dump=json.dumps(vars(credentials), cls=PythonObjectEncoder)
+    outfile.write(dump)
+    outfile.close()
+
+    headers={}
+    headers['Authorization']= 'Bearer '+cred['access_token']
+    userDetailsFromToken=requests.get('https://oauth2.googleapis.com/tokeninfo?id_token='+cred['id_token_jwt'], headers=headers)
+    userData=userDetailsFromToken.json()
+
+    userDetails=open('googleUserDetails.json', 'w')
+    dump=json.dumps(userData)
+    userDetails.write(dump)
+    userEmail=userData['email']
+    print(userEmail)
+
+    headers1={}
+    headers1['Authorization']= 'Bearer '+request.data.get('access_token')
+    url="https://shielded-dusk-55059.herokuapp.com/hi/storeCloud"
+
+    print(cred)
+    # response=requests.post(url, data={
+    #     'access_token':(vars(credentials)['access_token']),
+    #     'email':userEmail,
+    #     'cred':json.dumps(vars(credentials), cls=PythonObjectEncoder),
+    #     'dump':dump,
+    #     'authName': "GOOGLE DRIVE"
+    # }, headers=headers1).json()
+    #
+    # print(response)
+    #
+    # if(response['status']=='201'):
+    #     result="A Duplicate User With the Email Of Registered Drive Already Exists in our Database!! Please try again with that account (if its yours) or report an issue if you notice something unusual!!"
+    # else:
+    #     result="Your Drive Data Will Soon Be Loaded!! We are analysing it!! Be Patient!!"
+    # return JsonResponse({"message":result, "status":response['status']})
+    return JsonResponse({"message":"hello", "status":"201"})
+
 
 
 def complete(request):
