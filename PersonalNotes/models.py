@@ -18,6 +18,6 @@ class savedNoteData(models.Model):
     caption=models.TextField(null=True, blank=True)
     createdFrom=models.CharField(max_length=100, null=True, blank=True)
     showUpImg=models.TextField(null=True, blank=True)
-    showUpImg1=models.FileField(upload_to='notes_pictures', null=True, blank=True)
+    #showUpImg1=models.FileField(upload_to='notes_pictures', null=True, blank=True)
     createdAt=models.DateTimeField(auto_now=True)
     lastUpdated=models.DateTimeField()
