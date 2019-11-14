@@ -33,8 +33,10 @@ def shareNote(request):
     print(request.POST)
     print("\n\n")
     print(request.data)
+    friends=[]
     if(request.data.get('list')==None):
         friends=request.data.get('list[]')
+        print(friends)
     else:
         friends=request.data.get('list')
     print(request.data.get('list'), request.data.get('noteId'))
