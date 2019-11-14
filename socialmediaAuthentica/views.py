@@ -253,6 +253,13 @@ def login(request):
     return HttpResponseRedirect(auth_uri)
 
 
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def gd_login_auth_uri(request):
+    auth_uri = flow.step1_get_authorize_url()
+    return JsonResponse({"auth_uri":auth_uri, "status":"200"})
+
+
 def complete(request):
 
     code=request.GET.get('code')

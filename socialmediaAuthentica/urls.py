@@ -11,6 +11,7 @@ urlpatterns = [
     #Google Auth -D
     path('complete/google-oauth2/', views.complete, name="complete"),
     path('login', views.login, name="login"),
+    path('gd_login_auth_uri', views.gd_login_auth_uri, name="gd_login_auth_uri"),
 
     #GitHub Auth -D
     path('complete/gitHub-oauth2', views.gitHubComplete, name="gitHubComplete"),
