@@ -35,7 +35,7 @@ def shareNote(request):
     print(request.data)
     friends=[]
     if(request.data.get('list')==None):
-        friends=request.data.get('list[]')
+        friends=request.data.getlist('list[]')
         print(friends)
     else:
         friends=request.data.get('list')
