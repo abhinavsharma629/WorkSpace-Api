@@ -58,10 +58,10 @@ def getUserDetails(request, format=None):
 def userValidity(request):
     if(User.objects.filter(username=request.GET.get('username')).count()==1):
         isFriends=False
+        userImgUrl=UserDetails.objects.get(userId__username=request.GET.get('username')).profilePhoto.url
+        print(userImgUrl)
         if(FriendsFormedDetails.objects.filter(Q(user=UserDetails.objects.get(userId__username=request.GET.get('username')), friend_name=UserDetails.objects.get(userId=request.user)) | Q(user=UserDetails.objects.get(userId=request.user), friend_name=UserDetails.objects.get(userId__username=request.GET.get('username')))).count()>0):
             isFriends=True
-            userImgUrl=UserDetails.objects.get(userId__username=request.GET.get('username')).profilePhoto.url
-            print(userImgUrl)
         return JsonResponse({'message':"User Found", 'isFriends':isFriends,"userImg":userImgUrl, "status":"200"})
 
     else:
