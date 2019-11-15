@@ -291,7 +291,7 @@ def gd_oauth2_for_native(request):
     mainDict['id_token']=cred['id_token']
     mainDict['token_response']=cred['token_response']
 
-    //outfile=open('createAGoogleDrive.json', 'w')
+    #outfile=open('createAGoogleDrive.json', 'w')
 
     dump=json.dumps(vars(credentials), cls=PythonObjectEncoder)
     # outfile.write(dump)
