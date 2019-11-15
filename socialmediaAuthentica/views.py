@@ -425,10 +425,10 @@ def gd_segregates(request):
             print(i)
             if(c==0):
                 data={
-                "name":obj.typeOfData,
-                "data":obj.segregatedData}
+                "name":i.typeOfData,
+                "data":i.segregatedData}
 
-            segregates.append({"id":c,"name":obj.typeOfData})
+            segregates.append({"id":c,"name":i.typeOfData})
             c+=1
 
         segregates.append({
