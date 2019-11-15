@@ -422,6 +422,7 @@ def gd_segregates(request):
         c=0
         data={}
         for i in obj:
+            print(i)
             if(c==0):
                 data={
                 "name":obj.typeOfData,
