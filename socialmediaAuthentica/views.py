@@ -419,7 +419,14 @@ def gd_segregates(request):
         obj=DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA")
 
         segregates=[]
+        c=0
+        data={}
         for(i in obj):
+            if(c==0):
+                data={
+                "name":obj.typeOfData,
+                "data":obj.segregatedData}
+
             segregates.append({"id":c,"name":obj.typeOfData})
             c+=1
 
@@ -427,7 +434,7 @@ def gd_segregates(request):
             "id":c,
             "name":"Folder View"})
 
-        return JsonResponse({"segregates":segregates, "status":"200"})
+        return JsonResponse({"data":json.dumps(data), "segregates":segregates, "status":"200"})
     else:
         return JsonResponse({"message":"Error", "status":"404"})
 
