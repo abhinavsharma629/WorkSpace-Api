@@ -265,7 +265,8 @@ flow1 = OAuth2WebServerFlow(client_id='484263106620-gqflub2lb8d0bvbof404133q236u
                             'https://www.googleapis.com/auth/drive.file',
                             'https://www.googleapis.com/auth/drive.appdata'
                             ],
-                            
+                            access_type='offline',
+                            prompt='consent',
                             redirect_uri='https://obscure-bayou-10492.herokuapp.com/test/complete/google-oauth2/')
 
 
