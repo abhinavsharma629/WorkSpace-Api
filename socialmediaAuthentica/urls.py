@@ -14,6 +14,8 @@ urlpatterns = [
     path('gd_login_auth_uri', views.gd_login_auth_uri, name="gd_login_auth_uri"),
     path('gd_oauth2_for_native/', views.gd_oauth2_for_native, name="gd_oauth2_for_native"),
     path('gd_segregates', views.gd_segregates, name="gd_segregates"),
+    path('gd_selected_segregates', views.gd_selected_segregates, name="gd_selected_segregates"),
+    
     #GitHub Auth -D
     path('complete/gitHub-oauth2', views.gitHubComplete, name="gitHubComplete"),
     path('gitHubLogin', views.gitHubLogin, name="gitHubLogin"),
