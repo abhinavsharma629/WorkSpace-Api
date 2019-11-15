@@ -265,10 +265,8 @@ flow1 = OAuth2WebServerFlow(client_id='484263106620-gqflub2lb8d0bvbof404133q236u
                             'https://www.googleapis.com/auth/drive.file',
                             'https://www.googleapis.com/auth/drive.appdata'
                             ],
-
+                            
                             redirect_uri='https://obscure-bayou-10492.herokuapp.com/test/complete/google-oauth2/')
-
-
 
 
 @api_view(['GET'])
@@ -284,16 +282,17 @@ def gd_oauth2_for_native(request):
     print(request.data)
     code=request.data.get('code')
     print(code)
+
     credentials = flow1.step2_exchange(code)
     cred=vars(credentials)
-    #print(cred)
+    print(cred)
     mainDict={}
     mainDict['id_token']=cred['id_token']
     mainDict['token_response']=cred['token_response']
 
     #outfile=open('createAGoogleDrive.json', 'w')
 
-    dump=json.dumps(vars(credentials), cls=PythonObjectEncoder)
+    #dump=json.dumps(vars(credentials), cls=PythonObjectEncoder)
     # outfile.write(dump)
     # outfile.close()
 
@@ -301,7 +300,7 @@ def gd_oauth2_for_native(request):
     headers['Authorization']= 'Bearer '+cred['access_token']
     userDetailsFromToken=requests.get('https://oauth2.googleapis.com/tokeninfo?id_token='+cred['id_token_jwt'], headers=headers)
     userData=userDetailsFromToken.json()
-    print(userData)
+    #print(userData)
     # userDetails=open('googleUserDetails.json', 'w')
     dump=json.dumps(userData)
     # userDetails.write(dump)
