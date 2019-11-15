@@ -411,6 +411,48 @@ def complete(request):
     #To check details of access_token :- https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=
     # Authorization Endpoint :- https://accounts.google.com/o/oauth2/v2/auth
 
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def gd_segregates(request):
+    if(DataAnalysis.objects.filter(user=request.user).count()>0):
+        obj=DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA")
+
+        segregates=[]
+        for(i in obj):
+            segregates.append({"id":c,"name":obj.typeOfData})
+            c+=1
+
+        segregates.append({
+            "id":c,
+            "name":"Folder View"})
+
+        return JsonResponse({"segregates":segregates, "status":"200"})
+    else:
+        return JsonResponse({"message":"Error", "status":"404"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 def storeCloud(request):
