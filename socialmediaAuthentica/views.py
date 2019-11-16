@@ -396,7 +396,8 @@ def gd_data_overview(request):
     if(CloudOauth2Details.objects.filter(userId=request.user).count()>0):
         obj=CloudOauth2Details.objects.get(userId=request.user)
 
-        accessData=json.loads(obj.accessData)
+        accessData=obj.accessData
+        print(type(accessData))
         img_url=accessData['picture']
         creds={
             "access_token":obj.accessToken,
