@@ -339,18 +339,12 @@ def complete(request):
 def gd_segregates(request):
 
     if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()==0):
+        print("building data")
         if(request.GET.get('authName')=="GOOGLE DRIVE"):
             googleTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="GOOGLE DRIVE")).accessToken, request.user)
 
         elif(request.GET.get('authName')=="DROPBOX"):
             dropBoxTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="DROPBOX")).accessToken, request.user)
-
-    else:
-        if(request.GET.get('authName')!="GITHUB"):
-            obj1=DataAnalysis.objects.get(user=User.objects.get(username=request.user), classificationOfDataStorageType="HIERARCHICAL DATA", provider=AllAuths.objects.get(authName=request.GET.get('authName')))
-            obj=DataAnalysis.objects.get(user=User.objects.get(username=request.user), classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName=request.GET.get('authName')))
-            cloudObj=CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName=request.GET.get('authName')))
-
 
     if(DataAnalysis.objects.filter(user=request.user).count()>0):
         obj=DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA")
