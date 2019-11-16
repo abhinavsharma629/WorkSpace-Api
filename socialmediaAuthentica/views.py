@@ -337,6 +337,21 @@ def complete(request):
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def gd_segregates(request):
+
+    if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()==0):
+        if(request.GET.get('authName')=="GOOGLE DRIVE"):
+            googleTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="GOOGLE DRIVE")).accessToken, request.user)
+
+        elif(request.GET.get('authName')=="DROPBOX"):
+            dropBoxTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="DROPBOX")).accessToken, request.user)
+
+    else:
+        if(request.GET.get('authName')!="GITHUB"):
+            obj1=DataAnalysis.objects.get(user=User.objects.get(username=request.user), classificationOfDataStorageType="HIERARCHICAL DATA", provider=AllAuths.objects.get(authName=request.GET.get('authName')))
+            obj=DataAnalysis.objects.get(user=User.objects.get(username=request.user), classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName=request.GET.get('authName')))
+            cloudObj=CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName=request.GET.get('authName')))
+
+
     if(DataAnalysis.objects.filter(user=request.user).count()>0):
         obj=DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA")
 
@@ -374,6 +389,26 @@ def gd_selected_segregates(request):
         return JsonResponse({"message":"Error", "status":"404"})
 
 
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def gd_data_overview(request):
+    if(CloudOauth2Details.objects.filter(userId=request.user).count()>0):
+        obj=CloudOauth2Details.objects.get(userId=request.user)
+
+        accessData=json.loads(obj.accessData)
+        img_url=accessData['picture']
+        creds={
+            "access_token":obj.accessToken,
+            "img_url":img_url,
+            "refresh_token":obj.refreshToken,
+            "id_token":obj.idTokenJwt,
+            "token_info_uri":obj.tokenInfoUri,
+            "login_email":obj.auth_login_name
+        }
+        return JsonResponse({"creds":json.dumps(creds), "status":"200"})
+    else:
+        return JsonResponse({"message":"Error", "status":"404"})
 
 
 
