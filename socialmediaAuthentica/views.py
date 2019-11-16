@@ -346,8 +346,8 @@ def gd_segregates(request):
         elif(request.GET.get('authName')=="DROPBOX"):
             dropBoxTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="DROPBOX")).accessToken, request.user)
 
-    if(DataAnalysis.objects.filter(user=request.user).count()>0):
-        obj=DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA")
+    if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()>0):
+        obj=DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName=request.GET.get('authName')))
 
         segregates=[]
         c=0
