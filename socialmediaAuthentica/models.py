@@ -68,7 +68,7 @@ class DataAnalysis(models.Model):
         else:
             data=""
 
-        return self.user.username+" - "+self.provider.authName+" - "+data
+        return self.user.username+" - "+self.provider.authName+" - "+data+" - "+obj.typeOfData
 
 
 class Notification(models.Model):
