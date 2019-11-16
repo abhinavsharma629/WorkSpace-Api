@@ -56,7 +56,7 @@ class DataAnalysis(models.Model):
 
     def __str__(self):
         if(self.segregatedData):
-            data="Segregated Data"
+            data="Segregated Data - "+self.typeOfData
         elif(self.rootPageData):
             data="RootPage Data"
         elif(self.hierarchicalData):
@@ -68,7 +68,7 @@ class DataAnalysis(models.Model):
         else:
             data=""
 
-        return self.user.username+" - "+self.provider.authName+" - "+data+" - "+self.typeOfData
+        return self.user.username+" - "+self.provider.authName+" - "+data
 
 
 class Notification(models.Model):
