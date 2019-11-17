@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import sharedNoteData, CommentsOnNotes, NotesDetails
-from .serializers import sharedNoteDataSerializer, CommentsOnNotesSerializer, NotesDetailsSerializer, sharedNotesWithoutDetailsSerializer
+from .serializers import sharedNoteDataSerializer, CommentsOnNotesSerializer, NotesDetailsSerializer, sharedNotesWithoutDetailsSerializer, NotesDetailsSerializerForLikes, NotesDetailsSerializerForPosts
 from django.db.models import Q
 from django.http import JsonResponse
 from rest_framework.parsers import MultiPartParser
@@ -324,6 +324,23 @@ def noteDetails(request):
 
     likesNotesForCurrentUser=NotesDetails.objects.filter(likes__userId=request.user)
     likes_serializer=NotesDetailsSerializer(likesNotesForCurrentUser, many=True)
+
+    sharedDetails=sharedNoteData.objects.filter(sharedTo=UserDetails.objects.get(userId=request.user))
+    print(sharedDetails)
+    serializers1=sharedNotesWithoutDetailsSerializer(sharedDetails, many=True)
+    return JsonResponse({"message": "Ok", "sharedNotes": json.dumps(serializers.data),"sharedDetails": json.dumps(serializers1.data),"likedNotes":json.dumps(likes_serializer.data), "status": "200"})
+
+
+
+@api_view(['GET'])
+def noteDetailsForNative(request):
+    permission_classes=(IsAuthenticated,)
+
+    sharedNotesForCurrentUser=NotesDetails.objects.filter(sharedTo__sharedTo__userId__exact=UserDetails.objects.get(userId=request.user).userId)
+    serializers=NotesDetailsSerializerForPosts(sharedNotesForCurrentUser, many=True)
+
+    likesNotesForCurrentUser=NotesDetails.objects.filter(likes__userId=request.user)
+    likes_serializer=NotesDetailsSerializerForLikes(likesNotesForCurrentUser, many=True)
 
     sharedDetails=sharedNoteData.objects.filter(sharedTo=UserDetails.objects.get(userId=request.user))
     print(sharedDetails)

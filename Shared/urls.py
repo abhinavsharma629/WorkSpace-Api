@@ -21,6 +21,7 @@ urlpatterns = [
     path('specificNoteDetail', views.specificNoteDetail, name="specificNoteDetail"),
     path('allUserFriends', views.allUserFriends, name="allUserFriends"),
     path('specificNoteDetailForGit', views.specificNoteDetailForGit, name="specificNoteDetailForGit"),
+    path("noteDetailsForNative", views.noteDetailsForNative, name="noteDetailsForNative"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
