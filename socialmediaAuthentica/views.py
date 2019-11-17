@@ -334,6 +334,7 @@ def complete(request):
     # Authorization Endpoint :- https://accounts.google.com/o/oauth2/v2/auth
 
 
+#Segregated Data List With Fist Paginated Data Data return
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def gd_segregates(request):
@@ -373,11 +374,13 @@ def gd_segregates(request):
 
 
 
+
+#Segregated Data List With Pagination Data return
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def gd_selected_segregates(request):
-    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", typeOfData=request.GET.get("selName")).count()>0):
-        obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", typeOfData=request.GET.get("selName"))
+    if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName')), classificationOfDataStorageType="SEGREGATED DATA", typeOfData=request.GET.get("selName")).count()>0):
+        obj=DataAnalysis.objects.get(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName')), classificationOfDataStorageType="SEGREGATED DATA", typeOfData=request.GET.get("selName"))
 
         startIndex=0
         endIndex=20
@@ -391,10 +394,12 @@ def gd_selected_segregates(request):
 
         return JsonResponse({"data":json.dumps(obj.segregatedData[request.GET.get("selName")][startIndex:endIndex]), "status":"200"})
     else:
-        return JsonResponse({"message":"Error", "status":"404"})
+        return JsonResponse({"message":"Data Not Built Yet / No Data Present", "status":"404"})
 
 
 
+
+#Person Overview Data
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def gd_data_overview(request):
@@ -493,7 +498,7 @@ def storeCloud(request):
 
 
 
-
+#Specifically For Checking And Building Drive Data
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def buildDriveForDrive(request):
@@ -502,8 +507,8 @@ def buildDriveForDrive(request):
     if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()==0):
         if(request.GET.get('authName')=="GOOGLE DRIVE"):
             googleTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="GOOGLE DRIVE")).accessToken, request.user)
-
-        elif(request.GET.get('authName')=="DROPBOX"):
+            return JsonResponse({"message":"Successfully Built Drive Data", "status":"200"})
+        else:
             return JsonResponse({"message":"Not Supported Cloud", "status":"500"})
     else:
         return JsonResponse({"message":"Already Built Drive Data", "status":"200"})
