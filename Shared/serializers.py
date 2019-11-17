@@ -30,9 +30,10 @@ class CommentsOnNotesSerializer(serializers.ModelSerializer):
 
 
 class CommentsOnNotesSerializerWithoutDetails(serializers.ModelSerializer):
-  class Meta:
-    model=CommentsOnNotes  # what module you are going to serialize
-    fields= ('commentId', 'user')
+    user=serializers.CharField(source='userId.userId.username')
+    class Meta:
+        model=CommentsOnNotes  # what module you are going to serialize
+        fields= ('commentId', 'user')
 
 
 class sharedNotesWithoutDetailsSerializer(serializers.ModelSerializer):
