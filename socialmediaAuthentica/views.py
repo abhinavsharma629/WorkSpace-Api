@@ -378,7 +378,20 @@ def gd_segregates(request):
 def gd_selected_segregates(request):
     if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", typeOfData=request.GET.get("selName")).count()>0):
         obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", typeOfData=request.GET.get("selName"))
-        return JsonResponse({"data":json.dumps(obj.segregatedData), "status":"200"})
+
+        startIndex=0
+        endIndex=20
+
+        if("startIndex" in request.GET):
+            startIndex=(int)(request.GET.get("startIndex"))
+
+        endIndex=(int)(startIndex+20)
+        # if("endIndex" in request.GET):
+        #     endIndex=request.GET.get("endIndex")
+        # else:
+        #     startIndex=0
+
+        return JsonResponse({"data":json.dumps(obj.segregatedData[request.GET.get("selName")][startIndex:endIndex]), "status":"200"})
     else:
         return JsonResponse({"message":"Error", "status":"404"})
 
