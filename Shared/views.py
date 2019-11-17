@@ -338,13 +338,15 @@ def noteDetailsForNative(request):
 
     sharedNotesForCurrentUser=NotesDetails.objects.filter(sharedTo__sharedTo__userId__exact=UserDetails.objects.get(userId=request.user).userId)
     serializers=NotesDetailsSerializerForPosts(sharedNotesForCurrentUser, many=True)
+    print("ok1")
 
     likesNotesForCurrentUser=NotesDetails.objects.filter(likes__userId=request.user)
     likes_serializer=NotesDetailsSerializerForLikes(likesNotesForCurrentUser, many=True)
+    print("ok2")
 
     sharedDetails=sharedNoteData.objects.filter(sharedTo=UserDetails.objects.get(userId=request.user))
-    print(sharedDetails)
     serializers1=sharedNotesWithoutDetailsSerializer(sharedDetails, many=True)
+    print("ok3")
     return JsonResponse({"message": "Ok", "sharedNotes": json.dumps(serializers.data),"sharedDetails": json.dumps(serializers1.data),"likedNotes":json.dumps(likes_serializer.data), "status": "200"})
 
 
