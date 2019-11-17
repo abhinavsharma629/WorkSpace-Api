@@ -514,6 +514,16 @@ def buildDriveForDrive(request):
         return JsonResponse({"message":"Already Built Drive Data", "status":"200"})
 
 
+#Specifically For rootPageData For Drive
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def rootFolderDataForDrive(request):
+    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA").count()>0):
+        print(type(DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA").rootPageData))
+        return JsonResponse({'message':'success', 'status':200})
+    else:
+        return JsonResponse({'message':'Drive Not Built', 'status':'404'})
+
 
 
 @api_view(['GET'])

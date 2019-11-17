@@ -15,6 +15,7 @@ urlpatterns = [
     path('gd_data_overview', views.gd_data_overview, name="gd_data_overview"),
     path('gd_selected_segregates', views.gd_selected_segregates, name="gd_selected_segregates"),
     path("buildDriveForDrive", views.buildDriveForDrive, name="buildDriveForDrive"),
+    path('rootFolderDataForDrive', views.rootFolderDataForDrive, name="rootFolderDataForDrive"),
 
     #GitHub Auth -D
     path('complete/gitHub-oauth2', views.gitHubComplete, name="gitHubComplete"),
