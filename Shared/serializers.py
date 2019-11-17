@@ -91,4 +91,4 @@ class NotesDetailsSerializerForLikes(serializers.ModelSerializer):
 
   class Meta:
     model=NotesDetails
-    fields=('note_id')
+    fields=('note_id', 'likesCount')
