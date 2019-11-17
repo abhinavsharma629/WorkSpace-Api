@@ -56,7 +56,7 @@ class DataAnalysis(models.Model):
 
     def __str__(self):
         if(self.segregatedData):
-            data="Segregated Data - "+self.typeOfData
+            data="Segregated Data"
         elif(self.rootPageData):
             data="RootPage Data"
         elif(self.hierarchicalData):
