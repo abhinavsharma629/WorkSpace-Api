@@ -390,7 +390,7 @@ def gd_selected_segregates(request):
 
         endIndex=(int)(startIndex+20)
 
-        print(startIndex+" - "+endIndex)
+
 
         return JsonResponse({"data":json.dumps(obj.segregatedData[request.GET.get("selName")][startIndex:endIndex]), "status":"200"})
     else:
