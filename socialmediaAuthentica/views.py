@@ -520,6 +520,7 @@ def buildDriveForDrive(request):
 def rootFolderDataForDrive(request):
     if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA").count()>0):
         print(type(DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA").rootPageData))
+        print(DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA").rootPageData[0:9])
         return JsonResponse({'message':'success', 'status':200})
     else:
         return JsonResponse({'message':'Drive Not Built', 'status':'404'})
