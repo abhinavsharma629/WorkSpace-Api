@@ -386,10 +386,8 @@ def gd_selected_segregates(request):
             startIndex=(int)(request.GET.get("startIndex"))
 
         endIndex=(int)(startIndex+20)
-        # if("endIndex" in request.GET):
-        #     endIndex=request.GET.get("endIndex")
-        # else:
-        #     startIndex=0
+
+        print(startIndex+" - "+endIndex)
 
         return JsonResponse({"data":json.dumps(obj.segregatedData[request.GET.get("selName")][startIndex:endIndex]), "status":"200"})
     else:
@@ -491,6 +489,26 @@ def storeCloud(request):
         if(notif):
             cloudObj.save()
         return JsonResponse({"message": "Created", "status": "201"})
+
+
+
+
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def buildDriveForDrive(request):
+    print(request.user)
+    print(request.GET.get('authName'))
+    if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()==0):
+        if(request.GET.get('authName')=="GOOGLE DRIVE"):
+            googleTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="GOOGLE DRIVE")).accessToken, request.user)
+
+        elif(request.GET.get('authName')=="DROPBOX"):
+            return JsonResponse({"message":"Not Supported Cloud", "status":"500"})
+    else:
+        return JsonResponse({"message":"Already Built Drive Data", "status":"200"})
+
+
 
 
 @api_view(['GET'])
