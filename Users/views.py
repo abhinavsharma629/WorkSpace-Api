@@ -53,6 +53,23 @@ def getUserDetails(request, format=None):
     # data=serializers.serialize('json', data)
     # return Response({"message":"Ok Done", 'data':data, 'extendedData':serializedData.data}, status=status.HTTP_200_OK)
 
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def profileShowDetails(request, format=None):
+    details=UserDetails.objects.get(userId=request.user)
+    username=request.user.username
+    full_name=request.user.firstname+" "+request.user.lastname
+    img_url=details.profilePhoto.url
+    occupation=details.occupation
+    total_friends=UserFriends.objects.get(userId=request.user).friends.all().count()
+    curr_lat=details.current_lat
+    curr_long=details.current_long
+
+    return JsonResponse({"username":username, "name":full_name, "occupation":occupation, "total_friends":total_friends, "curr_lat":curr_lat, "curr_long":curr_long})
+
+
+
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, )) #For @api_view
 def userValidity(request):

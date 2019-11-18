@@ -34,6 +34,7 @@ urlpatterns = [
     path('saveImage/', views.saveImage, name="saveImage"),
     path('createFullUser/', views.createFullUser, name="createFullUser"),
     path('validateUser/', views.validateUser, name="validateUser"),
+    path('profileShowDetails', views.profileShowDetails, name="profileShowDetails"),
 
     # Your URLs...
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
