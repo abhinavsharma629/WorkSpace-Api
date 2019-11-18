@@ -403,8 +403,8 @@ def gd_selected_segregates(request):
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def gd_data_overview(request):
-    if(CloudOauth2Details.objects.filter(userId=request.user).count()>0):
-        obj=CloudOauth2Details.objects.get(userId=request.user)
+    if(CloudOauth2Details.objects.filter(userId=request.user, authName=AllAuths.objects.get(authName="GOOGLE DRIVE")).count()>0):
+        obj=CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="GOOGLE DRIVE"))
 
         accessData=obj.accessData
         print(type(accessData))
