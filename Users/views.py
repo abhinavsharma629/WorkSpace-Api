@@ -305,8 +305,11 @@ def updateFullUser(request, format=None):
     pic=request.FILES['photo']
     print(params)
     print(request.user.username)
-    user=authenticate(User.objects.get(username=request.user.username).username, params['pass'])
-    if(user is not None):
+    from django.contrib.auth.hashers import check_password
+    currentpassword= request.user.password #user's current password
+    user = check_password(params['pass'], currentpassword)
+    #user=authenticate(User.objects.get(username=request.user.username).username, params['pass'])
+    if(user):
         obj=User.objects.get(username=request.user.username)
         print(params['pass1'])
         obj.set_password(params['pass1'])
