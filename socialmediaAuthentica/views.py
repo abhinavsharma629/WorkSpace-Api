@@ -542,12 +542,14 @@ def hierarchicalFolderDataForDrive(request):
 
 
     if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA").count()>0):
-        print(type(DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA").rootPageData))
+
         obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA").hierarchicalData
         if(request.GET.get('currentAccessId') in obj):
             children=[]
             currentChild=[]
-            children=obj[request.GET.get('currentAccessId')]['children'][startIndex:endIndex]
+            children=obj[request.GET.get('currentAccessId')]['children']
+            print(type(children))
+            children=children[(int)(startIndex):(int)(endIndex)]
             for i in children:
                 currentChild.append(obj[i])
             return JsonResponse({'message':'success', 'hierarchicalData':json.dumps(currentChild), 'status':'200'})
