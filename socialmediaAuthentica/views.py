@@ -549,6 +549,7 @@ def hierarchicalFolderDataForDrive(request):
             currentChild={}
             children=obj[request.GET.get('currentAccessId')]['children']
             print(children)
+            print(startIndex, endIndex)
             children=children[(int)(startIndex):(int)(endIndex)]
             for i in children:
                 print(i)
