@@ -21,6 +21,7 @@ from django_user_agents.utils import get_user_agent
 from Notifications.models import Notifications
 from Notifications.UserAgent import getDeviceDetails
 from Friends.models import FriendsFormedDetails, UserFriends
+from django.contrib.auth.hashers import check_password
 
 # import logging
 
@@ -305,7 +306,7 @@ def updateFullUser(request, format=None):
     pic=request.FILES['photo']
     print(params)
     print(request.user.username)
-    from django.contrib.auth.hashers import check_password
+
     currentpassword= request.user.password #user's current password
     user = check_password(params['pass'], currentpassword)
     #user=authenticate(User.objects.get(username=request.user.username).username, params['pass'])
