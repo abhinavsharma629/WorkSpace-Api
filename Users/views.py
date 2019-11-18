@@ -318,7 +318,7 @@ def updateFullUser(request, format=None):
         obj.last_name=params['lname']
         obj.save()
         date = parse_date(params['dob'])
-        obj1=UserDetails.objects.get(userId=User.objects.get(username=request.user.username))
+        obj1=UserDetails.objects.get(userId=User.objects.get(username=params['username']))
         obj1.address=params['address']
         obj1.phoneNumber=params['phone']
         obj1.occupation=params['occupation']
