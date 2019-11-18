@@ -296,6 +296,42 @@ def createFullUser(request, format=None):
 
 
 
+
+@api_view(['PUT'])
+@permission_classes((IsAuthenticated, ))
+def updateFullUser(request, format=None):
+    parser=(MultiPartParser,)
+    params=request.data
+    pic=request.FILES['photo']
+    print(params)
+
+    if(User.objects.get(username=request.user.username).password==params['pass']):
+        obj=User.objects.get(username=request.user.username)
+        obj.set_password(params['pass1'])
+        obj.first_name=params['fname']
+        obj.last_name=params['lname']
+        obj.save()
+        date = parse_date(params['dob'])
+        obj1=UserDetails.objects.get(userId=User.objects.get(username=request.user.username))
+        obj1.address=params['address']
+        obj1.phoneNumber=params['phone']
+        obj1.occupation=params['occupation']
+        obj1.state=params['state']
+        obj1.city=params['city']
+        obj1.country=params['country']
+        obj1.alternatePhoneNumber=params['phone1']
+        obj1.dateOfBirth=date
+        obj1.gender=params['gender'],current_lat=(float)(params['lat'])
+        obj1.current_long=(float)(params['long']))
+        obj1.lat_long='POINT('+str(params['lat'])+' '+str(params['long'])+')'
+        obj1.profilePhoto=pic
+        obj1.save()
+        return JsonResponse({"message":"Successfully Updated Profile", "status":"201", 'img_url':obj1.profilePhoto.url})
+        
+    else:
+        return JsonResponse({"message":"Wrong Password", "status":"404"})
+
+
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 def validateUser(request, format=None):
