@@ -66,7 +66,7 @@ def profileShowDetails(request, format=None):
     curr_lat=details.current_lat
     curr_long=details.current_long
 
-    return JsonResponse({"username":username, "name":full_name, "occupation":occupation, "total_friends":total_friends, "curr_lat":curr_lat, "curr_long":curr_long, "status":"200"})
+    return JsonResponse({"username":username, "img_url":img_url ,"name":full_name, "occupation":occupation, "total_friends":total_friends, "curr_lat":curr_lat, "curr_long":curr_long, "status":"200"})
 
 
 
