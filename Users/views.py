@@ -59,7 +59,7 @@ def getUserDetails(request, format=None):
 def profileShowDetails(request, format=None):
     details=UserDetails.objects.get(userId=request.user)
     username=request.user.username
-    full_name=request.user.firstname+" "+request.user.lastname
+    full_name=request.user.first_name+" "+request.user.last_name
     img_url=details.profilePhoto.url
     occupation=details.occupation
     total_friends=UserFriends.objects.get(userId=request.user).friends.all().count()
