@@ -546,10 +546,10 @@ def hierarchicalFolderDataForDrive(request):
         obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA").hierarchicalData
         if(request.GET.get('currentAccessId') in obj):
             children=[]
-            currentChild={}
+            currentChild=[]
             children=obj[request.GET.get('currentAccessId')]['children'][startIndex:endIndex]
             for i in children:
-                currentChild[i]=obj[i]
+                currentChild.append(obj[i])
             return JsonResponse({'message':'success', 'hierarchicalData':json.dumps(currentChild), 'status':'200'})
         else:
             return JsonResponse({'message':'Id Not Found', 'status':'404'})
