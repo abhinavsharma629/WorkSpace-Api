@@ -367,7 +367,7 @@ def selfSharedNoteDetailsForNative(request):
     print(serializers.data)
 
     likesNotesForCurrentUser=NotesDetails.objects.filter(likes__userId=request.user)
-    likes_serializer=NotesDetailsSerializerFor(likesNotesForCurrentUser, many=True)
+    likes_serializer=NotesDetailsSerializerForLikes(likesNotesForCurrentUser, many=True)
     #print(likes_serializer.data)
 
     sharedDetails=sharedNoteData.objects.filter(noteId__userId=UserDetails.objects.get(userId=request.user))
