@@ -518,9 +518,9 @@ def buildDriveForDrive(request):
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def rootFolderDataForDrive(request):
-    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA").count()>0):
-        print(type(DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA").rootPageData))
-        obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA").rootPageData
+    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA", authName=AllAuths.objects.get(authName="GOOGLE DRIVE")).count()>0):
+
+        obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA", authName=AllAuths.objects.get(authName="GOOGLE DRIVE")).rootPageData
         return JsonResponse({'message':'success', 'rootData':json.dumps(obj), 'status':'200'})
     else:
         return JsonResponse({'message':'Drive Not Built', 'status':'404'})
