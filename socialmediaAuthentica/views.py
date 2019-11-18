@@ -541,9 +541,9 @@ def hierarchicalFolderDataForDrive(request):
         endIndex=startIndex+20
 
 
-    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA").count()>0):
+    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA",provider=AllAuths.objects.get(authName="GOOGLE DRIVE")).count()>0):
 
-        obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA").hierarchicalData
+        obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA",provider=AllAuths.objects.get(authName="GOOGLE DRIVE")).hierarchicalData
         if(request.GET.get('currentAccessId') in obj):
             children=[]
             currentChild={}
