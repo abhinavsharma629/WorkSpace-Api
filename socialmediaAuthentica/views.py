@@ -526,6 +526,38 @@ def rootFolderDataForDrive(request):
         return JsonResponse({'message':'Drive Not Built', 'status':'404'})
 
 
+#Specifically For hierarchicalData For Drive With Pagination
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def hierarchicalFolderDataForDrive(request):
+    startIndex=0
+    endIndex=20
+
+    if('startIndex' in request.GET):
+        startIndex=request.GET.get("startIndex")
+    if('endIndex' in request.GET):
+        endIndex=request.GET.get("endIndex")
+    else:
+        endIndex=startIndex+20
+
+
+    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA").count()>0):
+        print(type(DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA").rootPageData))
+        obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA").hierarchicalData
+        if(request.GET.get('currentAccessId') in obj):
+            children=[]
+            currentChild={}
+            children=obj[request.GET.get('currentAccessId')]['children'][startIndex:endIndex]
+            for(i in children):
+                currentChild[i]=obj[i]
+            return JsonResponse({'message':'success', 'hierarchicalData':json.dumps(currentChild), 'status':'200'})
+        else:
+            return JsonResponse({'message':'Id Not Found', 'status':'404'})
+
+    else:
+        return JsonResponse({'message':'Drive Not Built', 'status':'404'})
+
+
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
