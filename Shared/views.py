@@ -359,6 +359,27 @@ def noteDetailsForNative(request):
 
 
 @api_view(['GET'])
+def selfSharedNoteDetailsForNative(request):
+    permission_classes=(IsAuthenticated,)
+
+    sharedNotesForCurrentUser=NotesDetails.objects.filter(admin=UserDetails.objects.get(userId=request.user))
+    serializers=NotesDetailsSerializerForPosts(sharedNotesForCurrentUser, many=True)
+    print(serializers.data)
+
+    likesNotesForCurrentUser=NotesDetails.objects.filter(likes__userId=request.user)
+    likes_serializer=NotesDetailsSerializerFor(likesNotesForCurrentUser, many=True)
+    #print(likes_serializer.data)
+
+    sharedDetails=sharedNoteData.objects.filter(noteId__userId=UserDetails.objects.get(userId=request.user))
+    #print(sharedDetails)
+    serializers1=sharedNotesWithoutDetailsSerializer(sharedDetails, many=True)
+    return JsonResponse({"message": "Ok", "sharedNotes": json.dumps(serializers.data),"sharedDetails": json.dumps(serializers1.data),"likedNotes":json.dumps(likes_serializer.data), "status": "200"})
+
+
+
+
+
+@api_view(['GET'])
 def selfSharedNoteDetails(request):
     permission_classes=(IsAuthenticated,)
 

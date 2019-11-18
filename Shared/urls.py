@@ -22,6 +22,7 @@ urlpatterns = [
     path('allUserFriends', views.allUserFriends, name="allUserFriends"),
     path('specificNoteDetailForGit', views.specificNoteDetailForGit, name="specificNoteDetailForGit"),
     path("noteDetailsForNative", views.noteDetailsForNative, name="noteDetailsForNative"),
+    path('selfSharedNoteDetailsForNative', views.selfSharedNoteDetailsForNative, name="selfSharedNoteDetailsForNative"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
