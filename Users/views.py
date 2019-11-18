@@ -62,7 +62,7 @@ def profileShowDetails(request, format=None):
     full_name=request.user.first_name+" "+request.user.last_name
     img_url=details.profilePhoto.url
     occupation=details.occupation
-    total_friends=UserFriends.objects.get(userId=request.user).friends.all().count()
+    total_friends=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all().count()
     curr_lat=details.current_lat
     curr_long=details.current_long
 
