@@ -321,13 +321,14 @@ def updateFullUser(request, format=None):
         obj1.country=params['country']
         obj1.alternatePhoneNumber=params['phone1']
         obj1.dateOfBirth=date
-        obj1.gender=params['gender'],current_lat=(float)(params['lat'])
-        obj1.current_long=(float)(params['long']))
+        obj1.gender=params['gender']
+        obj1.current_lat=(float)(params['lat'])
+        obj1.current_long=(float)(params['long'])
         obj1.lat_long='POINT('+str(params['lat'])+' '+str(params['long'])+')'
         obj1.profilePhoto=pic
         obj1.save()
         return JsonResponse({"message":"Successfully Updated Profile", "status":"201", 'img_url':obj1.profilePhoto.url})
-        
+
     else:
         return JsonResponse({"message":"Wrong Password", "status":"404"})
 
