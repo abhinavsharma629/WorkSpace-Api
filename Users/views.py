@@ -305,7 +305,7 @@ def updateFullUser(request, format=None):
     pic=request.FILES['photo']
     print(params)
     print(request.user.username)
-    user=authenticate(request, User.objects.get(username=request.user.username).username, params['pass'])
+    user=authenticate(User.objects.get(username=request.user.username).username, params['pass'])
     if(user is not None):
         obj=User.objects.get(username=request.user.username)
         print(params['pass1'])
