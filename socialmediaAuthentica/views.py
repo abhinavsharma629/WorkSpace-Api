@@ -548,7 +548,7 @@ def hierarchicalFolderDataForDrive(request):
             children=[]
             currentChild={}
             children=obj[request.GET.get('currentAccessId')]['children'][startIndex:endIndex]
-            for(i in children):
+            for i in children:
                 currentChild[i]=obj[i]
             return JsonResponse({'message':'success', 'hierarchicalData':json.dumps(currentChild), 'status':'200'})
         else:
