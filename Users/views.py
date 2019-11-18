@@ -20,7 +20,7 @@ import requests
 from django_user_agents.utils import get_user_agent
 from Notifications.models import Notifications
 from Notifications.UserAgent import getDeviceDetails
-from Friends.models import FriendsFormedDetails
+from Friends.models import FriendsFormedDetails, UserFriends
 
 # import logging
 
@@ -271,8 +271,8 @@ def createFullUser(request, format=None):
         return JsonResponse({"message":"Error", "status":"200"})
     if(notif):
         obj.save()
-        obj.firstname=params['fname']
-        obj.lastname=params['lname']
+        obj.first_name=params['fname']
+        obj.last_name=params['lname']
         obj.save()
 
         date = parse_date(params['dob'])
