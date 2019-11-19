@@ -8,7 +8,7 @@ provider=AllAuths.objects.get(authName='DROPBOX')
 
 def dropBoxTree(accessToken, username):
 	obj=User.objects.get(username=username)
-	
+
 
 	url = "https://api.dropboxapi.com/2/files/list_folder"
 
@@ -72,15 +72,15 @@ def dropBoxTree(accessToken, username):
 				mediaInfo['dimensions']['width']=i['media_info']['metadata']['dimensions']['width']
 				mediaInfo['timeOfPhoto']=i['media_info']['metadata']['time_taken']
 				myDict['mediaInfo']=mediaInfo
-			
-			#Making Parent Child Relation:- 
+
+			#Making Parent Child Relation:-
 			treePath=myDict['path'].split('/')
 			lastElement=len(treePath[len(treePath)-1])
 			currentPath=myDict['path'][0:len(myDict['path'])-lastElement]
-			
+
 			if(currentPath=="/"):
 				rootDict['children'].append(myDict)
-			
+
 			if(currentPath in dropBoxMyDict):
 				dropBoxMyDict[currentPath]['children'].append(myDict)
 			else:
@@ -92,14 +92,14 @@ def dropBoxTree(accessToken, username):
 					segregatedDataDict[myDict['mediaInfo']['metaTag']]=myDict
 				else:
 					segregatedDataDict[myDict['typeOfFile']]=myDict
-			
+
 			if(myDict['typeOfFile']=="folder"):
 				folderDataDict[myDict['path']]=myDict
 
-	f=open('dropBoxAnalysis.json','w')
-	json.dump(dropBoxMyDict, f)
-	f.close()
-	#print(json.dumps(dropBoxMyDict, indent=4))
+	#f=open('dropBoxAnalysis.json','w')
+	#json.dump(dropBoxMyDict, f)
+	#f.close()
+	print(json.dumps(segregatedDataDict, indent=4))
 
 
 
@@ -138,7 +138,7 @@ def dropBoxTree(accessToken, username):
 		if(notif):
 			objec.save()
 
-	
+
 	#Create / Update Only Segregated Data
 	for i,j in segregatedDataDict.items():
 		try:
