@@ -113,7 +113,7 @@ def dropBoxTree1(accessToken, username):
 	#f=open('dropBoxAnalysis.json','w')
 	#json.dump(dropBoxMyDict, f)
 	#f.close()
-	#print(json.dumps(segregatedDataDict, indent=4))
+	print(json.dumps(segregatedDataDict, indent=4))
 
 
 
