@@ -88,7 +88,7 @@ def dropBoxTree1(accessToken, username):
 				dropBoxMyDict[currentPath]={}
 				dropBoxMyDict[currentPath]['children']=[]
 				dropBoxMyDict[currentPath]['children'].append(myDict)
-			if(myDict['typeOfFile']!="folder"):
+            if(myDict['typeOfFile']!="folder"):
                 file_ext=i['name'].split(".")[len(i['name'].split("."))-1]
                 print(file_ext)
                 if(file_ext in segregatedDataDict):
