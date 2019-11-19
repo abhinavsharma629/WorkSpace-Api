@@ -97,13 +97,13 @@ def dropBoxTree1(accessToken, username):
                     segregatedDataDict[file_ext]=[]
                     segregatedDataDict[file_ext].append(myDict)
 
-			if(myDict['typeOfFile']=="folder"):
-				folderDataDict[myDict['path']]=myDict
+            if(myDict['typeOfFile']=="folder"):
+                folderDataDict[myDict['path']]=myDict
 
 	#f=open('dropBoxAnalysis.json','w')
 	#json.dump(dropBoxMyDict, f)
 	#f.close()
-	print(json.dumps(segregatedDataDict, indent=4))
+    print(json.dumps(segregatedDataDict, indent=4))
 
 
 
