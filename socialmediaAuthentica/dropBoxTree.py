@@ -44,7 +44,8 @@ def dropBoxTree(accessToken, username):
 		currentCursor=response['cursor']
 		hasMore=True if(response['has_more']=="true") else False
 		url = "https://api.dropboxapi.com/2/files/list_folder/continue"
-		#print(json.dumps(response, indent=4))
+		print(json.dumps(response, indent=4))
+
 		for i in response['entries']:
 			myDict={}
 			myDict['typeOfFile']=i['.tag']
