@@ -535,6 +535,22 @@ def buildDriveForDrive(request):
         return JsonResponse({"message":"Already Built Drive Data", "status":"200"})
 
 
+#Specifically For Checking And Building Drive Data
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def buildDropboxForDropbox(request):
+    print(request.user)
+    print(request.GET.get('authName'))
+    if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()==0):
+        if(request.GET.get('authName')=="DROPBOX"):
+            dropBoxTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="DROPBOX")).accessToken, request.user)
+            return JsonResponse({"message":"Successfully Built Dropbox Data", "status":"200"})
+        else:
+            return JsonResponse({"message":"Not Supported Cloud", "status":"500"})
+    else:
+        return JsonResponse({"message":"Already Built Dropbox Data", "status":"200"})
+
+
 #Specifically For rootPageData For Drive
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))

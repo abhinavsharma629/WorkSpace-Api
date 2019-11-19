@@ -38,7 +38,8 @@ urlpatterns = [
     path('complete/dropbox-oauth2', views.dropboxComplete, name="dropboxComplete"),
     path('dropboxLogin', views.dropboxLogin, name="dropboxLogin"),
     path('db_data_overview', views.db_data_overview, name="db_data_overview"),
-
+    path('buildDropboxForDropbox', views.buildDropboxForDropbox, name="buildDropboxForDropbox"),
+    
     #OneDrive Auth / #Microsoft Azure -D
     path('complete/oneDrive-oauth2', views.oneDriveComplete, name="oneDriveComplete"),
     path('oneDriveLogin', views.oneDriveLogin, name="oneDriveLogin"),
