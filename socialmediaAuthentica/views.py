@@ -447,6 +447,39 @@ def db_data_overview(request):
 
 
 
+#Segregated Data List With Fist Paginated Data Data return
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def db_segregates(request):
+
+    if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()==0):
+        print("building data")
+        if(request.GET.get('authName')=="DROPBOX"):
+            dropBoxTree1(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="DROPBOX")).accessToken, request.user)
+
+    if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()>0):
+        obj=DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName=request.GET.get('authName')))
+
+        segregates=[]
+        c=0
+        data={}
+        for i in obj:
+            #print(type(i.segregatedData))
+            if(c==0):
+                data={
+                "name":i.typeOfData,
+                "data":i.segregatedData[0:20]}
+
+            segregates.append({"id":c,"name":i.typeOfData})
+            c+=1
+
+        segregates.append({
+            "id":c,
+            "name":"Folder View"})
+
+        return JsonResponse({"data":json.dumps(data), "segregates":segregates, "status":"200"})
+    else:
+        return JsonResponse({"message":"Error", "status":"404"})
 
 
 

@@ -98,7 +98,7 @@ def dropBoxTree1(accessToken, username):
 
 			if(myDict['typeOfFile']!="folder"):
 				file_ext=i['name'].split(".")[len(i['name'].split("."))-1]
-				print(file_ext)
+				#print(file_ext)
 				if(file_ext in segregatedDataDict):
 					segregatedDataDict[file_ext].append(myDict)
 
@@ -113,7 +113,7 @@ def dropBoxTree1(accessToken, username):
 	#f=open('dropBoxAnalysis.json','w')
 	#json.dump(dropBoxMyDict, f)
 	#f.close()
-	print(json.dumps(segregatedDataDict, indent=4))
+	#print(json.dumps(segregatedDataDict, indent=4))
 
 
 
@@ -151,7 +151,7 @@ def dropBoxTree1(accessToken, username):
 		objec,notif=DataAnalysis.objects.get_or_create(user=obj, provider=provider, classificationOfDataStorageType="HIERARCHICAL DATA" , hierarchicalData=dropBoxMyDict)
 		if(notif):
 			objec.save()
-    
+
 
 	#Create / Update Only Segregated Data
 	for i,j in segregatedDataDict.items():
