@@ -424,6 +424,27 @@ def gd_data_overview(request):
 
 
 
+#Person Overview Data
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def db_data_overview(request):
+    if(CloudOauth2Details.objects.filter(userId=request.user, authName=AllAuths.objects.get(authName="DROPBOX")).count()>0):
+        obj=CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="DROPBOX"))
+
+        accessData=obj.accessData
+        print(type(accessData))
+        img_url=accessData['user_details']['profile_photo_url']
+        creds={
+            "access_token":obj.accessToken,
+            "img_url":img_url,
+            "id_token":obj.idTokenJwt,
+            "login_email":accessData['user_details']['email']
+        }
+        return JsonResponse({"creds":json.dumps(creds), "status":"200"})
+    else:
+        return JsonResponse({"message":"Error", "status":"404"})
+
+
 
 
 
