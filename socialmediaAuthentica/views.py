@@ -400,6 +400,32 @@ def gd_selected_segregates(request):
 
 
 
+
+
+#Segregated Data List With Pagination Data return
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def db_selected_segregates(request):
+    if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName')), classificationOfDataStorageType="SEGREGATED DATA", typeOfData=request.GET.get("selName")).count()>0):
+        obj=DataAnalysis.objects.get(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName')), classificationOfDataStorageType="SEGREGATED DATA", typeOfData=request.GET.get("selName"))
+
+        startIndex=0
+        endIndex=20
+
+        if("startIndex" in request.GET):
+            startIndex=(int)(request.GET.get("startIndex"))
+
+        endIndex=(int)(startIndex+20)
+
+
+
+        return JsonResponse({"data":json.dumps(obj.segregatedData[startIndex:endIndex]), "status":"200"})
+    else:
+        return JsonResponse({"message":"Data Not Built Yet / No Data Present", "status":"404"})
+
+
+
+
 #Person Overview Data
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
