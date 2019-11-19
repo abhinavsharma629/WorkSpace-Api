@@ -121,45 +121,45 @@ def dropBoxTree1(accessToken, username):
 
 
 
-	# #Create / Update Only Folder Data
-	# try:
-	# 	folderData=DataAnalysis.objects.get(user=obj, provider=provider, classificationOfDataStorageType="FOLDER DATA")
-	# 	folderData.folderData=folderDataDict
-	# 	folderData.save()
-	# except:
-	# 	objec,notif=DataAnalysis.objects.get_or_create(user=obj, provider=provider, classificationOfDataStorageType="FOLDER DATA" , folderData=folderDataDict)
-	# 	if(notif):
-	# 		objec.save()
-    #
-    #
-	# #Create / Update Only Root Page Data
-	# try:
-	# 	rootPageData=DataAnalysis.objects.get(user=obj, provider=provider, classificationOfDataStorageType="ROOT FOLDER DATA")
-	# 	rootPageData.rootPageData=rootDict
-	# 	rootPageData.save()
-	# except:
-	# 	objec,notif=DataAnalysis.objects.get_or_create(user=obj, provider=provider, classificationOfDataStorageType="ROOT FOLDER DATA" , rootPageData=rootDict)
-	# 	if(notif):
-	# 		objec.save()
-    #
-	# #Create / Update Only Hierarchical Data
-	# try:
-	# 	hierarchicalData=DataAnalysis.objects.get(user=obj, provider=provider, classificationOfDataStorageType="HIERARCHICAL DATA")
-	# 	hierarchicalData.hierarchicalData=dropBoxMyDict
-	# 	hierarchicalData.save()
-	# except:
-	# 	objec,notif=DataAnalysis.objects.get_or_create(user=obj, provider=provider, classificationOfDataStorageType="HIERARCHICAL DATA" , hierarchicalData=dropBoxMyDict)
-	# 	if(notif):
-	# 		objec.save()
-    #
-    #
-	# #Create / Update Only Segregated Data
-	# for i,j in segregatedDataDict.items():
-	# 	try:
-	# 		segregatedData=DataAnalysis.objects.get(user=obj, provider=provider, classificationOfDataStorageType="SEGREGATED DATA", typeOfData=i)
-	# 		segregatedData.segregatedData=segregatedDataDict[i]
-	# 		segregatedData.save()
-	# 	except:
-	# 		objec,notif=DataAnalysis.objects.get_or_create(user=obj, provider=provider, classificationOfDataStorageType="SEGREGATED DATA" , typeOfData=i, segregatedData=segregatedDataDict[i])
-	# 		if(notif):
-	# 			objec.save()
+	#Create / Update Only Folder Data
+	try:
+		folderData=DataAnalysis.objects.get(user=obj, provider=provider, classificationOfDataStorageType="FOLDER DATA")
+		folderData.folderData=folderDataDict
+		folderData.save()
+	except:
+		objec,notif=DataAnalysis.objects.get_or_create(user=obj, provider=provider, classificationOfDataStorageType="FOLDER DATA" , folderData=folderDataDict)
+		if(notif):
+			objec.save()
+
+
+	#Create / Update Only Root Page Data
+	try:
+		rootPageData=DataAnalysis.objects.get(user=obj, provider=provider, classificationOfDataStorageType="ROOT FOLDER DATA")
+		rootPageData.rootPageData=rootDict
+		rootPageData.save()
+	except:
+		objec,notif=DataAnalysis.objects.get_or_create(user=obj, provider=provider, classificationOfDataStorageType="ROOT FOLDER DATA" , rootPageData=rootDict)
+		if(notif):
+			objec.save()
+
+	#Create / Update Only Hierarchical Data
+	try:
+		hierarchicalData=DataAnalysis.objects.get(user=obj, provider=provider, classificationOfDataStorageType="HIERARCHICAL DATA")
+		hierarchicalData.hierarchicalData=dropBoxMyDict
+		hierarchicalData.save()
+	except:
+		objec,notif=DataAnalysis.objects.get_or_create(user=obj, provider=provider, classificationOfDataStorageType="HIERARCHICAL DATA" , hierarchicalData=dropBoxMyDict)
+		if(notif):
+			objec.save()
+    
+
+	#Create / Update Only Segregated Data
+	for i,j in segregatedDataDict.items():
+		try:
+			segregatedData=DataAnalysis.objects.get(user=obj, provider=provider, classificationOfDataStorageType="SEGREGATED DATA", typeOfData=i)
+			segregatedData.segregatedData=segregatedDataDict[i]
+			segregatedData.save()
+		except:
+			objec,notif=DataAnalysis.objects.get_or_create(user=obj, provider=provider, classificationOfDataStorageType="SEGREGATED DATA" , typeOfData=i, segregatedData=segregatedDataDict[i])
+			if(notif):
+				objec.save()
