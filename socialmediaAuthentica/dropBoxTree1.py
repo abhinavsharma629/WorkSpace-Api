@@ -39,20 +39,20 @@ def dropBoxTree1(accessToken, username):
 	folderDataDict={}
 	picTypes=['jpg', 'jpeg', 'png', 'gif', 'tif']
 
-	while(hasMore==True):
-		response = requests.request("POST", url, data=payload, headers=headers).json()
-		currentCursor=response['cursor']
-		hasMore=True if(response['has_more']=="true") else False
-		url = "https://api.dropboxapi.com/2/files/list_folder/continue"
+    while(hasMore==True):
+        response = requests.request("POST", url, data=payload, headers=headers).json()
+        currentCursor=response['cursor']
+        hasMore=True if(response['has_more']=="true") else False
+        url = "https://api.dropboxapi.com/2/files/list_folder/continue"
 		print(json.dumps(response, indent=4))
 
-		for i in response['entries']:
-			myDict={}
+        for i in response['entries']:
+            myDict={}
 			myDict['typeOfFile']=i['.tag']
 			myDict['name']=i['name']
 			myDict['path']=i['path_display']
 			myDict['id']=i['id'].split(':')[1]
-			if('client_modified' in i):
+            if('client_modified' in i):
 				myDict['clientModifiedDate']=i['client_modified']
 			if('server_modified' in i):
 				myDict['serverModifiedDate']=i['server_modified']
@@ -79,20 +79,22 @@ def dropBoxTree1(accessToken, username):
 			lastElement=len(treePath[len(treePath)-1])
 			currentPath=myDict['path'][0:len(myDict['path'])-lastElement]
 
-			if(currentPath=="/"):
-				rootDict['children'].append(myDict)
+            if(currentPath=="/"):
+                rootDict['children'].append(myDict)
 
-			if(currentPath in dropBoxMyDict):
-				dropBoxMyDict[currentPath]['children'].append(myDict)
-			else:
-				dropBoxMyDict[currentPath]={}
-				dropBoxMyDict[currentPath]['children']=[]
-				dropBoxMyDict[currentPath]['children'].append(myDict)
+            if(currentPath in dropBoxMyDict):
+                dropBoxMyDict[currentPath]['children'].append(myDict)
+            else:
+                dropBoxMyDict[currentPath]={}
+                dropBoxMyDict[currentPath]['children']=[]
+                dropBoxMyDict[currentPath]['children'].append(myDict)
+
             if(myDict['typeOfFile']!="folder"):
                 file_ext=i['name'].split(".")[len(i['name'].split("."))-1]
                 print(file_ext)
                 if(file_ext in segregatedDataDict):
                     segregatedDataDict[file_ext].append(myDict)
+
                 else:
                     segregatedDataDict[file_ext]=[]
                     segregatedDataDict[file_ext].append(myDict)
