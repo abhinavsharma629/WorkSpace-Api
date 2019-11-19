@@ -31,6 +31,7 @@ from .gitHubNotifications import getGitHubNotifications
 from .models import *
 import json
 from .dropBoxTree import dropBoxTree
+from .dropBoxTree1 import dropBoxTree1
 from django.core import serializers
 from django.db.models import Q
 from .userRepo import userRepo, userFollowers, userFollowing
@@ -543,7 +544,7 @@ def buildDropboxForDropbox(request):
     print(request.GET.get('authName'))
     if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()==0):
         if(request.GET.get('authName')=="DROPBOX"):
-            dropBoxTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="DROPBOX")).accessToken, request.user)
+            dropBoxTree1(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="DROPBOX")).accessToken, request.user)
             return JsonResponse({"message":"Successfully Built Dropbox Data", "status":"200"})
         else:
             return JsonResponse({"message":"Not Supported Cloud", "status":"500"})
