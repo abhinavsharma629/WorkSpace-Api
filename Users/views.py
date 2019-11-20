@@ -83,7 +83,7 @@ def friendShowDetails(request, format=None):
     curr_lat=details.current_lat
     curr_long=details.current_long
     if(FriendsFormedDetails.objects.filter(Q(user__userId__username=request.GET.get('username')) | Q(friend_name__userId__username=request.GET.get('username'))).count()>0):
-        obj=FriendsFormedDetails.objects.get(Q(user__userId__username=request.GET.get('username')) | Q(friend_name__userId__username=request.GET.get('username')))
+        obj=FriendsFormedDetails.objects.get(Q(user__userId__username=request.GET.get('username'), friend_name__userId__username=request.user.username) | Q(friend_name__userId__username=request.GET.get('username'), user__userId__username=request.user.username))
         formedAt=obj.formedAt
         isFriend=obj.friend_or_Request
     total_notes=NotesDetails.objects.filter(admin__userId__username=request.GET.get('username')).count()
