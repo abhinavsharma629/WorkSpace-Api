@@ -95,7 +95,7 @@ def friendShowDetails(request, format=None):
     mutual_friends1=FriendsFormedDetails.objects.filter(Q(friend_name__userId__username=request.user.username, user__userId__in=curr_ShowUserFriends1) | Q(friend_name__userId__in=curr_ShowUserFriends1, user__userId__username=request.user.username)).count()
     print(mutual_friends, mutual_friends1)
 
-    return JsonResponse({"username":username, "img_url":img_url ,"name":full_name, "occupation":occupation, "total_friends":total_friends, "curr_lat":curr_lat, "curr_long":curr_long, "status":"200"})
+    return JsonResponse({"username":username, "img_url":img_url ,"name":full_name, "occupation":occupation, "total_friends":total_friends, "curr_lat":curr_lat, "curr_long":curr_long, "mutual":mutual_friends, "mutual1":mutual_friends1, "status":"200"})
 
 
 
