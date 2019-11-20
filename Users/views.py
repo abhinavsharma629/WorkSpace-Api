@@ -82,6 +82,8 @@ def friendShowDetails(request, format=None):
     total_friends=UserFriends.objects.get(userId=UserDetails.objects.get(userId__username=request.GET.get('username'))).friends.all().count()
     curr_lat=details.current_lat
     curr_long=details.current_long
+    formedAt=""
+    isFriend=False
     if(FriendsFormedDetails.objects.filter(Q(user__userId__username=request.GET.get('username')) | Q(friend_name__userId__username=request.GET.get('username'))).count()>0):
         obj=FriendsFormedDetails.objects.get(Q(user__userId__username=request.GET.get('username'), friend_name__userId__username=request.user.username) | Q(friend_name__userId__username=request.GET.get('username'), user__userId__username=request.user.username))
         formedAt=obj.formedAt
@@ -95,7 +97,7 @@ def friendShowDetails(request, format=None):
     mutual_friends1=FriendsFormedDetails.objects.filter(Q(friend_name__userId__username=request.user.username, user__userId__in=curr_ShowUserFriends1) | Q(friend_name__userId__in=curr_ShowUserFriends1, user__userId__username=request.user.username)).count()
     print(mutual_friends, mutual_friends1)
 
-    return JsonResponse({"username":username, "img_url":img_url ,"name":full_name, "occupation":occupation, "total_friends":total_friends, "curr_lat":curr_lat, "curr_long":curr_long, "mutual":mutual_friends, "mutual1":mutual_friends1, "status":"200"})
+    return JsonResponse({"username":username, "formedAt":formedAt,"isFriend":isFriend,"total_notes":total_notes, "img_url":img_url ,"name":full_name, "occupation":occupation, "total_friends":total_friends, "curr_lat":curr_lat, "curr_long":curr_long, "mutual":mutual_friends, "mutual1":mutual_friends1, "status":"200"})
 
 
 
