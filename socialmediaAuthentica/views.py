@@ -623,6 +623,20 @@ def rootFolderDataForDrive(request):
         return JsonResponse({'message':'Drive Not Built', 'status':'404'})
 
 
+#Specifically For rootPageData For Drive
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def rootFolderDataForDropbox(request):
+    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName="DROPBOX")).count()>0):
+
+        obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName="DROPBOX")).rootPageData
+        return JsonResponse({'message':'success', 'rootData':json.dumps(obj), 'status':'200'})
+    else:
+        return JsonResponse({'message':'Drive Not Built', 'status':'404'})
+
+
+
+
 #Specifically For hierarchicalData For Drive With Pagination
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
