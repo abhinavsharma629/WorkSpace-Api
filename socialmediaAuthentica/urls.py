@@ -48,6 +48,7 @@ urlpatterns = [
     #OneDrive Auth / #Microsoft Azure -D
     path('complete/oneDrive-oauth2', views.oneDriveComplete, name="oneDriveComplete"),
     path('oneDriveLogin', views.oneDriveLogin, name="oneDriveLogin"),
+    path('complete/oneDrive-oauth21', views.oneDriveComplete1, name="oneDriveComplete1"),
 
     #Digital Ocean Auth
     # path('complete/digitalOcean-oauth2', views.digitalOceanComplete, name="digitalOceanComplete"),

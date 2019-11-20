@@ -1148,6 +1148,7 @@ def oneDriveComplete(request):
 
     print("GET:- ",request.GET)
     code=request.GET.get('code')
+
     print(code)
     url = "https://login.microsoftonline.com/common/oauth2/v2.0/token"
 
@@ -1210,6 +1211,77 @@ def oneDriveComplete(request):
     '''
 
 
+
+
+
+def oneDriveComplete1(request):
+    ONEDRIVE_CLIENT_SECRET="tjrgDSA!qkpSPYI25943%7B%5D%3F"
+    ONEDRIVE_CLIENT_ID="0831a781-a072-4bc2-9294-fd79b4ca082e"
+    ONEDRIVE_REDIRECT_URI="http://127.0.0.1:8000/hi/complete/oneDrive-oauth2"
+
+    print("GET:- ",request.GET)
+    code=request.GET.get('code')
+
+    print(code)
+    url = "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+
+    payload = "client_id="+ONEDRIVE_CLIENT_ID+"&redirect_uri="+ONEDRIVE_REDIRECT_URI+"&client_secret="+ONEDRIVE_CLIENT_SECRET+"&code="+str(code)+"&grant_type=authorization_code&scope=user.read"
+    headers = {
+        'Content-Type': "application/x-www-form-urlencoded",
+        'Accept': "*/*",
+        'Cache-Control': "no-cache",
+        'Host': "login.microsoftonline.com",
+        'cookie': "buid=AQABAAEAAADCoMpjJXrxTq9VG9te-7FXdF5conme6fNqjdiRBKElK6DOuE7g9rxbHk0J4cVfkhyDO94HIPBECOFSvIoniBPgXMFOPKmc6vAZJZZ8kvnkB1Lk54k7otPLp7BwvC6yqmcgAA; fpc=AmELew3xLfpMjD-FzTvNlRhtMOofAQAAAAmTmNQOAAAA; esctx=AQABAAAAAADCoMpjJXrxTq9VG9te-7FXw1EQWCa_qpBHd2IohA8PgBO6R_pz5zRjF0gYb_E_Q86jvXRWZP6dpPVX94u-GgCYeja702gmW-tYiQCiNE9uXSJ9qR_DhJjXzM_Sxj953w97bQBQ2AebN5LVPrEtWeE7jGVRC19QR1EI7-vK70pvdcP7Ugbxo45ZrxQdfMK_E3IgAA; x-ms-gateway-slice=prod; stsservicecookie=ests",
+        'accept-encoding': "gzip, deflate",
+        'content-length': "242",
+        'Connection': "keep-alive",
+        'cache-control': "no-cache"
+        }
+
+    response = requests.request("POST", url, data=payload, headers=headers)
+    oneDrive=open('oneDriveUserDetails.json', 'w')
+    userCred={}
+    userCred['token_details']=response.json()
+
+    print(json.dumps(response.json(), indent=2))
+
+    userDataUrl="https://graph.microsoft.com/v1.0/me"
+    headers = {
+    'Content-Type': "application/json",
+    'Authorization': "Bearer "+response.json()['access_token'],
+    'Accept': "*/*",
+    'Cache-Control': "no-cache",
+    'Host': "graph.microsoft.com",
+    'accept-encoding': "gzip, deflate",
+    'Connection': "keep-alive",
+    'cache-control': "no-cache"
+    }
+
+    response1 = requests.request("GET", userDataUrl, headers=headers)
+    userCred['user_details']=response1.json()
+
+    json.dump(userCred, oneDrive)
+    oneDrive.close()
+    return HttpResponse("OneDrive Done")
+
+    '''GET NEW ACCESS && REFRESH TOKEN
+
+    url = "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+    payload = "client_id="+ONEDRIVE_CLIENT_ID+"&redirect_uri="+ONEDRIVE_REDIRECT_URI+"&client_secret="+ONEDRIVE_CLIENT_SECRET+"&code="+str(code)+"&grant_type=refresh_token&refresh_token=PREVIOUS_REFRESH_TOKEN"
+    headers = {
+        'Content-Type': "application/x-www-form-urlencoded",
+        'Accept': "*/*",
+        'Cache-Control': "no-cache",
+        'Host': "login.microsoftonline.com",
+        'cookie': "buid=AQABAAEAAADCoMpjJXrxTq9VG9te-7FXdF5conme6fNqjdiRBKElK6DOuE7g9rxbHk0J4cVfkhyDO94HIPBECOFSvIoniBPgXMFOPKmc6vAZJZZ8kvnkB1Lk54k7otPLp7BwvC6yqmcgAA; fpc=AmELew3xLfpMjD-FzTvNlRhtMOofAQAAAAmTmNQOAAAA; esctx=AQABAAAAAADCoMpjJXrxTq9VG9te-7FXw1EQWCa_qpBHd2IohA8PgBO6R_pz5zRjF0gYb_E_Q86jvXRWZP6dpPVX94u-GgCYeja702gmW-tYiQCiNE9uXSJ9qR_DhJjXzM_Sxj953w97bQBQ2AebN5LVPrEtWeE7jGVRC19QR1EI7-vK70pvdcP7Ugbxo45ZrxQdfMK_E3IgAA; x-ms-gateway-slice=prod; stsservicecookie=ests",
+        'accept-encoding': "gzip, deflate",
+        'content-length': "242",
+        'Connection': "keep-alive",
+        'cache-control': "no-cache"
+        }
+
+    response = requests.request("POST", url, data=payload, headers=headers)
+    '''
 
 
 
