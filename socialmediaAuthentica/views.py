@@ -701,13 +701,13 @@ def hierarchicalFolderDataForDropbox(request):
             print(children)
             print(startIndex, endIndex)
             children=children[(int)(startIndex):(int)(endIndex)]
-            for i in children:
-                print(i)
-                print(obj[i])
-                currentChild[i]=obj[i]
+            # for i in children:
+            #     print(i)
+            #     print(obj[i])
+            #     currentChild[i]=obj[i]
 
             print(currentChild)
-            return JsonResponse({'message':'success', 'hierarchicalData':json.dumps(currentChild), 'status':'200'})
+            return JsonResponse({'message':'success', 'hierarchicalData':json.dumps(children), 'status':'200'})
         else:
             return JsonResponse({'message':'Id Not Found', 'status':'404'})
 
