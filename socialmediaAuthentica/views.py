@@ -1267,7 +1267,27 @@ def oneDriveComplete1(request):
     #json.dump(userCred, oneDrive)
     #oneDrive.close()
     #return HttpResponse("OneDrive Done")
-    return JsonResponse({'message':"Successfully Saved", "status":"200"})
+    headers1={}
+    headers1['Authorization']= 'Bearer '+request.GET.get('state')
+    url="https://shielded-dusk-55059.herokuapp.com/hi/storeCloud"
+
+    response=requests.post(url, data={
+        'access_token':userCred['token_details']['access_token'],
+        'email':userCred['user_details']['userPrincipalName'],
+        'cred':json.dumps(userCred),
+        'dump':json.dumps(userCred),
+        'authName': "AZURE"
+    }, headers=headers1).json()
+
+    print(response)
+
+    if(response['status']=='201'):
+        result="A Duplicate User With the Email Of Registered Drive Already Exists in our Database!! Please try again with that account (if its yours) or report an issue if you notice something unusual!!"
+    else:
+        result="Your Drive Data Will Soon Be Loaded!! We are analysing it!! Be Patient!!"
+    return JsonResponse({"message":"Successfully Saved", "status":"201"})
+
+    #return JsonResponse({'message':"Successfully Saved", "status":"200"})
     '''GET NEW ACCESS && REFRESH TOKEN
 
     url = "https://login.microsoftonline.com/common/oauth2/v2.0/token"
