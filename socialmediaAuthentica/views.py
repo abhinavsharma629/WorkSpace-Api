@@ -560,6 +560,13 @@ def storeCloud(request):
             obj.accessToken= request.data.get('access_token')
             obj.accessData=dump
             obj.save()
+        elif(request.data.get('authName')=="AZURE"):
+            obj.authName=AllAuths.objects.get(authName=request.data.get('authName'))
+            obj.auth_login_name=request.data.get('email')
+            obj.accessToken= cred['access_token']
+            obj.refreshToken=cred['refresh_token']
+            obj.accessData=dump
+            obj.save()
 
         return JsonResponse({"message": "Already Exists", "status": "203"})
     else:
