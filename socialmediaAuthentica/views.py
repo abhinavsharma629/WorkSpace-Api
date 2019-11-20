@@ -516,6 +516,7 @@ def db_segregates(request):
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def ma_data_overview(request):
+    print(request.GET)
     if(CloudOauth2Details.objects.filter(userId=request.user, authName=AllAuths.objects.get(authName="AZURE")).count()>0):
         obj=CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="AZURE"))
 
