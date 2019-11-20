@@ -22,6 +22,7 @@ from Notifications.models import Notifications
 from Notifications.UserAgent import getDeviceDetails
 from Friends.models import FriendsFormedDetails, UserFriends
 from django.contrib.auth.hashers import check_password
+from Shared.models import NotesDetails
 
 # import logging
 
@@ -66,6 +67,33 @@ def profileShowDetails(request, format=None):
     total_friends=UserFriends.objects.get(userId=UserDetails.objects.get(userId=request.user)).friends.all().count()
     curr_lat=details.current_lat
     curr_long=details.current_long
+
+    return JsonResponse({"username":username, "img_url":img_url ,"name":full_name, "occupation":occupation, "total_friends":total_friends, "curr_lat":curr_lat, "curr_long":curr_long, "status":"200"})
+
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def friendShowDetails(request, format=None):
+    details=UserDetails.objects.get(userId__username=request.GET.get('username'))
+    username=request.GET.get('username')
+    full_name=User.objects.get(username=request.GET.get('username')).first_name+" "+User.objects.get(username=request.GET.get('username')).last_name
+    img_url=details.profilePhoto.url
+    occupation=details.occupation
+    total_friends=UserFriends.objects.get(userId=UserDetails.objects.get(userId__username=request.GET.get('username'))).friends.all().count()
+    curr_lat=details.current_lat
+    curr_long=details.current_long
+    if(FriendsFormedDetails.objects.filter(Q(user__userId__username=request.GET.get('username')) | Q(friend_name__userId__username=request.GET.get('username'))).count()>0):
+        obj=FriendsFormedDetails.objects.get(Q(user__userId__username=request.GET.get('username')) | Q(friend_name__userId__username=request.GET.get('username')))
+        formedAt=obj.formedAt
+        isFriend=obj.friend_or_Request
+    total_notes=NotesDetails.objects.filter(admin__userId__username=request.GET.get('username')).count()
+
+    curr_ShowUserFriends=FriendsFormedDetails.objects.filter(Q(user__userId__username=request.GET.get('username'))).values('friend_name__userId')
+    curr_ShowUserFriends1=FriendsFormedDetails.objects.filter(Q(friend_name__userId__username=request.GET.get('username'))).values('user__userId')
+
+    mutual_friends=FriendsFormedDetails.objects.filter(Q(friend_name__userId__username=request.GET.get('username'), user__userId__in=curr_ShowUserFriends) | Q(friend_name__userId__in=curr_ShowUserFriends, user__userId__username=request.GET.get('username'))).count()
+    mutual_friends1=FriendsFormedDetails.objects.filter(Q(friend_name__userId__username=request.GET.get('username'), user__userId__in=curr_ShowUserFriends1) | Q(friend_name__userId__in=curr_ShowUserFriends1, user__userId__username=request.GET.get('username'))).count()
+    print(mutual_friends, mutual_friends1)
 
     return JsonResponse({"username":username, "img_url":img_url ,"name":full_name, "occupation":occupation, "total_friends":total_friends, "curr_lat":curr_lat, "curr_long":curr_long, "status":"200"})
 
