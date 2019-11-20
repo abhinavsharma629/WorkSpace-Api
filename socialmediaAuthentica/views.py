@@ -1217,10 +1217,12 @@ def oneDriveComplete(request):
 def oneDriveComplete1(request):
     ONEDRIVE_CLIENT_SECRET="tjrgDSA!qkpSPYI25943%7B%5D%3F"
     ONEDRIVE_CLIENT_ID="0831a781-a072-4bc2-9294-fd79b4ca082e"
-    ONEDRIVE_REDIRECT_URI="http://127.0.0.1:8000/hi/complete/oneDrive-oauth2"
+    ONEDRIVE_REDIRECT_URI="https://obscure-bayou-10492.herokuapp.com/hi/complete/oneDrive-oauth21"
 
     print("GET:- ",request.GET)
     code=request.GET.get('code')
+    state=request.GET.get('state')
+    print(state)
 
     print(code)
     url = "https://login.microsoftonline.com/common/oauth2/v2.0/token"
@@ -1239,7 +1241,7 @@ def oneDriveComplete1(request):
         }
 
     response = requests.request("POST", url, data=payload, headers=headers)
-    oneDrive=open('oneDriveUserDetails.json', 'w')
+    #oneDrive=open('oneDriveUserDetails.json', 'w')
     userCred={}
     userCred['token_details']=response.json()
 
@@ -1260,10 +1262,10 @@ def oneDriveComplete1(request):
     response1 = requests.request("GET", userDataUrl, headers=headers)
     userCred['user_details']=response1.json()
 
-    json.dump(userCred, oneDrive)
-    oneDrive.close()
-    return HttpResponse("OneDrive Done")
-
+    #json.dump(userCred, oneDrive)
+    #oneDrive.close()
+    #return HttpResponse("OneDrive Done")
+    return JsonResponse({'message':"Successfully Saved", "status":"200"})
     '''GET NEW ACCESS && REFRESH TOKEN
 
     url = "https://login.microsoftonline.com/common/oauth2/v2.0/token"
