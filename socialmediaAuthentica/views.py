@@ -512,6 +512,25 @@ def db_segregates(request):
 
 
 
+#Person Overview Data
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def ma_data_overview(request):
+    if(CloudOauth2Details.objects.filter(userId=request.user, authName=AllAuths.objects.get(authName="AZURE")).count()>0):
+        obj=CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="AZURE"))
+
+        accessData=obj.accessData
+        print(type(accessData))
+        
+        creds={
+            "access_token":obj.accessToken,
+            "refresh_token":obj.refreshToken,
+            "login_email":obj.auth_login_name
+        }
+        return JsonResponse({"creds":json.dumps(creds), "status":"200"})
+    else:
+        return JsonResponse({"message":"Error", "status":"404"})
+
 
 
 
