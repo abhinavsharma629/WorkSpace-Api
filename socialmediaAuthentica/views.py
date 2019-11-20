@@ -1245,7 +1245,7 @@ def oneDriveComplete1(request):
     userCred={}
     userCred['token_details']=response.json()
 
-    print(json.dumps(response.json(), indent=2))
+    #print(json.dumps(response.json(), indent=2))
 
     userDataUrl="https://graph.microsoft.com/v1.0/me"
     headers = {
@@ -1261,6 +1261,7 @@ def oneDriveComplete1(request):
 
     response1 = requests.request("GET", userDataUrl, headers=headers)
     userCred['user_details']=response1.json()
+    print(json.dumps(userCred, indent=4))
 
     #json.dump(userCred, oneDrive)
     #oneDrive.close()
