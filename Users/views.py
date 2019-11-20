@@ -88,11 +88,11 @@ def friendShowDetails(request, format=None):
         isFriend=obj.friend_or_Request
     total_notes=NotesDetails.objects.filter(admin__userId__username=request.GET.get('username')).count()
 
-    curr_ShowUserFriends=FriendsFormedDetails.objects.filter(Q(user__userId__username=request.GET.get('username'))).values('friend_name__userId')
-    curr_ShowUserFriends1=FriendsFormedDetails.objects.filter(Q(friend_name__userId__username=request.GET.get('username'))).values('user__userId')
+    curr_ShowUserFriends=FriendsFormedDetails.objects.filter(Q(user__userId__username=request.GET.get('username'), friend_or_Request=True)).values('friend_name__userId')
+    curr_ShowUserFriends1=FriendsFormedDetails.objects.filter(Q(friend_name__userId__username=request.GET.get('username'), friend_or_Request=True)).values('user__userId')
 
-    mutual_friends=FriendsFormedDetails.objects.filter(Q(friend_name__userId__username=request.GET.get('username'), user__userId__in=curr_ShowUserFriends) | Q(friend_name__userId__in=curr_ShowUserFriends, user__userId__username=request.GET.get('username'))).count()
-    mutual_friends1=FriendsFormedDetails.objects.filter(Q(friend_name__userId__username=request.GET.get('username'), user__userId__in=curr_ShowUserFriends1) | Q(friend_name__userId__in=curr_ShowUserFriends1, user__userId__username=request.GET.get('username'))).count()
+    mutual_friends=FriendsFormedDetails.objects.filter(Q(friend_name__userId__username=request.user.username, user__userId__in=curr_ShowUserFriends) | Q(friend_name__userId__in=curr_ShowUserFriends, user__userId__username=request.user.username)).count()
+    mutual_friends1=FriendsFormedDetails.objects.filter(Q(friend_name__userId__username=request.user.username, user__userId__in=curr_ShowUserFriends1) | Q(friend_name__userId__in=curr_ShowUserFriends1, user__userId__username=request.user.username)).count()
     print(mutual_friends, mutual_friends1)
 
     return JsonResponse({"username":username, "img_url":img_url ,"name":full_name, "occupation":occupation, "total_friends":total_friends, "curr_lat":curr_lat, "curr_long":curr_long, "status":"200"})
