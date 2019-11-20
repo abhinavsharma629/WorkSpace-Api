@@ -1273,6 +1273,7 @@ def oneDriveComplete1(request):
 
     response=requests.post(url, data={
         'access_token':userCred['token_details']['access_token'],
+        'refresh_token':userCred['token_details']['refresh_token'],
         'email':userCred['user_details']['userPrincipalName'],
         'cred':json.dumps(userCred),
         'dump':json.dumps(userCred),
