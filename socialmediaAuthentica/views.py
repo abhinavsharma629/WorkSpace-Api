@@ -1133,7 +1133,7 @@ def oneDriveLogin(request):
         'client_id':'0831a781-a072-4bc2-9294-fd79b4ca082e',
         'scope':'onedrive.readwrite, wl.offline_access',
         'response_type':'code',
-        'redirect_uri':'http://127.0.0.1:8000/hi/complete/oneDrive-oauth2'
+        'redirect_uri':'https://obscure-bayou-10492.herokuapp.com/hi/complete/oneDrive-oauth21'
     }
     import urllib.parse
     #Making the query url
