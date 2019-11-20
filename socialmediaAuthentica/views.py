@@ -676,6 +676,45 @@ def hierarchicalFolderDataForDrive(request):
         return JsonResponse({'message':'Drive Not Built', 'status':'404'})
 
 
+#Specifically For hierarchicalData For Drive With Pagination
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def hierarchicalFolderDataForDropbox(request):
+    startIndex=0
+    endIndex=20
+
+    if('startIndex' in request.GET):
+        startIndex=request.GET.get("startIndex")
+    if('endIndex' in request.GET):
+        endIndex=request.GET.get("endIndex")
+    else:
+        endIndex=startIndex+20
+
+
+    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA",provider=AllAuths.objects.get(authName="DROPBOX")).count()>0):
+
+        obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA",provider=AllAuths.objects.get(authName="DROPBOX")).hierarchicalData
+        if(request.GET.get('currentAccessId') in obj):
+            children=[]
+            currentChild={}
+            children=obj[request.GET.get('currentAccessId')]['children']
+            print(children)
+            print(startIndex, endIndex)
+            children=children[(int)(startIndex):(int)(endIndex)]
+            for i in children:
+                print(i)
+                print(obj[i])
+                currentChild[i]=obj[i]
+
+            print(currentChild)
+            return JsonResponse({'message':'success', 'hierarchicalData':json.dumps(currentChild), 'status':'200'})
+        else:
+            return JsonResponse({'message':'Id Not Found', 'status':'404'})
+
+    else:
+        return JsonResponse({'message':'Drive Not Built', 'status':'404'})
+
+
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
