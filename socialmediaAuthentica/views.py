@@ -521,7 +521,7 @@ def ma_data_overview(request):
 
         accessData=obj.accessData
         print(type(accessData))
-        
+
         creds={
             "access_token":obj.accessToken,
             "refresh_token":obj.refreshToken,
@@ -597,6 +597,9 @@ def storeCloud(request):
 
         elif(request.data.get('authName')=="GITHUB"):
             cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')),auth_login_name=request.data.get('auth_login_name'), accessToken= request.data.get('access_token') , accessData=dump)
+
+        elif(request.data.get('authName')=="AZURE"):
+            cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')),auth_login_name=request.data.get('email'), accessToken= request.data.get('access_token') , accessData=dump, refreshToken=request.data.get('refresh_token'))
 
         if(notif):
             cloudObj.save()
