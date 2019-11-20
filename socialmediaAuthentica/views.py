@@ -1133,7 +1133,7 @@ def oneDriveLogin(request):
         'client_id':'0831a781-a072-4bc2-9294-fd79b4ca082e',
         'scope':'onedrive.readwrite, wl.offline_access',
         'response_type':'code',
-        'redirect_uri':'https://shielded-dusk-55059.herokuapp.com/hi/oneDriveLogin'
+        'redirect_uri':'https://shielded-dusk-55059.herokuapp.com/hi/complete/oneDrive-oauth21'
     }
 
     import urllib.parse
@@ -1218,7 +1218,7 @@ def oneDriveComplete(request):
 def oneDriveComplete1(request):
     ONEDRIVE_CLIENT_SECRET="tjrgDSA!qkpSPYI25943%7B%5D%3F"
     ONEDRIVE_CLIENT_ID="0831a781-a072-4bc2-9294-fd79b4ca082e"
-    ONEDRIVE_REDIRECT_URI="https://shielded-dusk-55059.herokuapp.com/hi/oneDriveLogin"
+    ONEDRIVE_REDIRECT_URI="https://shielded-dusk-55059.herokuapp.com/hi/complete/oneDrive-oauth21"
 
     print("GET:- ",request.GET)
     code=request.GET.get('code')
