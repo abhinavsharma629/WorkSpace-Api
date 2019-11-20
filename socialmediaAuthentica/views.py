@@ -692,12 +692,12 @@ def hierarchicalFolderDataForDropbox(request):
 
 
     if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA",provider=AllAuths.objects.get(authName="DROPBOX")).count()>0):
-
+        print(request.GET.get('currentAccessId')+"/")
         obj=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA",provider=AllAuths.objects.get(authName="DROPBOX")).hierarchicalData
-        if(request.GET.get('currentAccessId') in obj):
+        if(request.GET.get('currentAccessId')+"/" in obj):
             children=[]
             currentChild={}
-            children=obj[request.GET.get('currentAccessId')]['children']
+            children=obj[request.GET.get('currentAccessId')+"/"]['children']
             print(children)
             print(startIndex, endIndex)
             children=children[(int)(startIndex):(int)(endIndex)]
