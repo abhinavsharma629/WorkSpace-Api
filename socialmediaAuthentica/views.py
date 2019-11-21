@@ -1365,8 +1365,9 @@ def oneDriveComplete1(request):
 @api_view(['PUT'])
 @permission_classes((IsAuthenticated, ))
 def setDropboxFolderData(request):
-    data=json.loads(request.data)
+    data=request.data
     print(data)
+    print(type(data))
     if(data['isRoot']==True):
         rootData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
         rootData.rootPageData['children'].append(data['dict'])
@@ -1386,7 +1387,7 @@ def setDropboxFolderData(request):
     print(accessPath)
     hieData.hierarchicalData['accessPath']['children'].append(data['dict'])
     hieData.save()
-    
+
     return JsonResponse({'message':'Successfully Updated Data', "status":"201"})
 
 
