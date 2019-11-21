@@ -557,9 +557,8 @@ def storeCloud(request):
 
     userObj=User.objects.get(username=request.user.username)
 
-
-    if(CloudOauth2Details.objects.filter( ~Q(userId=userObj), Q(auth_login_name=request.data.get('email'))).count()==1):
-        CloudOauth2Details.objects.filter(auth_login_name=request.data.get('email')).delete()
+    if((CloudOauth2Details.objects.filter( ~Q(userId=userObj), Q(auth_login_name=request.data.get('email')), Q(authName=AllAuths.objects.get(authName=request.data.get('authName')))).count()==1) or (DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()>0)):
+        # CloudOauth2Details.objects.filter(auth_login_name=request.data.get('email')).delete()
         return JsonResponse({"message":"Multiple Login Attempt", "status":"500"})
     else:
         if(CloudOauth2Details.objects.filter(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName'))).count()==1):
