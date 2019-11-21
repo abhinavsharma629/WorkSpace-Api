@@ -446,7 +446,10 @@ def gd_data_overview(request):
         }
         return JsonResponse({"creds":json.dumps(creds), "status":"200"})
     else:
-        return JsonResponse({"message":"Error", "status":"404"})
+        if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName="GOOGLE DRIVE")).count()>0):
+            return JsonResponse({"message":"Multiple Login Account Access Attempt", "status":"500"})
+        else:
+            return JsonResponse({"message":"Error", "status":"404"})
 
 
 
@@ -544,7 +547,7 @@ def ma_data_overview(request):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 def storeCloud(request):
-    print("Logged in user is:- ",request.user)
+    print("Logged in user is:- ",request.user.username)
     print(request.POST.get('cred'))
     print(type(request.POST.get('cred')))
     print(request.data)
@@ -553,58 +556,64 @@ def storeCloud(request):
     dump=json.loads(request.data.get('dump'))
 
     userObj=User.objects.get(username=request.user.username)
-    if(CloudOauth2Details.objects.filter(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName'))).count()==1):
-        obj=CloudOauth2Details.objects.get(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')))
-        if(request.data.get('authName')=="GOOGLE DRIVE"):
-            obj.authName=AllAuths.objects.get(authName=request.data.get('authName'))
-            obj.auth_login_name=request.data.get('email')
-            obj.revokeTokenUri= cred['revoke_uri']
-            obj.accessToken= cred['access_token']
-            obj.refreshToken=cred['refresh_token']
-            obj.tokenExpiry= cred['token_expiry']
-            obj.idTokenJwt=cred['id_token_jwt']
-            obj.tokenId=cred['id_token']
-            obj.tokenInfoUri=cred['token_info_uri']
-            obj.accessData=dump
-            obj.save()
-        elif(request.data.get('authName')=="DROPBOX"):
-            obj.authName=AllAuths.objects.get(authName=request.data.get('authName'))
-            obj.auth_login_name=request.data.get('email')
-            obj.accessToken= cred['access_token']
-            obj.tokenId=cred['uid']
-            obj.accessData=dump
-            obj.save()
-        elif(request.data.get('authName')=="GITHUB"):
-            obj.authName=AllAuths.objects.get(authName=request.data.get('authName'))
-            obj.auth_login_name=request.data.get('auth_login_name')
-            obj.accessToken= request.data.get('access_token')
-            obj.accessData=dump
-            obj.save()
-        elif(request.data.get('authName')=="AZURE"):
-            obj.authName=AllAuths.objects.get(authName=request.data.get('authName'))
-            obj.auth_login_name=request.data.get('email')
-            obj.accessToken= cred['access_token']
-            obj.refreshToken=cred['refresh_token']
-            obj.accessData=dump
-            obj.save()
 
-        return JsonResponse({"message": "Already Exists", "status": "203"})
+
+    if(CloudOauth2Details.objects.filter(auth_login_name=request.data.get('email')).count()==1):
+        CloudOauth2Details.objects.filter(auth_login_name=request.data.get('email')).delete()
+        return JsonResponse({"message":"Multiple Login Attempt", "status":"500"})
     else:
-        if(request.data.get('authName')=="GOOGLE DRIVE"):
-            cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')), auth_login_name=request.data.get('email'), revokeTokenUri= cred['revoke_uri'], accessToken= cred['access_token'], refreshToken=cred['refresh_token'] , tokenExpiry= cred['token_expiry'], idTokenJwt=cred['id_token_jwt'], tokenId=cred['id_token'], tokenInfoUri=cred['token_info_uri'], accessData=dump)
+        if(CloudOauth2Details.objects.filter(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName'))).count()==1):
+            obj=CloudOauth2Details.objects.get(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')))
+            if(request.data.get('authName')=="GOOGLE DRIVE"):
+                obj.authName=AllAuths.objects.get(authName=request.data.get('authName'))
+                obj.auth_login_name=request.data.get('email')
+                obj.revokeTokenUri= cred['revoke_uri']
+                obj.accessToken= cred['access_token']
+                obj.refreshToken=cred['refresh_token']
+                obj.tokenExpiry= cred['token_expiry']
+                obj.idTokenJwt=cred['id_token_jwt']
+                obj.tokenId=cred['id_token']
+                obj.tokenInfoUri=cred['token_info_uri']
+                obj.accessData=dump
+                obj.save()
+            elif(request.data.get('authName')=="DROPBOX"):
+                obj.authName=AllAuths.objects.get(authName=request.data.get('authName'))
+                obj.auth_login_name=request.data.get('email')
+                obj.accessToken= cred['access_token']
+                obj.tokenId=cred['uid']
+                obj.accessData=dump
+                obj.save()
+            elif(request.data.get('authName')=="GITHUB"):
+                obj.authName=AllAuths.objects.get(authName=request.data.get('authName'))
+                obj.auth_login_name=request.data.get('auth_login_name')
+                obj.accessToken= request.data.get('access_token')
+                obj.accessData=dump
+                obj.save()
+            elif(request.data.get('authName')=="AZURE"):
+                obj.authName=AllAuths.objects.get(authName=request.data.get('authName'))
+                obj.auth_login_name=request.data.get('email')
+                obj.accessToken= cred['access_token']
+                obj.refreshToken=cred['refresh_token']
+                obj.accessData=dump
+                obj.save()
 
-        elif(request.data.get('authName')=="DROPBOX"):
-            cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')), auth_login_name=request.data.get('email'), accessToken= cred['access_token'] , tokenId=cred['uid'], accessData=dump)
+            return JsonResponse({"message": "Already Exists", "status": "203"})
+        else:
+            if(request.data.get('authName')=="GOOGLE DRIVE"):
+                cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')), auth_login_name=request.data.get('email'), revokeTokenUri= cred['revoke_uri'], accessToken= cred['access_token'], refreshToken=cred['refresh_token'] , tokenExpiry= cred['token_expiry'], idTokenJwt=cred['id_token_jwt'], tokenId=cred['id_token'], tokenInfoUri=cred['token_info_uri'], accessData=dump)
 
-        elif(request.data.get('authName')=="GITHUB"):
-            cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')),auth_login_name=request.data.get('auth_login_name'), accessToken= request.data.get('access_token') , accessData=dump)
+            elif(request.data.get('authName')=="DROPBOX"):
+                cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')), auth_login_name=request.data.get('email'), accessToken= cred['access_token'] , tokenId=cred['uid'], accessData=dump)
 
-        elif(request.data.get('authName')=="AZURE"):
-            cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')),auth_login_name=request.data.get('email'), accessToken= request.data.get('access_token') , accessData=dump, refreshToken=request.data.get('refresh_token'))
+            elif(request.data.get('authName')=="GITHUB"):
+                cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')),auth_login_name=request.data.get('auth_login_name'), accessToken= request.data.get('access_token') , accessData=dump)
 
-        if(notif):
-            cloudObj.save()
-        return JsonResponse({"message": "Created", "status": "201"})
+            elif(request.data.get('authName')=="AZURE"):
+                cloudObj, notif= CloudOauth2Details.objects.get_or_create(userId=userObj, authName=AllAuths.objects.get(authName=request.data.get('authName')),auth_login_name=request.data.get('email'), accessToken= request.data.get('access_token') , accessData=dump, refreshToken=request.data.get('refresh_token'))
+
+            if(notif):
+                cloudObj.save()
+            return JsonResponse({"message": "Created", "status": "201"})
 
 
 
@@ -1348,6 +1357,8 @@ def oneDriveComplete1(request):
 
 # def digitalOceanComplete(request):
 #     return HttpResponse("Aws Done")
+
+
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
