@@ -120,7 +120,7 @@ def googleTree(access_token, username):
 	# json.dump(searchItemsDict, f4)
 	# f4.close()
 
-	print(finalDict)
+	#print(finalDict)
 	#f=open('googleFinalDict.json','w')
 	#json.dump(finalDict, f)
 	#f.close()
