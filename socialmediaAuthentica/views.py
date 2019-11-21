@@ -1385,7 +1385,7 @@ def setDropboxFolderData(request):
         accessPath="/"
 
     print(accessPath)
-    hieData.hierarchicalData['accessPath']['children'].append(data['dict'])
+    hieData.hierarchicalData[accessPath]['children'].append(data['dict'])
     hieData.save()
 
     return JsonResponse({'message':'Successfully Updated Data', "status":"201"})
