@@ -31,7 +31,7 @@ def googleTree(access_token, username):
 			url="https://www.googleapis.com/drive/v2/files?maxResults=1000&orderBy=createdDate"
 		else:
 			url="https://www.googleapis.com/drive/v2/files?maxResults=1000&orderBy=createdDate&pageToken="+str(nextPageToken)
-		
+
 		response=requests.get(url,headers=headers)
 		response=response.json()
 
@@ -39,7 +39,7 @@ def googleTree(access_token, username):
 		# f1=open('googleCompareFinalDict.json','w')
 		# json.dump(response, f1)
 		# f1.close()
-		
+
 		#response['incompleteSearch']=False
 		#print(type(response['incompleteSearch']))
 		#If next page Exists
@@ -47,7 +47,7 @@ def googleTree(access_token, username):
 			nextPageToken=response['nextPageToken']
 		else:
 			hasNextPage=0
-		
+
 
 		for i in response['items']:
 			finalDict[i['id']]={}
@@ -61,8 +61,8 @@ def googleTree(access_token, username):
 
 			typeof=mimeType.split('.')
 			typeOfFile=typeof[len(typeof)-1]
-			
-			
+
+
 			finalDict[i['id']]['type']=typeOfFile
 
 			if('parents' in i and len(i['parents'])>0):
@@ -81,7 +81,7 @@ def googleTree(access_token, username):
 					c=True
 			else:
 				finalDict[i['id']]['children']=[]
-			
+
 			finalDict[i['id']]['created']=i['createdDate']
 			finalDict[i['id']]['modifiedDate']=i['modifiedDate']
 			finalDict[i['id']]['version']=i['version']
@@ -106,36 +106,36 @@ def googleTree(access_token, username):
 				folderDict[i['id']]={}
 				folderDict[i['id']]=finalDict[i['id']]
 
-			
+
 
 	# print(finalDict)
-			
+
 	for i,j in searchItemsDict.items():
 		try:
 			finalDict[i]['children']=j
 		except Exception as e:
 			print(e)
-	
+
 	# f4=open('searchDict.json', 'w')
 	# json.dump(searchItemsDict, f4)
-	# f4.close()	
+	# f4.close()
 
 	print(finalDict)
-	f=open('googleFinalDict.json','w')
-	json.dump(finalDict, f)
-	f.close()
+	#f=open('googleFinalDict.json','w')
+	#json.dump(finalDict, f)
+	#f.close()
 
-	
+
 	#Giving Unknown and error that i couldn't understand
-	
+
 	# for i,j in searchItemsDict.items():
 	# 	if(i in folderDict):
 	# 		folderDict[i]['children']=[]
 	# 	for k in j:
 	# 		if(finalDict[k]['type']=="folder"):
 	# 			folderDict[i]['children'].append(k)
-		
-	
+
+
 	# print("Root Folder Files:- ")
 	# print(json.dumps(rootFolder, indent=4))
 	# print("----------------------------------------------------")
@@ -157,7 +157,7 @@ def googleTree(access_token, username):
 	# print("\n\n\n\n\n\n\n")
 	# print("Id's of Folders with children Are:- ")
 	# print("----------------------------------------------------")
-	
+
 
 	#Create / Update Only Folder Data
 	try:
@@ -200,8 +200,8 @@ def googleTree(access_token, username):
 			print(e)
 
 
-	
-	
+
+
 	#Create / Update Only Segregated Data
 	for i,j in dataAnalysis.items():
 		data={}
