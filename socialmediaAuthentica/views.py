@@ -1361,6 +1361,58 @@ def oneDriveComplete1(request):
 
 
 
+#PUT CLOUD DATA
+@api_view(['PUT'])
+@permission_classes((IsAuthenticated, ))
+def setDropboxFolderData(request):
+    data=json.loads(request.data)
+    print(data)
+    if(data['isRoot']==True):
+        rootData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
+        rootData.rootPageData['children'].append(data['dict'])
+        rootData.save()
+
+    hieData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
+
+
+    path=data['dict']['path'].split('/')
+    print(path)
+    accessPath=""
+    for i in range(0,len(path)-1):
+        accessPath+=path[i]+"/"
+    if(accessPath==""):
+        accessPath="/"
+
+    print(accessPath)
+    hieData.hierarchicalData['accessPath']['children'].append(data['dict'])
+    hieData.save()
+    
+    return JsonResponse({'message':'Successfully Updated Data', "status":"201"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #DIGITAL OCEAN
 # def digitalOceanLogin(request):
 #     url="https://cloud.digitalocean.com/v1/oauth/authorize"

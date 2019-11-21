@@ -43,7 +43,7 @@ urlpatterns = [
     path('db_selected_segregates', views.db_selected_segregates, name="db_selected_segregates"),
     path('rootFolderDataForDropbox', views.rootFolderDataForDropbox, name="rootFolderDataForDropbox"),
     path('hierarchicalFolderDataForDropbox', views.hierarchicalFolderDataForDropbox, name="hierarchicalFolderDataForDropbox"),
-
+    path('setDropboxFolderData', views.setDropboxFolderData, name="setDropboxFolderData"),
 
     #OneDrive Auth / #Microsoft Azure -D
     path('complete/oneDrive-oauth2', views.oneDriveComplete, name="oneDriveComplete"),
