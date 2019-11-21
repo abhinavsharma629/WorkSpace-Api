@@ -558,7 +558,7 @@ def storeCloud(request):
     userObj=User.objects.get(username=request.user.username)
 
 
-    if(CloudOauth2Details.objects.filter(auth_login_name=request.data.get('email')).count()==1):
+    if(CloudOauth2Details.objects.filter(auth_login_name=request.data.get('email'), ~Q(userId=userObj)).count()==1):
         CloudOauth2Details.objects.filter(auth_login_name=request.data.get('email')).delete()
         return JsonResponse({"message":"Multiple Login Attempt", "status":"500"})
     else:
@@ -624,14 +624,17 @@ def storeCloud(request):
 def buildDriveForDrive(request):
     print(request.user)
     print(request.GET.get('authName'))
-    if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()==0):
-        if(request.GET.get('authName')=="GOOGLE DRIVE"):
-            googleTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="GOOGLE DRIVE")).accessToken, request.user.username)
-            return JsonResponse({"message":"Successfully Built Drive Data", "status":"200"})
-        else:
-            return JsonResponse({"message":"Not Supported Cloud", "status":"500"})
+    if(CloudOauth2Details.objects.filter(userId=request.user).count()==0):
+        return JsonResponse({"message":"Multiple Account Login Attempt", "status":"400"})
     else:
-        return JsonResponse({"message":"Already Built Drive Data", "status":"200"})
+        if(DataAnalysis.objects.filter(user=request.user, provider=AllAuths.objects.get(authName=request.GET.get('authName'))).count()==0):
+            if(request.GET.get('authName')=="GOOGLE DRIVE"):
+                googleTree(CloudOauth2Details.objects.get(userId=request.user, authName=AllAuths.objects.get(authName="GOOGLE DRIVE")).accessToken, request.user.username)
+                return JsonResponse({"message":"Successfully Built Drive Data", "status":"200"})
+            else:
+                return JsonResponse({"message":"Not Supported Cloud", "status":"500"})
+        else:
+            return JsonResponse({"message":"Already Built Drive Data", "status":"200"})
 
 
 #Specifically For Checking And Building Drive Data
