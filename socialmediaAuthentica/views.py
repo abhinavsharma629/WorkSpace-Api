@@ -1378,8 +1378,6 @@ def setDropboxFolderData(request):
 
     path=data['dict']['path'].split('/')
     print(path)
-    # for i in range(0,len(path)):
-    #     accessPath+=path[i]+"/"
 
     accessPath1=""  #Add To Children of this path
     for i in range(0,len(path)-1):
@@ -1388,35 +1386,6 @@ def setDropboxFolderData(request):
     print(accessPath1)
     accessPath=data['dict']['path']+"/"
     print(accessPath)
-
-
-
-    # hieDataCopy=hieData.hierarchicalData
-    #
-    # #For Existing path children
-    # if(accessPath1 in hieDataCopy):
-    #     hieDataCopy[accessPath1]['children'].append(dict)
-    # else:
-    #     hieDataCopy[accessPath1]={}
-    #     hieDataCopy[accessPath1]['children']=[]
-    #     hieDataCopy[accessPath1]['children'].append(dict)
-    #
-    #
-    # #For new path
-    # hieDataCopy[accessPath]={}
-    # hieDataCopy[accessPath]['children']=[]
-    # hieDataCopy[accessPath]['children'].append(dict)
-    #
-    # print(type(hieDataCopy))
-    # #print(hieDataCopy)
-    # print(type(hieData.hierarchicalData))
-    # d=serializers.serialize('json', hieDataCopy)
-    # print(type(d.data))
-    # d1=json.loads(d)
-    # print(type(d1))
-    # hieData.hierarchicalData=json.loads(json.dumps(hieDataCopy))
-    # hieData.save()
-
 
     #For Existing path children
     if(accessPath1 in hieData.hierarchicalData):
@@ -1438,6 +1407,54 @@ def setDropboxFolderData(request):
 
 
 
+
+#PUT CLOUD DATA
+@api_view(['DELETE'])
+@permission_classes((IsAuthenticated, ))
+def deleteDropboxFolderData(request):
+    data=request.data
+    print(data)
+    print(type(data))
+    if(data['isRoot']==True):
+        rootData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
+        rootData.rootPageData['children'].append(data['dict'])
+        rootData.save()
+
+    hieData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
+
+
+
+    path=data['path'].split('/')
+    print(path)
+
+    accessPath1=""  #Add To Children of this path
+    for i in range(0,len(path)-1):
+        accessPath1+=path[i]+"/"
+
+    print(accessPath1)
+    accessPath=data['dict']['path']+"/"
+    print(accessPath)
+
+
+    #For Existing path children
+    hieDataCopy=hieData.hierarchicalData
+
+    if(accessData in hieDataCopy):
+        for i in hieDataCopy:
+            if(i['path']==accessPath1):
+                hieDataCopy.remove(i)
+                break
+
+    if(accessData in hieDataCopy):
+        del hieDataCopy[accessData]
+    else:
+        print("path not present")
+        print("error in making path")
+
+    hieData.hierarchicalData=hieDataCopy
+    hieData.save()
+
+    return JsonResponse({'message':'Successfully Deleted Data', "status":"200"})
 
 
 

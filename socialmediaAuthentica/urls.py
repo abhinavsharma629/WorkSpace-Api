@@ -44,6 +44,7 @@ urlpatterns = [
     path('rootFolderDataForDropbox', views.rootFolderDataForDropbox, name="rootFolderDataForDropbox"),
     path('hierarchicalFolderDataForDropbox', views.hierarchicalFolderDataForDropbox, name="hierarchicalFolderDataForDropbox"),
     path('setDropboxFolderData', views.setDropboxFolderData, name="setDropboxFolderData"),
+    path('deleteDropboxFolderData', views.deleteDropboxFolderData, name="deleteDropboxFolderData"),
 
     #OneDrive Auth / #Microsoft Azure -D
     path('complete/oneDrive-oauth2', views.oneDriveComplete, name="oneDriveComplete"),
