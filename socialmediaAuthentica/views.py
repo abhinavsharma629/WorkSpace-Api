@@ -1430,7 +1430,6 @@ def setDropboxFolderData(request):
     #For new path
     hieData.hierarchicalData[accessPath]={}
     hieData.hierarchicalData[accessPath]['children']=[]
-    hieData.hierarchicalData[accessPath]['children'].append(data['dict'])
 
     hieData.save()
 
