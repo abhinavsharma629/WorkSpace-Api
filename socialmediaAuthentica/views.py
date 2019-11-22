@@ -1391,30 +1391,47 @@ def setDropboxFolderData(request):
 
 
 
-    hieDataCopy=hieData.hierarchicalData
+    # hieDataCopy=hieData.hierarchicalData
+    #
+    # #For Existing path children
+    # if(accessPath1 in hieDataCopy):
+    #     hieDataCopy[accessPath1]['children'].append(dict)
+    # else:
+    #     hieDataCopy[accessPath1]={}
+    #     hieDataCopy[accessPath1]['children']=[]
+    #     hieDataCopy[accessPath1]['children'].append(dict)
+    #
+    #
+    # #For new path
+    # hieDataCopy[accessPath]={}
+    # hieDataCopy[accessPath]['children']=[]
+    # hieDataCopy[accessPath]['children'].append(dict)
+    #
+    # print(type(hieDataCopy))
+    # #print(hieDataCopy)
+    # print(type(hieData.hierarchicalData))
+    # d=serializers.serialize('json', hieDataCopy)
+    # print(type(d.data))
+    # d1=json.loads(d)
+    # print(type(d1))
+    # hieData.hierarchicalData=json.loads(json.dumps(hieDataCopy))
+    # hieData.save()
+
 
     #For Existing path children
-    if(accessPath1 in hieDataCopy):
-        hieDataCopy[accessPath1]['children'].append(dict)
+    if(accessPath1 in hieData.hierarchicalData):
+        hieData.hierarchicalData[accessPath1]['children'].append(dict)
     else:
-        hieDataCopy[accessPath1]={}
-        hieDataCopy[accessPath1]['children']=[]
-        hieDataCopy[accessPath1]['children'].append(dict)
+        hieData.hierarchicalData[accessPath1]={}
+        hieData.hierarchicalData[accessPath1]['children']=[]
+        hieData.hierarchicalData[accessPath1]['children'].append(dict)
 
 
     #For new path
-    hieDataCopy[accessPath]={}
-    hieDataCopy[accessPath]['children']=[]
-    hieDataCopy[accessPath]['children'].append(dict)
-
-    print(type(hieDataCopy))
-    #print(hieDataCopy)
-    print(type(hieData.hierarchicalData))
-    d=serializers.serialize('json', hieDataCopy)
-    print(type(d.data))
-    d1=json.loads(d)
-    print(type(d1))
-    hieData.hierarchicalData=json.loads(json.dumps(hieDataCopy))
+    hieData.hierarchicalData[accessPath]={}
+    hieData.hierarchicalData[accessPath]['children']=[]
+    hieData.hierarchicalData[accessPath]['children'].append(dict)
+    
     hieData.save()
 
     return JsonResponse({'message':'Successfully Updated Data', "status":"201"})
