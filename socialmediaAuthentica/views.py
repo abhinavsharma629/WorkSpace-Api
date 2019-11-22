@@ -1501,11 +1501,20 @@ def setDropboxFileData(request):
 
     #Segregated data update
     type=data['dict']['name'].split(".")[len(data['dict']['name'].split("."))-1]
-    segData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type)
-    print(type)
-    segData.append(data['dict'])
-    segData.save()
-    
+
+    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type).count()>0):
+        segData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type)
+        print(type)
+        segData.append(data['dict'])
+        segData.save()
+    else:
+        dat=[]
+        dat.append(data['dict'])
+        segData,notif=DataAnalysis.objects.get_or_create(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type, segregatedData=dat)
+        print(type)
+        if(notif):
+            segData.save()
+
     return JsonResponse({'message':'Successfully Uploaded File Data', "status":"201"})
 
 
