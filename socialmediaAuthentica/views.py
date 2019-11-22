@@ -1500,18 +1500,18 @@ def setDropboxFileData(request):
 
 
     #Segregated data update
-    type=data['dict']['name'].split(".")[len(data['dict']['name'].split("."))-1]
+    type1=data['dict']['name'].split(".")[len(data['dict']['name'].split("."))-1]
 
-    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type).count()>0):
-        segData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type)
-        print(type)
+    if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type1).count()>0):
+        segData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type1)
+        print(type1)
         segData.append(data['dict'])
         segData.save()
     else:
         dat=[]
         dat.append(data['dict'])
-        segData,notif=DataAnalysis.objects.get_or_create(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type, segregatedData=dat)
-        print(type)
+        segData,notif=DataAnalysis.objects.get_or_create(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type1, segregatedData=dat)
+        print(type1)
         if(notif):
             segData.save()
 
