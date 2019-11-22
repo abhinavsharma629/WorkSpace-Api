@@ -1505,7 +1505,7 @@ def setDropboxFileData(request):
     if(DataAnalysis.objects.filter(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type1).count()>0):
         segData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type1)
         print(type1)
-        segData['children'].append(data['dict'])
+        segData.segregatedData.append(data['dict'])
         segData.save()
     else:
         dat=[]
