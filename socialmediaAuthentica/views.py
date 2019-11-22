@@ -1462,7 +1462,51 @@ def deleteDropboxFolderData(request):
 
 
 
+#PUT CLOUD DATA
+@api_view(['PUT'])
+@permission_classes((IsAuthenticated, ))
+def setDropboxFileData(request):
+    data=request.data
+    print(data)
+    print(type(data))
+    if(data['isRoot']==True):
+        rootData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
+        rootData.rootPageData['children'].append(data['dict'])
+        rootData.save()
 
+    hieData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
+
+
+    path=data['dict']['path'].split('/')
+    print(path)
+
+    accessPath1=""  #Add To Children of this path
+    for i in range(0,len(path)-1):
+        accessPath1+=path[i]+"/"
+
+    print(accessPath1)
+    accessPath=data['dict']['path']+"/"
+    print(accessPath)
+
+    #For Existing path children
+    if(accessPath1 in hieData.hierarchicalData):
+        hieData.hierarchicalData[accessPath1]['children'].append(data['dict'])
+    else:
+        hieData.hierarchicalData[accessPath1]={}
+        hieData.hierarchicalData[accessPath1]['children']=[]
+        hieData.hierarchicalData[accessPath1]['children'].append(data['dict'])
+
+    hieData.save()
+
+
+    #Segregated data update
+    type=data['dict']['name'].split(".")[len(data['dict']['name'].split("."))-1]
+    segData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type)
+    print(type)
+    segData.append(data['dict'])
+    segData.save()
+    
+    return JsonResponse({'message':'Successfully Uploaded File Data', "status":"201"})
 
 
 
