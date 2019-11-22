@@ -78,9 +78,9 @@ def dropBoxTree1(accessToken, username):
 				try:
 					mediaInfo['dimensions']['height']=i['media_info']['metadata']['dimensions']['height']
 					mediaInfo['dimensions']['width']=i['media_info']['metadata']['dimensions']['width']
+					mediaInfo['timeOfPhoto']=i['media_info']['metadata']['time_taken']
 				except:
 					print("skipped")
-				mediaInfo['timeOfPhoto']=i['media_info']['metadata']['time_taken']
 				myDict['mediaInfo']=mediaInfo
 
 			#Making Parent Child Relation:-
