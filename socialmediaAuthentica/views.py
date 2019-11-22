@@ -1408,6 +1408,8 @@ def setDropboxFolderData(request):
     hieDataCopy[accessPath]['children'].append(dict)
 
     print(type(hieDataCopy))
+    print(hieDataCopy)
+    print(hieData)
     hieData.hierarchicalData=hieDataCopy
     hieData.save()
 
