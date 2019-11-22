@@ -1410,7 +1410,7 @@ def setDropboxFolderData(request):
     print(type(hieDataCopy))
     print(hieDataCopy)
     print(hieData)
-    hieData.hierarchicalData=hieDataCopy
+    hieData.hierarchicalData=json.loads(json.dumps(hieDataCopy))
     hieData.save()
 
     return JsonResponse({'message':'Successfully Updated Data', "status":"201"})
