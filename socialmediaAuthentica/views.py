@@ -1376,13 +1376,12 @@ def setDropboxFolderData(request):
     hieData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
 
 
-    path=data['dict']['path'].split('/')
-    print(path)
-    accessPath=""
-    for i in range(0,len(path)):
-        accessPath+=path[i]+"/"
+    # path=data['dict']['path'].split('/')
+    # print(path)
+    # for i in range(0,len(path)):
+    #     accessPath+=path[i]+"/"
 
-    accessPath1="/"
+    accessPath1=""  #Add To Children of this path
     for i in range(0,len(path)-1):
         accessPath1+=path[i]+"/"
 
@@ -1392,21 +1391,24 @@ def setDropboxFolderData(request):
 
 
 
-    # hieDataCopy=hie.hierarchicalData
-    # if(accessPath in hieDataCopy):
-    #     if('children' in hieDataCopy[accessPath]):
-    #         hieDataCopy[accessPath]['children'].append(dict)
-    #     else:
-    #         hieDataCopy[accessPath]['children']=[]
-    #         hieDataCopy[accessPath]['children'].append(dict)
-    #
-    # else:
-    #     hieDataCopy[accessPath]={}
-    #     hieDataCopy[accessPath]['children']=[]
-    #     hieDataCopy[accessPath]['children'].append(dict)
-    #
-    # hieData.hierarchicalData=hieDataCopy
-    # hieData.save()
+    hieDataCopy=hie.hierarchicalData
+
+    #For Existing path children
+    if(accessPath1 in hieDataCopy):
+        hieDataCopy[accessPath1]['children'].append(dict)
+    else:
+        hieDataCopy[accessPath1]={}
+        hieDataCopy[accessPath1]['children']=[]
+        hieDataCopy[accessPath1]['children'].append(dict)
+
+
+    #For new path
+    hieDataCopy[accessPath]={}
+    hieDataCopy[accessPath]['children']=[]
+    hieDataCopy[accessPath]['children'].append(dict)
+    
+    hieData.hierarchicalData=hieDataCopy
+    hieData.save()
 
     return JsonResponse({'message':'Successfully Updated Data', "status":"201"})
 
