@@ -1376,8 +1376,8 @@ def setDropboxFolderData(request):
     hieData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
 
 
-    # path=data['dict']['path'].split('/')
-    # print(path)
+    path=data['dict']['path'].split('/')
+    print(path)
     # for i in range(0,len(path)):
     #     accessPath+=path[i]+"/"
 
@@ -1406,7 +1406,7 @@ def setDropboxFolderData(request):
     hieDataCopy[accessPath]={}
     hieDataCopy[accessPath]['children']=[]
     hieDataCopy[accessPath]['children'].append(dict)
-    
+
     hieData.hierarchicalData=hieDataCopy
     hieData.save()
 
