@@ -1391,7 +1391,7 @@ def setDropboxFolderData(request):
 
 
 
-    hieDataCopy=hie.hierarchicalData
+    hieDataCopy=hieData.hierarchicalData
 
     #For Existing path children
     if(accessPath1 in hieDataCopy):
