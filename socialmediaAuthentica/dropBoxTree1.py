@@ -75,8 +75,11 @@ def dropBoxTree1(accessToken, username):
 				mediaInfo={}
 				mediaInfo['metaTag']=i['media_info']['metadata']['.tag']
 				mediaInfo['dimensions']={}
-				mediaInfo['dimensions']['height']=i['media_info']['metadata']['dimensions']['height']
-				mediaInfo['dimensions']['width']=i['media_info']['metadata']['dimensions']['width']
+				try:
+					mediaInfo['dimensions']['height']=i['media_info']['metadata']['dimensions']['height']
+					mediaInfo['dimensions']['width']=i['media_info']['metadata']['dimensions']['width']
+				except:
+					print("skipped")
 				mediaInfo['timeOfPhoto']=i['media_info']['metadata']['time_taken']
 				myDict['mediaInfo']=mediaInfo
 
