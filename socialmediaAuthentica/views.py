@@ -1382,18 +1382,20 @@ def setDropboxFolderData(request):
     for i in range(0,len(path)):
         accessPath+=path[i]+"/"
 
-    if(accessPath in hieData.hierarchicalData):
-        if('children' in hieData.hierarchicalData[accessPath]):
-            hieData.hierarchicalData[accessPath]['children'].append(dict)
+    hieDataCopy=hie.hierarchicalData
+    if(accessPath in hieDataCopy):
+        if('children' in hieDataCopy[accessPath]):
+            hieDataCopy[accessPath]['children'].append(dict)
         else:
-            hieData.hierarchicalData[accessPath]['children']=[]
-            hieData.hierarchicalData[accessPath]['children'].append(dict)
+            hieDataCopy[accessPath]['children']=[]
+            hieDataCopy[accessPath]['children'].append(dict)
 
     else:
-        hieData.hierarchicalData[accessPath]={}
-        hieData.hierarchicalData[accessPath]['children']=[]
-        hieData.hierarchicalData[accessPath]['children'].append(dict)
+        hieDataCopy[accessPath]={}
+        hieDataCopy[accessPath]['children']=[]
+        hieDataCopy[accessPath]['children'].append(dict)
 
+    hieData.hierarchicalData=hieDataCopy
     hieData.save()
     
     return JsonResponse({'message':'Successfully Updated Data', "status":"201"})
