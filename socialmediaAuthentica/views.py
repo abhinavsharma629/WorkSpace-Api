@@ -1437,7 +1437,7 @@ def deleteDropboxFolderData(request):
         accessPath1+=path[i]+"/"
 
     print(accessPath1)
-    accessPath=data['dict']['path']+"/"
+    accessPath=data['path']+"/"
     print(accessPath)
 
     del hieData.hierarchicalData[accessPath]
