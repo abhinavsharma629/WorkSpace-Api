@@ -1501,7 +1501,10 @@ def deleteDropboxFileData(request):
             segData.segregatedData.remove(i)
             break
 
-    segData.save()
+    if(len(segData.segregatedData)==0):
+        segData.delete()
+    else:
+        segData.save()
 
     return JsonResponse({'message':'Successfully Deleted File Data', "status":"200"})
 
