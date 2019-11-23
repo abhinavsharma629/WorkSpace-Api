@@ -1503,7 +1503,7 @@ def deleteDropboxFileData(request):
 
     segData.save()
 
-    return JsonResponse({'message':'Successfully Deleted Data', "status":"200"})
+    return JsonResponse({'message':'Successfully Deleted File Data', "status":"200"})
 
 
 
