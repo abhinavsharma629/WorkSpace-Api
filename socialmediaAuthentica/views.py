@@ -1454,6 +1454,62 @@ def deleteDropboxFolderData(request):
 
 
 
+
+#PUT CLOUD DATA
+@api_view(['DELETE'])
+@permission_classes((IsAuthenticated, ))
+def deleteDropboxFileData(request):
+    data=request.data
+    print(data)
+    print(type(data))
+    if(data['isRoot']==True):
+        rootData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
+        rootDataCopy=rootData.rootPageData['children']
+        for i in rootDataCopy:
+            if(i['id']==data['id']):
+                rootDataCopy.remove(i)
+                break
+        rootData.rootPageData['children']=rootDataCopy
+        rootData.save()
+
+    hieData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
+
+    path=data['path'].split('/')
+    print(path)
+
+    accessPath1=""  #Add To Children of this path
+    for i in range(0,len(path)-1):
+        accessPath1+=path[i]+"/"
+
+    print(accessPath1)
+    accessPath=data['path']+"/"
+    print(accessPath)
+
+
+    for i in hieData.hierarchicalData[accessPath1]['children']:
+        if(i['id']==data['id']):
+            hieData.hierarchicalData[accessPath1]['children'].remove(i)
+            break
+
+    hieData.save()
+
+    type1=data['type']
+    segData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="SEGREGATED DATA", provider=AllAuths.objects.get(authName="DROPBOX"), typeOfData=type1)
+    print(type1)
+    for i in segData.segregatedData:
+        if(i['id']==data['id']):
+            segData.segregatedData.remove(i)
+            break
+
+    segData.save()
+
+    return JsonResponse({'message':'Successfully Deleted Data', "status":"200"})
+
+
+
+
+
+
 #PUT CLOUD DATA
 @api_view(['PUT'])
 @permission_classes((IsAuthenticated, ))
