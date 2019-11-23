@@ -1419,7 +1419,7 @@ def deleteDropboxFolderData(request):
         rootData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
         rootDataCopy=rootData.rootPageData['children']
         for i in rootDataCopy:
-            if(i['id']===data['id']):
+            if(i['id']==data['id']):
                 rootDataCopy.remove(i)
                 break
         rootData.rootPageData['children']=rootDataCopy
