@@ -1417,7 +1417,12 @@ def deleteDropboxFolderData(request):
     print(type(data))
     if(data['isRoot']==True):
         rootData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="ROOT FOLDER DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
-        rootData.rootPageData['children'].append(data['dict'])
+        rootDataCopy=rootData.rootPageData['children']
+        for i in rootDataCopy:
+            if(i['id']===data['id']):
+                rootDataCopy.remove(i)
+                break
+        rootData.rootPageData['children']=rootDataCopy
         rootData.save()
 
     hieData=DataAnalysis.objects.get(user=request.user, classificationOfDataStorageType="HIERARCHICAL DATA", provider=AllAuths.objects.get(authName="DROPBOX"))
@@ -1435,29 +1440,16 @@ def deleteDropboxFolderData(request):
     accessPath=data['dict']['path']+"/"
     print(accessPath)
 
+    del hieData.hierarchicalData[accessPath]
 
-    #For Existing path children
-    hieDataCopy=hieData.hierarchicalData
+    for i in hieData.hierarchicalData[accessPath1]['children']:
+        if(i['id']==data['id']):
+            hieData.hierarchicalData[accessPath1]['children'].remove(i)
+            break
 
-    if(accessData in hieDataCopy):
-        for i in hieDataCopy:
-            if(i['path']==accessPath1):
-                hieDataCopy.remove(i)
-                break
-
-    if(accessData in hieDataCopy):
-        del hieDataCopy[accessData]
-    else:
-        print("path not present")
-        print("error in making path")
-
-    hieData.hierarchicalData=hieDataCopy
     hieData.save()
 
     return JsonResponse({'message':'Successfully Deleted Data', "status":"200"})
-
-
-
 
 
 
