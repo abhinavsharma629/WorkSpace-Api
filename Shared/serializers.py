@@ -93,3 +93,18 @@ class NotesDetailsSerializerForLikes(serializers.ModelSerializer):
   class Meta:
     model=NotesDetails
     fields=('note_id', 'likesCount')
+
+
+
+class NotesDetailsSerializerForComments(serializers.ModelSerializer):
+  note_id=serializers.CharField(source='noteId.noteId')
+  noteTitle=serializers.CharField(source='noteId.title')
+  note_admin=serializers.CharField(source='admin.userId.username')
+  note_created_date=serializers.CharField(source='noteId.createdAt')
+  note_last_updated=serializers.CharField(source='noteId.lastUpdated')
+  admin_profile_picture=serializers.CharField(source='noteId.userId.profilePhoto')
+  comments=CommentsOnNotesSerializerWithoutDetails(many=True)
+
+  class Meta:
+    model=NotesDetails
+    fields=('note_id', 'note_admin', 'noteTitle' , 'note_created_date', 'note_last_updated', 'admin_profile_picture', 'comments')

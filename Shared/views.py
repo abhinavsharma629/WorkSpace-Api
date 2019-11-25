@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import sharedNoteData, CommentsOnNotes, NotesDetails
-from .serializers import sharedNoteDataSerializer, CommentsOnNotesSerializer, NotesDetailsSerializer, sharedNotesWithoutDetailsSerializer, NotesDetailsSerializerForLikes, NotesDetailsSerializerForPosts
+from .serializers import sharedNoteDataSerializer, CommentsOnNotesSerializer, NotesDetailsSerializer, sharedNotesWithoutDetailsSerializer, NotesDetailsSerializerForLikes, NotesDetailsSerializerForComments, NotesDetailsSerializerForPosts
 from django.db.models import Q
 from django.http import JsonResponse
 from rest_framework.parsers import MultiPartParser
@@ -404,6 +404,18 @@ def specificNoteDetail(request):
     print(request.GET.get('noteId'))
     sharedNotesForCurrentUser=NotesDetails.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId')))
     serializers=NotesDetailsSerializer(sharedNotesForCurrentUser, many=True)
+
+    return JsonResponse({"message": "Ok", "noteDetails": json.dumps(serializers.data), "status": "200"})
+
+
+
+@api_view(['GET'])
+def specificNoteDetailForComments(request):
+    permission_classes=(IsAuthenticated,)
+
+    print(request.GET.get('noteId'))
+    sharedNotesForCurrentUser=NotesDetails.objects.filter(noteId=savedNoteData.objects.get(noteId=request.GET.get('noteId')))
+    serializers=NotesDetailsSerializerForComments(sharedNotesForCurrentUser, many=True)
 
     return JsonResponse({"message": "Ok", "noteDetails": json.dumps(serializers.data), "status": "200"})
 
