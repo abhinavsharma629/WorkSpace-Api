@@ -22,7 +22,7 @@ class sharedNoteDataSerializer(serializers.ModelSerializer):
 
 class CommentsOnNotesSerializer(serializers.ModelSerializer):
   user=serializers.CharField(source='userId.userId.username')
-  user_img_url=serializers.CharField(source='sharedTo.profilePhoto')
+  user_img_url=serializers.CharField(source='userId.profilePhoto')
 
   class Meta:
     model=CommentsOnNotes  # what module you are going to serialize
