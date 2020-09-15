@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'Mi.wsgi.application'
 #         'ENGINE': 'django.contrib.gis.db.backends.postgis',
 #         'NAME': 'db11',
 #         'USER': 'postgres',
-#         'PASSWORD': 'abhi629@@',
+#         'PASSWORD': '****',
 #         'HOST': '127.0.0.1',
 #         'PORT': '5432',
 #     }
@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'Mi.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=dj_database_url.config('postgres://xkwomrmbgqvczp:f9ae8151eb283ea46beff8d917a09870fb25214dd8dd120c7dda8607a9a310af@ec2-54-221-238-248.compute-1.amazonaws.com:5432/dch3oggdm23n00')
+        default=dj_database_url.config('****')
     )
 }
 
@@ -176,7 +176,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 
 EMAIL_HOST_USER="abhinavshar657@gmail.com"
-EMAIL_HOST_PASSWORD = 'hydra629@@'
+EMAIL_HOST_PASSWORD = '****'
 EMAIL_PORT = 587
 
 
